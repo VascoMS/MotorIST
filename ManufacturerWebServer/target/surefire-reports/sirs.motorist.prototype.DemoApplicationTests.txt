@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: sirs.motorist.prototype.DemoApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.005 s -- in sirs.motorist.prototype.DemoApplicationTests
