@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sirs.motorist.prototype.lib.secdoc.Check;
 import sirs.motorist.prototype.model.dto.FirmwareRequestDto;
 import sirs.motorist.prototype.model.dto.SignedFirmwareDto;
 import sirs.motorist.prototype.service.FirmwareService;

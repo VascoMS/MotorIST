@@ -2,7 +2,6 @@ package sirs.motorist.prototype.model.dto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sirs.motorist.prototype.lib.secdoc.Check;
 
 public class SignedFirmwareDto {
 
@@ -11,9 +10,6 @@ public class SignedFirmwareDto {
     private String manufacturerSignature;
     private int firmwareVersion;
     private String chassisNumber;
-
-    public SignedFirmwareDto() {
-    }
 
     public SignedFirmwareDto(String manufacturerSignature, int firmwareVersion, String chassisNumber) {
         this.manufacturerSignature = manufacturerSignature;
