@@ -132,6 +132,7 @@ public class SecurityUtil {
         }
     }
 
+    //TODO: Add nonce to mechanic signature
     public static String signData(byte[] data, PrivateKey privateKey) throws Exception {
         logger.info("Signing data...");
         // Get a signature object
