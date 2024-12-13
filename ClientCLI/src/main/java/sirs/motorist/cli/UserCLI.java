@@ -6,8 +6,8 @@ import java.security.PrivateKey;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
+import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.cli.dto.FirmwareRequestDto;
-import sirs.motorist.cli.sec.SecurityUtil;
 
 public class UserCLI {
 

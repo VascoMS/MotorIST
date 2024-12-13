@@ -131,13 +131,16 @@ public class SecurityUtil {
         }
     }
 
-    public static String signData(byte[] data, PrivateKey privateKey) throws Exception {
+    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce) throws Exception {
         logger.info("Signing data...");
         // Get a signature object
         Signature signer = Signature.getInstance("SHA256withRSA");
         // Initialize the signature object with the private key
         signer.initSign(privateKey);
-        // Update the signature object with the data
+        // Update the signature object with the nonce (if necessary) and data
+        if(nonce != null) {
+            signer.update(nonce);
+        }
         signer.update(data);
         // Sign the data
         byte[] signature = signer.sign();
