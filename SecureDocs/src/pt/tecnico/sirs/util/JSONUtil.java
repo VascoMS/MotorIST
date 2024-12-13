@@ -1,4 +1,4 @@
-package com.sirs.carserver.lib.util;
+package pt.tecnico.sirs.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
