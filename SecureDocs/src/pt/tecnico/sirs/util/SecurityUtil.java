@@ -7,9 +7,12 @@ import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.io.*;
+import java.nio.file.Files;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class SecurityUtil {
@@ -68,7 +71,7 @@ public class SecurityUtil {
         return expectedBase64HMAC.equals(computedBase64HMAC);
     }
 
-    public static boolean verifySignature(byte[] data, byte[] nonce, byte[] iv, String base64Signature, PublicKey publicKey) throws Exception {
+    public static boolean verifySignature(byte[] data, String base64Signature, PublicKey publicKey) throws Exception {
         logger.info("Verifying signature...");
         // Get a signature object
         Signature verifier = Signature.getInstance("SHA256withRSA");
@@ -76,11 +79,85 @@ public class SecurityUtil {
         verifier.initVerify(publicKey);
         // Decode Base64 signature
         byte[] decodedSignature = Base64.getDecoder().decode(base64Signature);
-        // Update the signature object with the nonce, iv and data
-        verifier.update(nonce);
-        verifier.update(iv);
+        // Update the signature object with the data
         verifier.update(data);
         // Verify the signature
         return verifier.verify(decodedSignature);
     }
+
+    /**
+     * Load the private key from the file
+     * @param privateKeyPath path to the private key file
+     * @return the private key
+     */
+    public static PrivateKey loadPrivateKey(String privateKeyPath) {
+        try {
+            byte[] keyBytes = Files.readAllBytes(new File(privateKeyPath).toPath());
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePrivate(spec);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            logger.error("Error while loading the Private key");
+            return null;
+        }
+    }
+
+    /**
+     * Load the public key from the file
+     * @param publicKeyPath path to the public key file
+     * @return the public key
+     */
+    public static PublicKey loadPublicKeyFromFile(String publicKeyPath) {
+        try {
+            byte[] keyBytes = Files.readAllBytes(new File(publicKeyPath).toPath());
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePublic(spec);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            logger.error("Error while loading the Public key");
+            return null;
+        }
+    }
+
+    public static PublicKey convertPublicKeyFromString(String publicKeyString) {
+        try {
+            byte[] keyBytes = Base64.getDecoder().decode(publicKeyString);
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePublic(spec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            logger.error("Error while converting the Public key");
+            return null;
+        }
+    }
+
+    public static String signData(byte[] data, PrivateKey privateKey) throws Exception {
+        logger.info("Signing data...");
+        // Get a signature object
+        Signature signer = Signature.getInstance("SHA256withRSA");
+        // Initialize the signature object with the private key
+        signer.initSign(privateKey);
+        // Update the signature object with the data
+        signer.update(data);
+        // Sign the data
+        byte[] signature = signer.sign();
+        // Encode the signature in Base64
+        return Base64.getEncoder().encodeToString(signature);
+    }
+
+    public static byte[] serializeToByteArray(Serializable object) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(object); // Write the object
+            return baos.toByteArray(); // Convert to byte array
+        }
+    }
+
+    public static <T extends Serializable> T deserializeFromByteArray(byte[] data) throws IOException, ClassNotFoundException {
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
+             ObjectInputStream ois = new ObjectInputStream(bais)) {
+            return (T) ois.readObject(); // Deserialize to the original object
+        }
+    }
+
 }

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import sirs.motorist.prototype.lib.util.SecurityUtil;
+import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.prototype.model.dto.FirmwareRequestDto;
 import sirs.motorist.prototype.model.dto.SignedFirmwareDto;
 import sirs.motorist.prototype.model.entity.Firmware;

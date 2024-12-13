@@ -1,4 +1,4 @@
-package sirs.motorist.carserver.lib.model;
+package pt.tecnico.sirs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.Setter;
 public class ProtectedObject {
     private String content;
     private String iv;
-    private String secretKey;
     private Nonce nonce;
     private String hmac;
 }

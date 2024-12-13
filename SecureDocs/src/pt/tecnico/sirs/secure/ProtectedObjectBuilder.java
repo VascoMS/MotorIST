@@ -9,6 +9,7 @@ import pt.tecnico.sirs.util.SecurityUtil;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.security.*;
 import java.util.Base64;
 
@@ -56,6 +57,7 @@ public class ProtectedObjectBuilder {
         logger.info("Ciphering the content...");
 
         byte[] contentCipherBytes = symCipher.doFinal(content);
+
         // Convert the ciphered content to a base64 string
         String base64Content = Base64.getEncoder().encodeToString(contentCipherBytes);
         // Add the ciphered content to the JSON object
@@ -111,24 +113,13 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder signData(byte[] data, PrivateKey privateKey) throws Exception {
-        Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initSign(privateKey);
-
-        logger.info("Signing the data...");
-        
-        signature.update(this.nonce); // adding nonce to the signature
-        signature.update(this.iv); // adding iv to the signature
-        signature.update(data); // adding data to the signature
-        byte[] digitalSignature = signature.sign();
-        String base64Signature = Base64.getEncoder().encodeToString(digitalSignature);
-
+        String base64Signature = SecurityUtil.signData(data, privateKey);
         logger.info("Adding the signature to the JSON object...");
-
         jsonObject.addProperty(SIGNATURE, base64Signature);
         return this;
     }
 
-    public ProtectedObjectBuilder generateNonce(int lengthInBytes) {
+    public ProtectedObjectBuilder generateNonce(int lengthInBytes) throws IOException {
         logger.info("Generating nonce...");
         byte[] nonceBytes = new byte[lengthInBytes];
         this.secureRandom.nextBytes(nonceBytes);

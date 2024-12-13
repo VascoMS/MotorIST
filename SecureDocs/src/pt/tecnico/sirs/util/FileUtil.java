@@ -2,7 +2,6 @@ package pt.tecnico.sirs.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.tecnico.sirs.secdoc.Unprotect;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,11 +24,11 @@ public class FileUtil {
         try{
             Path path = Paths.get(filePath);
             content = Files.readString(path);
+            return content;
         } catch(IOException e){
             logger.error("An error occurred while reading the file: {}", e.getMessage());
-            System.exit(1);
+            return null;
         }
-        return content;
     }
 
     /**
@@ -42,11 +41,11 @@ public class FileUtil {
         try {
             Path path = Paths.get(filePath);
             content = Files.readAllBytes(path);
+            return content;
         } catch(IOException e){
             logger.error("An error occurred while reading the file: {}", e.getMessage());
-            System.exit(1);
+            return null;
         }
-        return content;
     }
 
     /**
@@ -60,7 +59,6 @@ public class FileUtil {
             Files.write(path, content);
         } catch (IOException e) {
             logger.error("Unable to write to file: {}", e.getMessage());
-            System.exit(1);
         }
     }
 
@@ -69,7 +67,6 @@ public class FileUtil {
             writer.write(content);
         } catch (IOException e) {
             logger.error("Error while writing to file {}, Error: {}", filePath, e.getMessage());
-            System.exit(1);
         }
     }
 }

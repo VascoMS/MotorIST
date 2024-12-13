@@ -1,64 +1,46 @@
 package pt.tecnico.sirs;
 
-import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
+import pt.tecnico.sirs.secdoc.Check;
+import pt.tecnico.sirs.model.ProtectedObject;
 
-import java.util.Scanner;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 public class SecureDocs {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("SecureDocs CLI. Type 'help' for a list of commands.");
+        try {
+            // Example content to protect
+            String content = "This is a test content";
+            SecretKeySpec secretKey = new SecretKeySpec("1234567890123456".getBytes(StandardCharsets.UTF_8), "AES");
 
-        while (true) {
-            System.out.print("> ");
-            String input = scanner.nextLine();
-            String[] inputArgs = input.split("\\s+");
-            if (inputArgs.length < 1) {
-                printUsage();
-                continue;
-            }
+            // Protect the content
+            Protect protect = new Protect();
+            ProtectedObject protectedObject = protect.protect(secretKey, content);
+            System.out.println("Protected Object: ");
+            System.out.println("  - Content: " + protectedObject.getContent());
+            System.out.println("  - IV: " + protectedObject.getIv());
+            System.out.println("  - Nonce: " + protectedObject.getNonce());
+            System.out.println("  - HMAC: " + protectedObject.getHmac());
 
-            String command = inputArgs[0];
-            String[] commandArgs = java.util.Arrays.copyOfRange(inputArgs, 1, inputArgs.length);
+            // Unprotect the content
+            Unprotect unprotect = new Unprotect();
+            ProtectedObject unprotectedContent = unprotect.unprotect(protectedObject, secretKey);
+            System.out.println("Unprotected Content:");
+            System.out.println("  - Content: " + unprotectedContent.getContent());
+            System.out.println("  - IV: " + unprotectedContent.getIv());
+            System.out.println("  - Nonce: " + unprotectedContent.getNonce());
+            System.out.println("  - HMAC: " + unprotectedContent.getHmac());
 
-            switch (command) {
-                case "protect":
-                    Protect p = new Protect();
-                    p.protect(commandArgs);
-                    break;
-                case "unprotect":
-                    Unprotect u = new Unprotect();
-                    u.unprotect(commandArgs);
-                    break;
-                case "check":
-                    Check c = new Check();
-                    c.check(commandArgs);
-                    break;
-                case "help":
-                    printUsage();
-                    break;
-                case "exit":
-                    System.out.println("Exiting SecureDocs CLI.");
-                    scanner.close();
-                    return;
-                default:
-                    System.out.println("Unknown command: " + command);
-                    printUsage();
-                    break;
-            }
+            // Check the content
+            Check check = new Check();
+            boolean isValid = check.check(protectedObject, secretKey);
+            System.out.println("Is the content valid? " + isValid);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    private static void printUsage() {
-        System.out.println("Usage: <command> [args...]");
-        System.out.println("Commands:");
-        System.out.println("  help      - Display this help message (^w^) uwu\n");
-        System.out.println("  protect   - protect (input_file) (output_file) (secret_key)");
-        System.out.println("  unprotect - unprotect (input_file) (output_file) (secret_key_path)");
-        System.out.println("  check     - check (input_file) (sender_public_key)");
-        System.out.println("  exit      - Exit the CLI");
     }
 }

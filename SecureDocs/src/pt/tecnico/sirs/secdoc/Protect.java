@@ -3,15 +3,15 @@ package pt.tecnico.sirs.secdoc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import pt.tecnico.sirs.secure.ProtectedObjectBuilder;
-import pt.tecnico.sirs.util.FileUtil;
-import pt.tecnico.sirs.secure.KeyManager;
-
 import javax.crypto.spec.SecretKeySpec;
-import java.io.FileWriter;
+import java.io.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secure.ProtectedObjectBuilder;
+import pt.tecnico.sirs.util.JSONUtil;
+import pt.tecnico.sirs.util.SecurityUtil;
 
 public class Protect {
 
@@ -19,44 +19,27 @@ public class Protect {
 
     public Protect() {}
 
-    public void protect(String[] args) {
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content) throws IOException {
 
-        // Check arguments
-        if (args.length < 3) {
-            logger.error("Argument(s) missing!");
-            logger.error("Usage: java {} input_file output_file secret_key", Protect.class.getName());
-            return;
-        }
-
-        final String inputFilePath = args[0];
-        final String outputFilePath = args[1];
-        final String secretKeyPath = args[2];
-
-        final KeyManager keyManager = new KeyManager();
         ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
 
-        final SecretKeySpec secretKey = keyManager.loadSecretKey(secretKeyPath);
-
         // Read the data from the file
-        byte[] content = FileUtil.readBytes(inputFilePath);
+        byte[] byteContent = SecurityUtil.serializeToByteArray(content);
 
         //------------------------------BUILD PROTECTED OBJECT------------------------------------------
         JsonObject protectedObject;
         try {
             protectedObject = protectedObjectBuilder
-                                .cipherContent(content, secretKey)
-                                .generateNonce(8)
-                                .generateHMAC(content, secretKey.getEncoded())
-                                .build();
+                    .cipherContent(byteContent, secretKey)
+                    .generateNonce(8)
+                    .generateHMAC(byteContent, secretKey.getEncoded())
+                    .build();
         } catch(Exception e){
-            logger.error("Failed to build protected object for file: {}", inputFilePath);
-            return;
+            logger.error("Failed to build protected object: {}", e.getMessage());
+            return null;
         }
 
-        //------------------------------WRITE TO OUTPUT FILE------------------------------------------
-
-        writeProtectedDocument(outputFilePath, protectedObject);
-
+        return JSONUtil.parseJsonToClass(protectedObject, ProtectedObject.class);
     }
 
     public static void writeProtectedDocument(String filePath, JsonObject protectedObject){
@@ -67,7 +50,6 @@ public class Protect {
             fileWriter.write(gson.toJson(protectedObject));
         } catch (Exception e) {
             logger.error("Writing the output file object failed {}", e.getMessage());
-            System.exit(1);
         }
     }
 }

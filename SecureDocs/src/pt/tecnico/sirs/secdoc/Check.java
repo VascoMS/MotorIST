@@ -1,13 +1,9 @@
 package pt.tecnico.sirs.secdoc;
 
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.tecnico.sirs.model.Nonce;
-import pt.tecnico.sirs.secure.KeyManager;
-import pt.tecnico.sirs.secure.ProtectedObjectBuilder;
-import pt.tecnico.sirs.util.FileUtil;
-import pt.tecnico.sirs.util.JSONUtil;
+import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.SecurityUtil;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -23,37 +19,23 @@ public class Check {
 
     public Check() {}
 
-    public void check(String[] args) {
-        // Check arguments
-        if (args.length < 2) {
-            logger.error("Argument(s) missing!");
-            logger.error("Usage: java %s input_file secret_key%n  {}", Check.class.getName());
-            return;
-        }
-
-        final String inputFilePath = args[0];
-        final String secretKeyPath = args[1];
-
-        final KeyManager keyManager = new KeyManager();
-        final SecretKeySpec secretKey = keyManager.loadSecretKey(secretKeyPath);
-
-        // Load the json object
-        String fileContent = FileUtil.readContent(inputFilePath);
-        JsonObject jsonObject = JSONUtil.parseJson(fileContent);
+    public boolean check(ProtectedObject protectedObject, SecretKeySpec secretKey) {
 
         // Extract the content and signature from the json object
-        String content = jsonObject.get(ProtectedObjectBuilder.CONTENT_PROPERTY).getAsString();
+        String contentBase64 = protectedObject.getContent();
         // Turned it into a Nonce
-        Nonce nonce = JSONUtil.parseJsonToClass(jsonObject.get(ProtectedObjectBuilder.NONCE).getAsJsonObject(), Nonce.class);
-        byte[] iv = getAndDecodeIv(jsonObject);
-        String expectedHmac = jsonObject.get(ProtectedObjectBuilder.HMAC).getAsString();
+        Nonce nonce = protectedObject.getNonce();
+        byte[] iv =  Base64.getDecoder().decode(protectedObject.getIv());
+        String expectedHmac = protectedObject.getHmac();
+        byte[] content = Base64.getDecoder().decode(contentBase64);
 
         boolean hmacValid;
         try {
-            hmacValid = SecurityUtil.verifyHMAC(content.getBytes(), secretKey.getEncoded(), expectedHmac, nonce.toByteArray(), iv);
+            hmacValid = SecurityUtil.verifyHMAC(content, secretKey.getEncoded(),
+                    expectedHmac, SecurityUtil.serializeToByteArray(nonce), iv);
         } catch (Exception e) {
-            logger.error("Failed to verify hmac for file: {}", e.getMessage());
-            return;
+            logger.error("Failed to verify hmac: {}", e.getMessage());
+            return false;
         }
 
         nonceCleanup();
@@ -67,11 +49,8 @@ public class Check {
         } else {
             logger.info("Some verification failed :c\n  - HMAC: {}\n  - Nonce: {}", hmacValid, nonceValid);
         }
-    }
 
-    private byte[] getAndDecodeIv(JsonObject jsonObject) {
-        String iv = jsonObject.get(ProtectedObjectBuilder.IV_PROPERTY).getAsString();
-        return Base64.getDecoder().decode(iv);
+        return isValid;
     }
 
     private boolean verifyNonce(Nonce nonce) {
