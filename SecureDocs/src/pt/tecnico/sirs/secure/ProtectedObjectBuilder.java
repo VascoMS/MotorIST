@@ -60,7 +60,7 @@ public class ProtectedObjectBuilder {
 
         // Convert the ciphered content to a base64 string
         String base64Content = Base64.getEncoder().encodeToString(contentCipherBytes);
-        // Add the ciphered content to the JSON object
+        // Add the ciphered content to the JSON objec
 
         logger.info("Adding the ciphered content and IV to the JSON object...");
 
@@ -128,7 +128,7 @@ public class ProtectedObjectBuilder {
         long timestamp = System.currentTimeMillis();
         Nonce newNonce = new Nonce(base64Random, timestamp);
         jsonObject.add(NONCE, newNonce.toJsonObject());
-        this.nonce = newNonce.toByteArray();
+        this.nonce = SecurityUtil.serializeToByteArray(newNonce);
         return this;
     }
 

@@ -2,7 +2,9 @@ package pt.tecnico.sirs.model;
 
 import com.google.gson.JsonObject;
 
-public record Nonce (String base64Random, long timestamp) {
+import java.io.Serializable;
+
+public record Nonce (String base64Random, long timestamp) implements Serializable {
     private final static String TIMESTAMP_PROPERTY = "timestamp";
     private final static String BASE64_PROPERTY = "base64Random";
 
@@ -16,10 +18,6 @@ public record Nonce (String base64Random, long timestamp) {
         nonceJson.addProperty(BASE64_PROPERTY, base64Random);
         nonceJson.addProperty(TIMESTAMP_PROPERTY, timestamp);
         return nonceJson;
-    }
-
-    public byte[] toByteArray() {
-        return (this.base64Random + this.timestamp).getBytes();
     }
 
     @Override

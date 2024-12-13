@@ -33,7 +33,7 @@ public class SecurityUtil {
         // Initialize the cipher object with the secret key and IV
         symCipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
         // Decrypt the content
-        return new String(symCipher.doFinal(content));
+        return Base64.getEncoder().encodeToString(symCipher.doFinal(content));
     }
 
     public static String decipherSecretKey(String base64CipheredSecretKey, PrivateKey privateKey) throws Exception {
