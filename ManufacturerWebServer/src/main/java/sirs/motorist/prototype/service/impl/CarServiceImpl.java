@@ -14,4 +14,9 @@ public class CarServiceImpl implements CarService {
     public CarServiceImpl(CarRepository carRepository) {
         this.carRepository = carRepository;
     }
+
+    @Override
+    public String getCurrentConfiguration() {
+        return ""; //TODO: implement
+    }
 }

@@ -50,7 +50,8 @@ public class FirmwareServiceImpl implements FirmwareService {
         String signedData = firmwareDownloadRequest.getChassisNumber();
         PublicKey mechanicPublicKey = SecurityUtil.convertPublicKeyFromString(mechanic.getPublicKey());
         try {
-            return SecurityUtil.verifySignature(signedData.getBytes(), mechanicSignature, mechanicPublicKey);
+            byte[] nonce = SecurityUtil.serializeToByteArray(firmwareDownloadRequest.getNonce());
+            return SecurityUtil.verifySignature(signedData.getBytes(), mechanicSignature, mechanicPublicKey, nonce, null);
         } catch (Exception e) {
             logger.error("Error verifying mechanic signature... {}", e.getMessage());
             return false;
@@ -64,7 +65,7 @@ public class FirmwareServiceImpl implements FirmwareService {
         try {
             PrivateKey privateKey = keyStoreService.getPrivateKey(privateKeyAlias);
             String dataToSign = latestFirmware.getVersion() + chassisNumber;
-            String signedData = SecurityUtil.signData(dataToSign.getBytes(), privateKey, null);
+            String signedData = SecurityUtil.signData(dataToSign.getBytes(), privateKey, null, null);
             return new SignedFirmwareDto(signedData, latestFirmware.getVersion(), chassisNumber);
         } catch(Exception e) {
             logger.error("Error fetching and signing firmware... {}", e.getMessage());

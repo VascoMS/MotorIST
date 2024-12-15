@@ -8,8 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Firmware {
 
-    private static final Logger logger = LoggerFactory.getLogger(Firmware.class);
-
     @Id
     private String id;
     private int version;
