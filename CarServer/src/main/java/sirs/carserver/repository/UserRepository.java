@@ -1,6 +1,6 @@
-package repository;
+package sirs.carserver.repository;
 
-import model.User;
+import sirs.carserver.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, String> {

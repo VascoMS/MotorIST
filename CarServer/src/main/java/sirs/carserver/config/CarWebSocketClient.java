@@ -1,3 +1,5 @@
+package sirs.carserver.config;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         logger.info("Received message from server...");
-
+        logger.info("Message: {}", message);
     }
 
     @Override
@@ -73,11 +75,5 @@ public class CarWebSocketClient extends WebSocketClient {
     }
 
 
-    public static void main(String[] args) throws Exception {
-        //TODO: Integrate TLS, swap "your-server-address"
-        URI serverUri = new URI("wss://your-server-address:8443/car-tunnel");
-        // TODO: Create and pass dependencies to the CarWebSocketClient 
-        CarWebSocketClient client = new CarWebSocketClient(serverUri);
-        client.connect();  // Opens the session
-    }
+
 }

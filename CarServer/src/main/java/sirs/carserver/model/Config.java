@@ -1,4 +1,4 @@
-package model;
+package sirs.carserver.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

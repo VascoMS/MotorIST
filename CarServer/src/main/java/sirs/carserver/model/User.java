@@ -1,4 +1,4 @@
-package model;
+package sirs.carserver.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

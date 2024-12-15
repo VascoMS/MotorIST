@@ -64,7 +64,7 @@ public class FirmwareServiceImpl implements FirmwareService {
         try {
             PrivateKey privateKey = keyStoreService.getPrivateKey(privateKeyAlias);
             String dataToSign = latestFirmware.getVersion() + chassisNumber;
-            String signedData = SecurityUtil.signData(dataToSign.getBytes(), privateKey);
+            String signedData = SecurityUtil.signData(dataToSign.getBytes(), privateKey, null);
             return new SignedFirmwareDto(signedData, latestFirmware.getVersion(), chassisNumber);
         } catch(Exception e) {
             logger.error("Error fetching and signing firmware... {}", e.getMessage());

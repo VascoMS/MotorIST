@@ -1,16 +1,21 @@
-package service;
+package sirs.carserver.service;
 
-import model.Audit;
-import model.Config;
-import model.User;
+import sirs.carserver.model.Audit;
+import sirs.carserver.model.Config;
+import sirs.carserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.AuditRepository;
+import sirs.carserver.repository.AuditRepository;
 
 @Service
 public class AuditService {
+
+    private final AuditRepository auditRepository;
+
     @Autowired
-    private AuditRepository auditRepository;
+    public AuditService(AuditRepository auditRepository) {
+        this.auditRepository = auditRepository;
+    }
 
     public void createAudit(User user, Config config) {
         Audit audit = new Audit();

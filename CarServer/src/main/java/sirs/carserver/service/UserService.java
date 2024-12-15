@@ -1,12 +1,10 @@
-package service;
+package sirs.carserver.service;
 
-import model.Audit;
-import model.Config;
-import model.User;
+import sirs.carserver.model.Config;
+import sirs.carserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.AuditRepository;
-import repository.UserRepository;
+import sirs.carserver.repository.UserRepository;
 
 @Service
 public class UserService {

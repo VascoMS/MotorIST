@@ -1,0 +1,61 @@
+Operations server -> car:
+
+- request code for pairing with pairing id
+- update, delete config for user
+- add new user
+
+{
+    operation: "pair",
+    pairingId: "a23vcs2245"
+}
+
+{
+    operation: "updateconfig",
+    userId: "a23vcs2245",
+    config(ciphered): {
+    	"ac": [
+       	    { "out1": "789"},
+       	    { "out2": "1011"}
+    	],
+    	"seat": [
+       	    { "pos1": "0"},
+       	    { "pos3": "6"}
+    	]
+     }
+}
+
+{
+    operation: "deleteconfig",
+    userId: "a23vcs2245"
+}
+
+{
+    operation: "newuser",
+    userId: "a23vcs2245",
+    pubKey: "pub_key_xyz"
+}
+
+Operations car -> server:
+- send secret key for new user
+- send code for pairing with pairing id
+- periodically send battery and km status
+
+{
+    operation: "newkey",
+    pairingId: "a23vcs2245",
+    carId: "tesla_1234",
+    key: "new_key_xyz"(ciphered)
+}
+
+{
+    operation: "pair",
+    pairingId: "a23vcs2245",
+    code(hashed): "1234"
+}
+
+{
+    operation: "status",
+    carId: "a23vcs2245",
+    battery: 50,
+    km: 100
+}
