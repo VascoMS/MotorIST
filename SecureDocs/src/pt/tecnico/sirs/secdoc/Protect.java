@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
+import java.security.PrivateKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class Protect {
 
     public Protect() {}
 
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content) throws IOException {
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, PrivateKey privkey) throws IOException {
 
         ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
 
@@ -32,7 +33,7 @@ public class Protect {
             protectedObject = protectedObjectBuilder
                     .cipherContent(byteContent, secretKey)
                     .generateNonce(8)
-                    .generateHMAC(byteContent, secretKey.getEncoded())
+                    .signData(byteContent, privkey)
                     .build();
         } catch(Exception e){
             logger.error("Failed to build protected object: {}", e.getMessage());

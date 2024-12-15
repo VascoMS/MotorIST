@@ -113,7 +113,7 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder signData(byte[] data, PrivateKey privateKey) throws Exception {
-        String base64Signature = SecurityUtil.signData(data, privateKey);
+        String base64Signature = SecurityUtil.signData(data, privateKey, this.nonce, this.iv);
         logger.info("Adding the signature to the JSON object...");
         jsonObject.addProperty(SIGNATURE, base64Signature);
         return this;

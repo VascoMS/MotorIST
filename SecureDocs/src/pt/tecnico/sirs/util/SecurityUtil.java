@@ -36,6 +36,18 @@ public class SecurityUtil {
         return Base64.getEncoder().encodeToString(symCipher.doFinal(content));
     }
 
+    public static String cipherSecretKey(SecretKeySpec secretKey, PublicKey publicKey) throws Exception {
+        logger.info("Ciphering secret key...");
+        // Get an RSA cipher object
+        Cipher asymCipher = Cipher.getInstance(ASYM_CIPHER);
+        // Initialize the cipher object with the public key
+        asymCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        // Encrypt the secret key
+        byte[] secretKeyCipherBytes = asymCipher.doFinal(secretKey.getEncoded());
+        // Encode the ciphered secret key in Base64
+        return Base64.getEncoder().encodeToString(secretKeyCipherBytes);
+    }
+
     public static String decipherSecretKey(String base64CipheredSecretKey, PrivateKey privateKey) throws Exception {
         logger.info("Deciphering secret key...");
         byte[] cipheredSecretKey = Base64.getDecoder().decode(base64CipheredSecretKey);
@@ -69,20 +81,6 @@ public class SecurityUtil {
 
         // Compare the computed HMAC with the expected HMAC in constant time to avoid timing attacks
         return expectedBase64HMAC.equals(computedBase64HMAC);
-    }
-
-    public static boolean verifySignature(byte[] data, String base64Signature, PublicKey publicKey) throws Exception {
-        logger.info("Verifying signature...");
-        // Get a signature object
-        Signature verifier = Signature.getInstance("SHA256withRSA");
-        // Initialize the signature object with the public key
-        verifier.initVerify(publicKey);
-        // Decode Base64 signature
-        byte[] decodedSignature = Base64.getDecoder().decode(base64Signature);
-        // Update the signature object with the data
-        verifier.update(data);
-        // Verify the signature
-        return verifier.verify(decodedSignature);
     }
 
     /**
@@ -131,21 +129,44 @@ public class SecurityUtil {
         }
     }
 
-    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce) throws Exception {
+    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce, byte[] iv) throws Exception {
         logger.info("Signing data...");
         // Get a signature object
         Signature signer = Signature.getInstance("SHA256withRSA");
         // Initialize the signature object with the private key
         signer.initSign(privateKey);
-        // Update the signature object with the nonce (if necessary) and data
-        if(nonce != null) {
-            signer.update(nonce);
-        }
+
+        // Update the signature object with the nonce, iv (if necessary) and data
+        updateSignature(signer, nonce);
+        updateSignature(signer, iv);
         signer.update(data);
+
         // Sign the data
         byte[] signature = signer.sign();
         // Encode the signature in Base64
         return Base64.getEncoder().encodeToString(signature);
+    }
+
+    private static void updateSignature(Signature signer, byte[] data) throws SignatureException {
+        if (data != null) {
+            signer.update(data);
+        }
+    }
+
+    public static boolean verifySignature(byte[] data, String base64Signature, PublicKey publicKey, byte[] nonce, byte[] iv) throws Exception {
+        logger.info("Verifying signature...");
+        // Get a signature object
+        Signature verifier = Signature.getInstance("SHA256withRSA");
+        // Initialize the signature object with the public key
+        verifier.initVerify(publicKey);
+        // Decode Base64 signature
+        byte[] decodedSignature = Base64.getDecoder().decode(base64Signature);
+        // Update the signature object with the data and the nonce (if necessary)
+        updateSignature(verifier, nonce);
+        updateSignature(verifier, iv);
+        verifier.update(data);
+        // Verify the signature
+        return verifier.verify(decodedSignature);
     }
 
     public static byte[] serializeToByteArray(Serializable object) throws IOException {

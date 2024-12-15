@@ -6,7 +6,7 @@ import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.SecurityUtil;
 
-import javax.crypto.spec.SecretKeySpec;
+import java.security.PublicKey;
 import java.util.*;
 
 public class Check {
@@ -19,35 +19,37 @@ public class Check {
 
     public Check() {}
 
-    public boolean check(ProtectedObject protectedObject, SecretKeySpec secretKey) {
+    public boolean check(ProtectedObject protectedObject, PublicKey pubkey) {
 
         // Extract the content and signature from the json object
         String contentBase64 = protectedObject.getContent();
         // Turned it into a Nonce
         Nonce nonce = protectedObject.getNonce();
         byte[] iv =  Base64.getDecoder().decode(protectedObject.getIv());
-        String expectedHmac = protectedObject.getHmac();
+        String signature = protectedObject.getSignature();
         byte[] content = Base64.getDecoder().decode(contentBase64);
 
-        boolean hmacValid;
+        boolean signatureValid;
         try {
-            hmacValid = SecurityUtil.verifyHMAC(content, secretKey.getEncoded(),
-                    expectedHmac, SecurityUtil.serializeToByteArray(nonce), iv);
+            signatureValid = SecurityUtil.verifySignature(
+                    content,
+                    signature,
+                    pubkey,
+                    SecurityUtil.serializeToByteArray(nonce),
+                    iv
+            );
         } catch (Exception e) {
             logger.error("Failed to verify hmac: {}", e.getMessage());
             return false;
         }
-
         nonceCleanup();
 
         boolean nonceValid = verifyNonce(nonce);
-        boolean isValid = hmacValid && nonceValid;
-
-
+        boolean isValid = signatureValid && nonceValid;
         if (isValid) {
             logger.info("Everything adds up! :D");
         } else {
-            logger.info("Some verification failed :c\n  - HMAC: {}\n  - Nonce: {}", hmacValid, nonceValid);
+            logger.info("Some verification failed :c\n  - HMAC: {}\n  - Nonce: {}", signatureValid, nonceValid);
         }
 
         return isValid;
