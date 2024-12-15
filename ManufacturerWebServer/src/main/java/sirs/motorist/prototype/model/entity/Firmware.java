@@ -1,11 +1,13 @@
 package sirs.motorist.prototype.model.entity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@Getter
+@Setter
 public class Firmware {
 
     @Id
@@ -14,22 +16,6 @@ public class Firmware {
 
     public Firmware(String id, int version) {
         this.id = id;
-        this.version = version;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
         this.version = version;
     }
 
