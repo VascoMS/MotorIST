@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.model.PairingSession;
+import sirs.carserver.model.User;
 import sirs.carserver.model.dto.ResponseDto;
 
 @Service
@@ -15,38 +16,40 @@ public class MessageProcessorService {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
-    private final PairingService pairingService;
+    private static final String CODE_FIELD = "code";
+    private static final String SUCCESS_FIELD = "success";
 
-    public MessageProcessorService(PairingService pairingService) {
+    private final PairingService pairingService;
+    private final UserService userService;
+
+    public MessageProcessorService(PairingService pairingService, UserService userService) {
         this.pairingService = pairingService;
+        this.userService = userService;
     }
 
-    public ResponseDto processMessage(String message) {
+    public void processMessage(String message) {
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
         String operation = messageJson.get("operation").getAsString();
         boolean success = false;
         switch (operation) {
-            case "pair" -> {
-                return pairOperation(messageJson);
-            }
+            case "pair" -> pairOperation(messageJson);
             case "updateconfig" -> updateConfigOperation(messageJson);
             case "deleteconfig" -> deleteConfigOperation(messageJson);
             case "newuser" -> newUserOperation(messageJson);
             default -> logger.error("Operation not supported: {}", operation);
         }
-        return null;
     }
 
-    public ResponseDto pairOperation(JsonObject messageJson) {
-        // TODO: Sign all responses to authenticate the car with the server
-        PairingSession pairingSession = pairingService.createPairSession();
-        if(pairingSession == null) {
-            logger.warn("Unable to create new pair session, already in use...");
-            return new ResponseDto(false, null);
+    public void pairOperation(JsonObject messageJson) {
+        String pairingId = messageJson.get(CODE_FIELD).getAsString();
+        if(pairingService.checkPairingSession(pairingId)){
+            logger.info("Pairing code: {}", pairingId);
+            userService.createUser()
+        } else {
+            logger.error("Invalid pairing code: {}", pairingId);
         }
-
-        return new ResponseDto(true, pairingSession.toJson());
+        pairingService.endPairSession();
     }
 
     public void updateConfigOperation(JsonObject messageJson) {

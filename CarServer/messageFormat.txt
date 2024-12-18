@@ -6,7 +6,8 @@ Operations server -> car:
 
 {
     operation: "pair",
-    pairingId: "a23vcs2245"
+    userId: "a23vcs2245",
+    success: true/false
 }
 
 {
