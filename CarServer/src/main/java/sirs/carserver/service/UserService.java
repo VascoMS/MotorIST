@@ -20,9 +20,8 @@ public class UserService {
     public User createUser(String username) {
         User user = new User();
         user.setUsername(username);
-
         Config config = new Config();
-        user.setConfig(config);
+        //TODO: Cipher config with generated secret key
         return userRepository.save(user);
     }
 
@@ -31,7 +30,7 @@ public class UserService {
     //TODO the configUpdate needs to create a new config at some point
     public void updateConfig(String username, Config configUpdate) {
         User user = userRepository.findByUsername(username);
-        user.setConfig(configUpdate);
+        //user.setConfig(configUpdate);
         userRepository.save(user);
 
         //create the new audit

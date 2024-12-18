@@ -11,8 +11,5 @@ public class User {
     @Id
     private String username;
     private int kmDriven;
-
-    @OneToOne
-    @JoinColumn(name = "config_id")
-    private Config config;
+    private String config;
 }

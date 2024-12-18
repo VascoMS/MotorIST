@@ -41,7 +41,9 @@ public class MessageProcessorService {
         String pairingId = messageJson.get(CODE_FIELD).getAsString();
         if(pairingService.checkPairingSession(pairingId)){
             logger.info("Pairing code: {}", pairingId);
-            userService.createUser()
+            String userId = messageJson.get(USERID_FIELD).getAsString();
+
+            //userService.createUser()
         } else {
             logger.error("Invalid pairing code: {}", pairingId);
         }
