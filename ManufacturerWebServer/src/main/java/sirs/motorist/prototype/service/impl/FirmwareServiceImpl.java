@@ -9,9 +9,9 @@ import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.prototype.model.dto.FirmwareRequestDto;
 import sirs.motorist.prototype.model.dto.SignedFirmwareDto;
 import sirs.motorist.prototype.model.entity.Firmware;
-import sirs.motorist.prototype.model.entity.Mechanic;
+import sirs.motorist.prototype.model.entity.User;
 import sirs.motorist.prototype.repository.FirmwareRepository;
-import sirs.motorist.prototype.repository.MechanicRepository;
+import sirs.motorist.prototype.repository.UserRepository;
 import sirs.motorist.prototype.service.FirmwareService;
 import sirs.motorist.prototype.service.KeyStoreService;
 
@@ -23,7 +23,7 @@ public class FirmwareServiceImpl implements FirmwareService {
 
     private static final Logger logger = LoggerFactory.getLogger(FirmwareServiceImpl.class);
 
-    private final MechanicRepository mechanicRepository;
+    private final UserRepository userRepository;
     private final FirmwareRepository firmwareRepository;
     private final KeyStoreService keyStoreService;
 
@@ -31,8 +31,8 @@ public class FirmwareServiceImpl implements FirmwareService {
     private String privateKeyAlias;
 
     @Autowired
-    public FirmwareServiceImpl(MechanicRepository mechanicRepository, FirmwareRepository firmwareRepository, KeyStoreService keyStoreService) {
-        this.mechanicRepository = mechanicRepository;
+    public FirmwareServiceImpl(UserRepository userRepository, FirmwareRepository firmwareRepository, KeyStoreService keyStoreService) {
+        this.userRepository = userRepository;
         this.firmwareRepository = firmwareRepository;
         this.keyStoreService = keyStoreService;
     }
@@ -40,7 +40,7 @@ public class FirmwareServiceImpl implements FirmwareService {
     @Override
     public boolean checkMechanicSignature(FirmwareRequestDto firmwareDownloadRequest) {
         logger.info("Checking mechanic signature...");
-        Mechanic mechanic = mechanicRepository.findById(firmwareDownloadRequest.getMechanicId()).orElse(null);
+        User mechanic = userRepository.findByUserIdAndIsMechanicTrue(firmwareDownloadRequest.getMechanicId());
         if (mechanic == null) {
             logger.error("Mechanic not found...");
             return false;

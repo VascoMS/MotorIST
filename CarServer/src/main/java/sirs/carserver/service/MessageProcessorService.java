@@ -1,15 +1,10 @@
 package sirs.carserver.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
-import sirs.carserver.model.PairingSession;
-import sirs.carserver.model.User;
-import sirs.carserver.model.dto.ResponseDto;
 
 @Service
 public class MessageProcessorService {
@@ -17,6 +12,7 @@ public class MessageProcessorService {
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
     private static final String CODE_FIELD = "code";
+    private static final String USERID_FIELD = "userId";
     private static final String SUCCESS_FIELD = "success";
 
     private final PairingService pairingService;

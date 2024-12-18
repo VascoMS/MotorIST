@@ -5,21 +5,21 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
 @Getter
 @Setter
+@Document(collection = "firmwares")
 public class Firmware {
 
     @Id
-    private String id;
     private int version;
+    private String description;
 
-    public Firmware(String id, int version) {
-        this.id = id;
+    public Firmware(int version, String description) {
         this.version = version;
+        this.description = description;
     }
 
     public byte[] getAsByteArray() {
-        return (version + "").getBytes();
+        return (version + description).getBytes();
     }
 }

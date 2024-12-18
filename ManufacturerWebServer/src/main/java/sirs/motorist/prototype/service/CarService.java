@@ -1,5 +1,7 @@
 package sirs.motorist.prototype.service;
 
+import sirs.motorist.prototype.model.dto.PairingRequestDto;
+
 public interface CarService {
-    String getCurrentConfiguration();
+    Boolean checkPairingCodes(PairingRequestDto request);
 }

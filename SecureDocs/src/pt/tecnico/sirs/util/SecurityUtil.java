@@ -2,9 +2,11 @@ package pt.tecnico.sirs.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.tecnico.sirs.model.Nonce;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
@@ -24,6 +26,8 @@ public class SecurityUtil {
 
     // Asymmetric cipher: combination of algorithm, block processing, and padding
     public static final String ASYM_CIPHER = "RSA/ECB/PKCS1Padding";
+
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     public static String decipherContent(String base64Content, IvParameterSpec ivSpec, SecretKeySpec secretKey) throws Exception{
         logger.info("Deciphering content...");
@@ -100,6 +104,33 @@ public class SecurityUtil {
         }
     }
 
+    public static KeyStore loadKeyStore(String username, String password, String keyStorePath) throws Exception {
+        // Load the keystore
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        try (InputStream is = new FileInputStream(keyStorePath)) {
+            keyStore.load(is, password.toCharArray());
+        }
+        return keyStore;
+    }
+
+    public static void saveSecretKeyInKeyStore(KeyStore keyStore, String inputtedSecretKey, String username, String password, String keyStorePath) throws Exception {
+        // Create a SecretKeySpec from the inputted one
+        SecretKey secretKey = new SecretKeySpec(inputtedSecretKey.getBytes(), "AES");
+
+        // Store the SecretKey in the KeyStore
+        KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(secretKey);
+        KeyStore.PasswordProtection protection = new KeyStore.PasswordProtection(password.toCharArray());
+
+        // Store the secret key with an alias
+        String alias = username + "_secret";
+        keyStore.setEntry(alias, secretKeyEntry, protection);
+
+        // Save the updated KeyStore to the file
+        try(FileOutputStream os = new FileOutputStream(keyStorePath)) {
+            keyStore.store(os, password.toCharArray());
+        }
+    }
+
     /**
      * Load the public key from the file
      * @param publicKeyPath path to the public key file
@@ -153,12 +184,6 @@ public class SecurityUtil {
         }
     }
 
-    public String digest(byte[] data) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(data);
-        return Base64.getEncoder().encodeToString(hash);
-    }
-
     public static boolean verifySignature(byte[] data, String base64Signature, PublicKey publicKey, byte[] nonce, byte[] iv) throws Exception {
         logger.info("Verifying signature...");
         // Get a signature object
@@ -173,6 +198,16 @@ public class SecurityUtil {
         verifier.update(data);
         // Verify the signature
         return verifier.verify(decodedSignature);
+    }
+
+    public static Nonce generateNonce(int lengthInBytes) {
+        logger.info("Generating nonce...");
+        byte[] nonceBytes = new byte[lengthInBytes];
+        secureRandom.nextBytes(nonceBytes);
+        // Convert the nonce to a base64 string for easy transmission
+        String base64Random = Base64.getUrlEncoder().withoutPadding().encodeToString(nonceBytes);
+        long timestamp = System.currentTimeMillis();
+        return new Nonce(base64Random, timestamp);
     }
 
     public static byte[] serializeToByteArray(Serializable object) throws IOException {

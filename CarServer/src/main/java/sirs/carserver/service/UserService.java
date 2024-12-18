@@ -2,16 +2,20 @@ package sirs.carserver.service;
 
 import sirs.carserver.model.Config;
 import sirs.carserver.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sirs.carserver.repository.UserRepository;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuditService auditService;
+
+    private final UserRepository userRepository;
+
+    private final AuditService auditService;
+
+    public UserService(UserRepository userRepository, AuditService auditService) {
+        this.userRepository = userRepository;
+        this.auditService = auditService;
+    }
 
     public User createUser(String username) {
         User user = new User();

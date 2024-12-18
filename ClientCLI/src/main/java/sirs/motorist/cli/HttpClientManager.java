@@ -18,18 +18,13 @@ public class HttpClientManager {
 
     public static String executeHttpRequest(String url, String method, String jsonBody) {
         try {
-            switch (method) {
-                case "GET":
-                    return sendGetRequest(url);
-                case "POST":
-                    return sendPostRequest(url, jsonBody);
-                case "PUT":
-                    return sendPutRequest(url, jsonBody);
-                case "DELETE":
-                    return sendDeleteRequest(url);
-                default:
-                    return "Invalid HTTP method";
-            }
+            return switch (method) {
+                case "GET" -> sendGetRequest(url);
+                case "POST" -> sendPostRequest(url, jsonBody);
+                case "PUT" -> sendPutRequest(url, jsonBody);
+                case "DELETE" -> sendDeleteRequest(url);
+                default -> "Invalid HTTP method";
+            };
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }

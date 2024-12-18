@@ -120,13 +120,7 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder generateNonce(int lengthInBytes) throws IOException {
-        logger.info("Generating nonce...");
-        byte[] nonceBytes = new byte[lengthInBytes];
-        this.secureRandom.nextBytes(nonceBytes);
-        // Convert the nonce to a base64 string for easy transmission
-        String base64Random = Base64.getUrlEncoder().withoutPadding().encodeToString(nonceBytes);
-        long timestamp = System.currentTimeMillis();
-        Nonce newNonce = new Nonce(base64Random, timestamp);
+        Nonce newNonce = SecurityUtil.generateNonce(lengthInBytes);
         jsonObject.add(NONCE, newNonce.toJsonObject());
         this.nonce = SecurityUtil.serializeToByteArray(newNonce);
         return this;

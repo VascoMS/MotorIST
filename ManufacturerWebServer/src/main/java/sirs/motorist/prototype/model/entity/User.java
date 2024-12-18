@@ -8,16 +8,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Setter
 @Getter
-@Document
-public class Mechanic {
+@Document(collection = "users")
+public class User {
 
     @Id
-    private String id;
+    private String userId;
     private String publicKey;
+    private Boolean isMechanic;
 
-    public Mechanic(String id, String publicKey) {
-        this.id = id;
+    public User(String userId, String publicKey, Boolean isMechanic) {
+        this.userId = userId;
         this.publicKey = publicKey;
+        this.isMechanic = isMechanic;
     }
 }
 

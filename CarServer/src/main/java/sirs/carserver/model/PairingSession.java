@@ -1,11 +1,12 @@
 package sirs.carserver.model;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Map;
-import java.util.UUID;
 
-import com.google.gson.Gson;
 import lombok.Getter;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 @Getter
 public class PairingSession {
