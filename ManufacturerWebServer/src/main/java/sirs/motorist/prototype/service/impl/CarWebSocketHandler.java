@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class CarWebSocketHandler extends TextWebSocketHandler {
 
-    private ConcurrentHashMap<String, WebSocketSession> carSessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, WebSocketSession> carSessions = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

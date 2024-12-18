@@ -4,6 +4,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sirs.carserver.service.MessageProcessorService;
 
 import java.net.URI;
 import java.util.Timer;
@@ -17,9 +18,11 @@ public class CarWebSocketClient extends WebSocketClient {
     private static final int MAX_RETRIES = 5; // Maximum reconnection attempts
     private int reconnectAttempts = 0;
     private Timer reconnectTimer;
+    private final MessageProcessorService messageProcessorService;
 
-    public CarWebSocketClient(URI serverUri) {
+    public CarWebSocketClient(URI serverUri, MessageProcessorService messageProcessorService) {
         super(serverUri);
+        this.messageProcessorService = messageProcessorService;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         logger.info("Received message from server...");
-        logger.info("Message: {}", message);
+        messageProcessorService.processMessage(message);
     }
 
     @Override

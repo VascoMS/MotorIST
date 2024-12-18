@@ -153,6 +153,12 @@ public class SecurityUtil {
         }
     }
 
+    public String digest(byte[] data) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(data);
+        return Base64.getEncoder().encodeToString(hash);
+    }
+
     public static boolean verifySignature(byte[] data, String base64Signature, PublicKey publicKey, byte[] nonce, byte[] iv) throws Exception {
         logger.info("Verifying signature...");
         // Get a signature object
