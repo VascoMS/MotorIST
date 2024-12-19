@@ -9,15 +9,15 @@ import sirs.motorist.prototype.model.dto.PairingRequestDto;
 import sirs.motorist.prototype.service.CarService;
 
 @RestController
-@RequestMapping("/car")
-public class CarsController {
+@RequestMapping("/user/config")
+public class UserConfigController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CarsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserConfigController.class);
 
     CarService carService;
 
     @Autowired
-    public CarsController(CarService carService) {
+    public UserConfigController(CarService carService) {
         this.carService = carService;
     }
 
@@ -48,4 +48,5 @@ public class CarsController {
     public ResponseEntity<?> deleteConfig() {
         return null; //TODO: to implement
     }
+
 }

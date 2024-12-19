@@ -3,10 +3,12 @@ package sirs.carserver.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 
 @Getter
 @Setter
-public class Config {
+public class Config implements Serializable {
     private Long id;
 
     //ac

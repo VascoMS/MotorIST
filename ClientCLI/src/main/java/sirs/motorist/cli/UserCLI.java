@@ -9,7 +9,7 @@ import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.cli.dto.FirmwareRequestDto;
 import sirs.motorist.cli.dto.PairingRequestDto;
-import sirs.motorist.cli.model.SignedRequestData;
+import pt.tecnico.sirs.model.SignedRequestData;
 
 public class UserCLI {
     private static final String MANUFACTURER_URL = "http://localhost:8080/api"; //TODO: change to actual URL
@@ -179,7 +179,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath); // TODO: Do we need to load the keystore everytime?
 
         SignedRequestData srd = prepareAndSignTheContentToSend(chassisNumber, username, password, keyStore);
 

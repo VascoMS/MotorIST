@@ -12,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.*;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 public class ProtectedObjectBuilder {
 
@@ -35,6 +37,8 @@ public class ProtectedObjectBuilder {
     private byte[] iv;
 
     private byte[] nonce;
+
+    private List<String> additionalProperties;
 
     public ProtectedObjectBuilder() {
         this.secureRandom = new SecureRandom();
@@ -95,6 +99,14 @@ public class ProtectedObjectBuilder {
         return this;
     }
 
+    public ProtectedObjectBuilder addProperties(Map<String, String> properties){
+        for(Map.Entry<String, String> entry : properties.entrySet()){
+            this.jsonObject.addProperty(entry.getKey(), entry.getValue());
+            this.additionalProperties.add(entry.getValue());
+        }
+        return this;
+    }
+
     public ProtectedObjectBuilder generateHMAC(byte[] data, byte[] secretKey) throws Exception {
         logger.info("Generating HMAC...");
 
@@ -113,7 +125,7 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder signData(byte[] data, PrivateKey privateKey) throws Exception {
-        String base64Signature = SecurityUtil.signData(data, privateKey, this.nonce, this.iv);
+        String base64Signature = SecurityUtil.signData(data, privateKey, this.nonce, this.iv, this.additionalProperties.toArray(new String[0]));
         logger.info("Adding the signature to the JSON object...");
         jsonObject.addProperty(SIGNATURE, base64Signature);
         return this;

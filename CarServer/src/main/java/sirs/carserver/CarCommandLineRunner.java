@@ -1,20 +1,23 @@
 package sirs.carserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import sirs.carserver.config.CarWebSocketClient;
+import sirs.carserver.exception.PairingSessionException;
 import sirs.carserver.service.PairingService;
 
 import java.util.Scanner;
 
 @Component
 class CarCommandLineRunner implements CommandLineRunner {
-    PairingService pairingService;
-    CarWebSocketClient webSocketClient;
+    private static final Logger logger = LoggerFactory.getLogger(CarCommandLineRunner.class);
 
-    public CarCommandLineRunner(PairingService pairingService, CarWebSocketClient webSocketClient){
+    PairingService pairingService;
+
+    public CarCommandLineRunner(PairingService pairingService){
         this.pairingService = pairingService;
-        this.webSocketClient = webSocketClient;
     }
 
     @Override
@@ -29,10 +32,10 @@ class CarCommandLineRunner implements CommandLineRunner {
         }
         // Implement your CLI commands here
         System.out.println("Car Server is running in CLI mode!");
-        userCLI();
+        carCLI();
     }
 
-    private void userCLI() {
+    private void carCLI() {
         Scanner scanner = new Scanner(System.in);
         while(true) {
             System.out.println("Choose a command: ");
@@ -41,24 +44,26 @@ class CarCommandLineRunner implements CommandLineRunner {
             int command = scanner.nextInt();
             scanner.nextLine();
             switch (command) {
-                case 1:
+                case 1 -> {
                     System.out.println("Starting pair, please input the following code in your app:");
                     pairWithApp();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.println("Exiting...");
                     return;
-                default:
-                    System.out.println("Invalid command...");
+                }
+                default -> System.out.println("Invalid command...");
             }
         }
     }
 
     private void pairWithApp(){
-        String code = pairingService.createPairingSession();
-
-        System.out.println("Pairing code: " + code);
-
-
+        try {
+            String code = pairingService.createPairingSession();
+            System.out.println("Pairing code: " + code);
+        } catch (PairingSessionException e) {
+            logger.error("Error creating pairing session {}", e.getMessage());
+            System.out.println("Error creating pairing session...");
+        }
     }
 }
