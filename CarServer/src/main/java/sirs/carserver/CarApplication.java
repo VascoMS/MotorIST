@@ -20,13 +20,11 @@ public class CarApplication {
             // Create and save a User
             User user = new User();
             user.setUsername("john_doe");
-            user.setKmDriven(5000);
             user.setConfig("thisIsAConfig");
             repository.save(user);
             // Create and save a User2
             User user2 = new User();
             user.setUsername("john_2_doe");
-            user.setKmDriven(5002);
             user.setConfig("thisIsAConfig_2");
             repository.save(user2);
 

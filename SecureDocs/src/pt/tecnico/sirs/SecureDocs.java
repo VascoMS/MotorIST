@@ -29,7 +29,7 @@ public class SecureDocs {
 
             // Protect the content
             Protect protect = new Protect();
-            ProtectedObject protectedObject = protect.protect(secretKey, content);
+            ProtectedObject protectedObject = protect.protect(secretKey, content, true);
             System.out.println("Protected Object: ");
             System.out.println("  - Content: " + protectedObject.getContent());
             System.out.println("  - IV: " + protectedObject.getIv());

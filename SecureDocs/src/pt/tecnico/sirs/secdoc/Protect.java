@@ -21,28 +21,7 @@ public class Protect {
 
     public Protect() {}
 
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content) throws IOException {
-
-        // Read the data from the file
-        byte[] byteContent = SecurityUtil.serializeToByteArray(content);
-
-        //------------------------------BUILD PROTECTED OBJECT------------------------------------------
-        try {
-            ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
-            JsonObject protectedObject = protectedObjectBuilder
-                    .cipherContent(byteContent, secretKey)
-                    .generateNonce(8)
-                    .generateHMAC(byteContent, secretKey.getEncoded())
-                    .build();
-            return JSONUtil.parseJsonToClass(protectedObject, ProtectedObject.class);
-        } catch(Exception e){
-            logger.error("Failed to build protected object: {}", e.getMessage());
-            return null;
-        }
-
-    }
-
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, Map<String, String> additionalFields) throws IOException {
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, boolean hasNonce) throws IOException {
 
         // Read the data from the file
         byte[] byteContent = SecurityUtil.serializeToByteArray(content);
@@ -51,9 +30,38 @@ public class Protect {
         try {
             ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
             protectedObjectBuilder
-                    .cipherContent(byteContent, secretKey)
-                    .generateNonce(8)
-                    .addProperties(additionalFields)
+                    .cipherContent(byteContent, secretKey);
+
+            if (hasNonce) {
+                protectedObjectBuilder.generateNonce(8);
+            }
+
+            protectedObjectBuilder.generateHMAC(byteContent, secretKey.getEncoded());
+
+            return JSONUtil.parseJsonToClass(protectedObjectBuilder.build(), ProtectedObject.class);
+        } catch(Exception e){
+            logger.error("Failed to build protected object: {}", e.getMessage());
+            return null;
+        }
+
+    }
+
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, boolean hasNonce, Map<String, String> additionalFields) throws IOException {
+
+        // Read the data from the file
+        byte[] byteContent = SecurityUtil.serializeToByteArray(content);
+
+        //------------------------------BUILD PROTECTED OBJECT------------------------------------------
+        try {
+            ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
+            protectedObjectBuilder
+                    .cipherContent(byteContent, secretKey);
+
+            if (hasNonce) {
+                protectedObjectBuilder.generateNonce(8);
+            }
+
+            protectedObjectBuilder.addProperties(additionalFields)
                     .generateHMAC(byteContent, secretKey.getEncoded());
 
             return JSONUtil.parseJsonToClass(protectedObjectBuilder.build(), ProtectedObject.class);

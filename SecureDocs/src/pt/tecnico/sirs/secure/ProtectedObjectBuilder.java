@@ -36,7 +36,7 @@ public class ProtectedObjectBuilder {
 
     private byte[] iv;
 
-    private byte[] nonce;
+    private byte[] nonce = null;
 
     private List<String> additionalProperties;
 
@@ -113,8 +113,16 @@ public class ProtectedObjectBuilder {
         Mac mac = Mac.getInstance("HmacSHA256");
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey, "HmacSHA256");
         mac.init(secretKeySpec);
-        mac.update(this.nonce);
+        if (this.nonce != null) {
+            mac.update(this.nonce);
+        }
         mac.update(this.iv);
+
+        for (String field : this.additionalProperties) {
+            byte[] fieldBytes = field.getBytes();
+            mac.update(fieldBytes);
+        }
+
         byte[] hmacBytes = mac.doFinal(data);
         String base64hmac = Base64.getEncoder().encodeToString(hmacBytes);
 
@@ -125,7 +133,7 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder signData(byte[] data, PrivateKey privateKey) throws Exception {
-        String base64Signature = SecurityUtil.signData(data, privateKey, this.nonce, this.iv, this.additionalProperties.toArray(new String[0]));
+        String base64Signature = SecurityUtil.signData(data, privateKey, this.nonce, this.iv,  this.additionalProperties.toArray(new String[0]));
         logger.info("Adding the signature to the JSON object...");
         jsonObject.addProperty(SIGNATURE, base64Signature);
         return this;

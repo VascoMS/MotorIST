@@ -3,11 +3,10 @@ package sirs.carserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import sirs.carserver.config.CarWebSocketClient;
 import sirs.carserver.exception.PairingSessionException;
 import sirs.carserver.observer.Observer;
+import sirs.carserver.service.MessageProcessorService;
 import sirs.carserver.service.PairingService;
 
 import java.util.Scanner;
@@ -18,8 +17,9 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
 
     PairingService pairingService;
 
-    public CarCommandLineRunner(PairingService pairingService){
+    public CarCommandLineRunner(PairingService pairingService, MessageProcessorService messageProcessorService){
         this.pairingService = pairingService;
+        messageProcessorService.addObserver(this);
     }
 
     @Override
@@ -73,10 +73,15 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
     public void update(boolean pairingSuccess) {
         // TODO: clear key from console output
         if(pairingSuccess){
-            pairingService.
-            String output = "New secret key (DON'T SHARE WITH ANYONE): " + pairingService.getKeyBase64();
-            System.out.println(output);
-        } else{
+            try {
+                String key = pairingService.storeKey();
+                String output = "New secret key (DON'T SHARE WITH ANYONE): " + key;
+                System.out.println(output);
+            } catch (PairingSessionException e){
+                logger.error("Error storing key {}", e.getMessage());
+                System.out.println("Error storing key...");
+            }
+        } else {
             System.out.println("Failed to pair...");
         }
     }

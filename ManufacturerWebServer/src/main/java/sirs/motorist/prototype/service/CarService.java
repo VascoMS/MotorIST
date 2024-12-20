@@ -1,7 +1,7 @@
 package sirs.motorist.prototype.service;
 
-import sirs.motorist.prototype.model.dto.PairingRequestDto;
+import sirs.motorist.prototype.model.dto.UserPairRequestDto;
 
 public interface CarService {
-    Boolean checkPairingCodes(PairingRequestDto request);
+
 }

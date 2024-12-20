@@ -40,8 +40,8 @@ public class FirmwareServiceImpl implements FirmwareService {
     @Override
     public boolean checkMechanicSignature(FirmwareRequestDto firmwareDownloadRequest) {
         logger.info("Checking mechanic signature...");
-        User mechanic = userRepository.findByUserIdAndIsMechanicTrue(firmwareDownloadRequest.getMechanicId());
-        if (mechanic == null) {
+        User mechanic = userRepository.findByUserId(firmwareDownloadRequest.getMechanicId());
+        if (mechanic == null || !mechanic.isMechanic()) {
             logger.error("Mechanic not found...");
             return false;
         }

@@ -63,6 +63,17 @@ public class SecurityUtil {
         return new String(asymCipher.doFinal(cipheredSecretKey));
     }
 
+    public static byte[] hashData(byte[] data) {
+        logger.info("Hashing data...");
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(data);
+        } catch (NoSuchAlgorithmException e) {
+            logger.error("Error hashing data: " + e.getMessage());
+            return null;
+        }
+    }
+
     public static boolean verifyHMAC(byte[] data, byte[] secretKey, String expectedBase64HMAC, byte[] nonce, byte[] iv) throws Exception {
         logger.info("Verifying HMAC...");
 
@@ -113,6 +124,15 @@ public class SecurityUtil {
         return keyStore;
     }
 
+    public static SecretKeySpec loadSecretKeyFromKeyStore(String username, String password, KeyStore keyStore) throws Exception {
+        SecretKey secretKey = (SecretKey) keyStore.getKey(username + "_secret", password.toCharArray());
+        return new SecretKeySpec(secretKey.getEncoded(), "AES");
+    }
+
+    public static PrivateKey loadPrivateKeyFromKeyStore(String username, String password, KeyStore keyStore) throws Exception {
+        return (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
+    }
+
     public static void saveSecretKeyInKeyStore(KeyStore keyStore, String inputtedSecretKey, String username, String password, String keyStorePath) throws Exception {
         // Create a SecretKeySpec from the inputted one
         SecretKey secretKey = new SecretKeySpec(inputtedSecretKey.getBytes(), "AES");
@@ -160,7 +180,7 @@ public class SecurityUtil {
         }
     }
 
-    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce, String... additionalFields) throws Exception {
+    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce, byte[] iv, String... additionalFields) throws Exception {
         logger.info("Signing data...");
         // Get a signature object
         Signature signer = Signature.getInstance("SHA256withRSA");
@@ -169,6 +189,7 @@ public class SecurityUtil {
 
         // Update the signature object with the nonce, iv (if necessary) and data
         updateSignature(signer, nonce);
+        updateSignature(signer, iv);
         for (String field : additionalFields) {
             byte[] fieldBytes = field.getBytes();
             signer.update(fieldBytes);

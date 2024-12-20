@@ -6,9 +6,17 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 import pt.tecnico.sirs.model.Nonce;
+import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.util.SecurityUtil;
+import sirs.motorist.cli.dto.ConfigurationDto;
+import sirs.motorist.cli.dto.ConfigurationIdRequestDto;
 import sirs.motorist.cli.dto.FirmwareRequestDto;
 import sirs.motorist.cli.dto.PairingRequestDto;
+import sirs.motorist.cli.model.Config;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class UserCLI {
     private static final String MANUFACTURER_URL = "http://localhost:8080/api"; //TODO: change to actual URL
@@ -63,13 +71,13 @@ public class UserCLI {
                         pairCar(scanner);
                         break;
                     case 2:
-                        getConfig();
+                        getConfig(scanner);
                         break;
                     case 3:
                         updateConfig(scanner);
                         break;
                     case 4:
-                        deleteConfig();
+                        deleteConfig(scanner);
                         break;
                     case 5:
                         System.out.println("Logging out...");
@@ -137,9 +145,8 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
-        // Create the request DTO
         PairingRequestDto dto = new PairingRequestDto(username, pairCode);
         String body = gson.toJson(dto);
 
@@ -155,16 +162,83 @@ public class UserCLI {
         System.out.println("Secret key stored successfully");
     }
 
-    private static void getConfig() throws Exception {
-        //TODO: Implement method
+    private static void getConfig(Scanner scanner) {
+        System.out.println("Enter the car chassis number: ");
+        String carId = scanner.nextLine();
+
+        String url = MANUFACTURER_URL + "/user/readConfig";
+
+        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        String body = gson.toJson(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+
+        // TODO: Unprotect and Check
+
+        System.out.println(response);
+
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
-        //TODO: Implement method
+        System.out.println("Enter the car chassis number: ");
+        String carId = scanner.nextLine();
+
+        System.out.print("Enter AC out1 value: ");
+        int out1 = scanner.nextInt();
+
+        System.out.print("Enter AC out2 value: ");
+        int out2 = scanner.nextInt();
+
+        System.out.print("Enter Seat pos1 value: ");
+        int pos1 = scanner.nextInt();
+
+        System.out.print("Enter Seat pos3 value: ");
+        int pos3 = scanner.nextInt();
+
+        // Clear the newline from the buffer
+        scanner.nextLine();
+
+        String url = MANUFACTURER_URL + "/user/updateConfig";
+        String keyStorePath = String.format("keystore/%s.jks", username);
+
+        // Load the key store
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+
+        Config config = new Config(out1,out2,pos1,pos3);
+        Protect protect = new Protect();
+
+        byte[] configBytes = SecurityUtil.serializeToByteArray(config);
+        ProtectedObject protectedObj = protect.protect(secretKeySpec, configBytes, true);
+
+        ConfigurationDto dto = new ConfigurationDto(
+                username,
+                carId,
+                protectedObj.getContent(),
+                protectedObj.getIv(),
+                protectedObj.getNonce(),
+                protectedObj.getHmac()
+        );
+        String body = gson.toJson(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+
+        System.out.println(response);
     }
 
-    private static void deleteConfig() throws Exception {
-        //TODO: Implement method
+    private static void deleteConfig(Scanner scanner) throws Exception {
+        System.out.println("Enter the car chassis number: ");
+        String carId = scanner.nextLine();
+
+        String url = MANUFACTURER_URL + "/user/deleteConfig";
+
+        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        String body = gson.toJson(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+
+        System.out.println(response);
     }
 
     private static void downloadFirmware(Scanner scanner) throws Exception {
@@ -175,10 +249,10 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath); // TODO: Do we need to load the keystore everytime?
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath); // TODO: Do we need to load the keystore everytime?
 
         // Get the private key
-        PrivateKey privateKey = (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
+        PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);
 
         // Generate a nonce
         Nonce nonce = SecurityUtil.generateNonce(8);
@@ -187,7 +261,7 @@ public class UserCLI {
         byte[] nonceBytes = SecurityUtil.serializeToByteArray(nonce);
 
         // Sign the data
-        String signedData = SecurityUtil.signData(chassisNumber.getBytes(), privateKey, nonceBytes);
+        String signedData = SecurityUtil.signData(chassisNumber.getBytes(), privateKey, nonceBytes, null);
 
         // Create the request DTO
         FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, chassisNumber);

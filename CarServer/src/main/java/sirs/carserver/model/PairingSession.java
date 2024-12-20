@@ -6,7 +6,6 @@ import java.security.SecureRandom;
 import lombok.Getter;
 
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 @Getter

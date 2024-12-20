@@ -1,39 +1,53 @@
 package sirs.carserver.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Protect;
 import sirs.carserver.model.Config;
 import sirs.carserver.model.User;
 import org.springframework.stereotype.Service;
 import sirs.carserver.repository.UserRepository;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.util.Map;
+
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final KeyStoreService keyStoreService;
+    private final String carId;
 
-    private final AuditService auditService;
-
-    public UserService(UserRepository userRepository, AuditService auditService) {
+    public UserService(UserRepository userRepository, KeyStoreService keyStoreService, @Value("${car.id}") String carId) {
         this.userRepository = userRepository;
-        this.auditService = auditService;
+        this.keyStoreService = keyStoreService;
+        this.carId = carId;
     }
 
-    public User createUser(String username) {
-        User user = new User();
-        user.setUsername(username);
+    public void createUser(String username) throws IOException {
         Config config = new Config();
-        //TODO: Cipher config with generated secret key
-        return userRepository.save(user);
+
+        Protect protect = new Protect();
+        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
+
+        Map<String, String> additionalFields = Map.of("carId", carId);
+        additionalFields.put("username", username);
+
+        ProtectedObject protectedConfig = protect.protect(secretKeySpec, config, false, additionalFields);
+
+        User user = new User(username, protectedConfig.getContent(), protectedConfig.getIv());
+
+        userRepository.save(user);
     }
 
-    //TODO whenever we edit a config or sth, an audit needs to be created + the config is a new audit, not an edit -> needs to be updated on the user
-
-    //TODO the configUpdate needs to create a new config at some point
-    public void updateConfig(String username, Config configUpdate) {
+    //TODO: finish this shit
+    public void updateConfig(String username, String configUpdate) {
         User user = userRepository.findByUsername(username);
-        //user.setConfig(configUpdate);
+        user.setConfig(configUpdate);
         userRepository.save(user);
 
-        //create the new audit
-        auditService.createAudit(user, configUpdate);
+        //TODO: create the new audit (append to audit file)
+
     }
 }

@@ -9,6 +9,7 @@ import sirs.carserver.service.MessageProcessorService;
 import java.net.URI;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
 
 
 public class CarWebSocketClient extends WebSocketClient {
@@ -34,7 +35,8 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         logger.info("Received message from server...");
-        messageProcessorService.processMessage(message);
+        boolean success = messageProcessorService.processMessage(message);
+        // Send response to server
     }
 
     @Override
@@ -47,6 +49,13 @@ public class CarWebSocketClient extends WebSocketClient {
     public void onError(Exception ex) {
         logger.error("Error whilst connection was open: {}", ex.getMessage());
         attemptReconnect();
+    }
+
+    public CompletableFuture<Boolean> sendRequest(String payload) {
+        CompletableFuture<Boolean> future = messageProcessorService.addPendingRequest();
+        // Send the message
+        send(payload);
+        return future;
     }
 
     private void attemptReconnect() {

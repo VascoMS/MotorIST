@@ -8,13 +8,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class GeneralCarInfo {
+public class    GeneralCarInfo {
     @Id
-    private Long id = 1L; // Default ID for singleton
+    private String id = "thisACarId";
 
-
+    private boolean isLocked;
     private String firmwareVersion;
     private int batteryLevel;
-
-    private String chassisNumber;
 }

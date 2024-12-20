@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
 import pt.tecnico.sirs.util.SecurityUtil;
 
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
@@ -34,6 +36,18 @@ public class KeyStoreService {
     public PrivateKey getPrivateKey(String alias) throws Exception {
         logger.info("Getting private key from keystore...");
         return (PrivateKey) keyStore.getKey(alias, keystorePassword.toCharArray());
+    }
+
+    public SecretKeySpec getSecretKeySpec(String alias){
+        logger.info("Getting secret key from keystore...");
+        // Get the key from the keystore
+        try {
+            Key key = keyStore.getKey(alias, keystorePassword.toCharArray());
+            return new SecretKeySpec(key.getEncoded(), key.getAlgorithm());
+        } catch (Exception e) {
+            logger.error("Failed to get secret key from keystore.", e);
+            return null;
+        }
     }
 
     public void storeNewKey(SecretKeySpec secretKey, String userId) throws Exception {

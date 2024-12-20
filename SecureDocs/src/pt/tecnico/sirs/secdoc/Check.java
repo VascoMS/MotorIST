@@ -19,7 +19,7 @@ public class Check {
 
     public Check() {}
 
-    public boolean check(ProtectedObject protectedObject, SecretKey secretKey) {
+    public boolean check(ProtectedObject protectedObject, SecretKey secretKey, boolean hasNonce) {
 
         // Extract the content and signature from the json object
         String contentBase64 = protectedObject.getContent();
@@ -44,7 +44,10 @@ public class Check {
         }
         nonceCleanup();
 
-        boolean nonceValid = verifyNonce(nonce);
+        boolean nonceValid = true;
+        if (hasNonce) {
+            nonceValid = verifyNonce(nonce);
+        }
         boolean isValid = hmacValid && nonceValid;
         if (isValid) {
             logger.info("Everything adds up! :D");
@@ -55,7 +58,7 @@ public class Check {
         return isValid;
     }
 
-    private boolean verifyNonce(Nonce nonce) {
+    public boolean verifyNonce(Nonce nonce) {
         logger.info("Verifying nonce...");
         long timeDelta = System.currentTimeMillis() - nonce.timestamp();
         if (timeDelta > MAX_TIMEDELTA) {

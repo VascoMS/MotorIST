@@ -1,17 +1,13 @@
-package sirs.motorist.prototype.model.entity;
+package sirs.motorist.cli.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import pt.tecnico.sirs.model.Nonce;
 
 @Getter
 @Setter
-@Document(collection = "configs")
-public class Configuration {
+public class ConfigurationDto {
 
-    @Id
     private String userId;
     private String carId;
     private String configuration;
@@ -19,7 +15,7 @@ public class Configuration {
     private Nonce nonce;
     private String hmac;
 
-    public Configuration(String userId, String carId, String configuration, String iv, Nonce nonce, String hmac) {
+    public ConfigurationDto(String userId, String carId, String configuration, String iv, Nonce nonce, String hmac) {
         this.userId = userId;
         this.carId = carId;
         this.configuration = configuration;

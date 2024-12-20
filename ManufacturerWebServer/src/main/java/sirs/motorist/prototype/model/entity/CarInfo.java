@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Document(collection = "cars")
 public class CarInfo {
-
     private String carId;
     private String firmwareVersion;
     private int batteryLevel;

@@ -8,7 +8,7 @@ import pt.tecnico.sirs.model.Nonce;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PairingRequestDto {
+public class UserPairRequestDto {
     private String userId;
     private String userSignature;
     private Nonce nonce;

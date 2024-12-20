@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.tecnico.sirs.model.Nonce;
 
 public class JSONUtil {
 
@@ -43,5 +44,13 @@ public class JSONUtil {
 
     public static <T> T parseJsonToClass(JsonObject jsonObject, Class<T> classOfT) {
         return gson.fromJson(jsonObject, classOfT);
+    }
+
+    public static <T> T parseJsonToClass(String jsonString, Class<T> classOfT) {
+        return gson.fromJson(jsonString, classOfT);
+    }
+
+    public static <T> String parseClassToJsonString(T object) {
+        return gson.toJson(object);
     }
 }
