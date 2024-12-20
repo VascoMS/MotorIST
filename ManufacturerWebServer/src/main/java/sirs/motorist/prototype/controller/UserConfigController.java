@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import sirs.motorist.prototype.model.dto.ConfigurationDto;
 import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
 import sirs.motorist.prototype.model.dto.PairingRequestDto;
-import sirs.motorist.prototype.service.CarService;
+import sirs.motorist.prototype.model.entity.Configuration;
+import sirs.motorist.prototype.service.UserConfigService;
 
 @RestController
 @RequestMapping("/user")
@@ -48,8 +49,11 @@ public class UserConfigController {
         return ResponseEntity.ok("Configuration updated successfully");
     }
 
-    @DeleteMapping("/deleteConfig")
-    public ResponseEntity<?> deleteConfig() {
-        return null; //TODO: to implement
+    @PutMapping("/resetConfig")
+    public ResponseEntity<?> resetConfig(@RequestBody ConfigurationIdRequestDto request) {
+        if(!userConfigService.resetConfiguration(request.getUserId(), request.getCarId())) {
+            return ResponseEntity.badRequest().body("Error resetting the configuration");
+        }
+        return ResponseEntity.ok("Configuration was reset successfully");
     }
 }

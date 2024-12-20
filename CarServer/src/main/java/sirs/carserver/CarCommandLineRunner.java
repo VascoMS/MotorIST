@@ -3,6 +3,7 @@ package sirs.carserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import sirs.carserver.config.CarWebSocketClient;
 import sirs.carserver.exception.PairingSessionException;

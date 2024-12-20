@@ -14,11 +14,15 @@ public class User {
     @Id
     private String userId;
     private String publicKey;
-    private Boolean isMechanic;
 
-    public User(String userId, String publicKey, Boolean isMechanic) {
+    public User(String userId, String publicKey) {
         this.userId = userId;
         this.publicKey = publicKey;
+    }
+
+    public boolean isMechanic(){
+        // Only mechanics have a public key
+        return !publicKey.isEmpty();
     }
 }
 
