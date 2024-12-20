@@ -160,7 +160,7 @@ public class SecurityUtil {
         }
     }
 
-    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce, byte[] iv, String... additionalFields) throws Exception {
+    public static String signData(byte[] data, PrivateKey privateKey, byte[] nonce, String... additionalFields) throws Exception {
         logger.info("Signing data...");
         // Get a signature object
         Signature signer = Signature.getInstance("SHA256withRSA");
@@ -169,7 +169,6 @@ public class SecurityUtil {
 
         // Update the signature object with the nonce, iv (if necessary) and data
         updateSignature(signer, nonce);
-        updateSignature(signer, iv);
         for (String field : additionalFields) {
             byte[] fieldBytes = field.getBytes();
             signer.update(fieldBytes);

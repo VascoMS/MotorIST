@@ -21,7 +21,7 @@ public class Protect {
 
     public Protect() {}
 
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, PrivateKey privkey) throws IOException {
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content) throws IOException {
 
         // Read the data from the file
         byte[] byteContent = SecurityUtil.serializeToByteArray(content);
@@ -32,7 +32,7 @@ public class Protect {
             JsonObject protectedObject = protectedObjectBuilder
                     .cipherContent(byteContent, secretKey)
                     .generateNonce(8)
-                    .signData(byteContent, privkey)
+                    .generateHMAC(byteContent, secretKey.getEncoded())
                     .build();
             return JSONUtil.parseJsonToClass(protectedObject, ProtectedObject.class);
         } catch(Exception e){
@@ -42,7 +42,7 @@ public class Protect {
 
     }
 
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, PrivateKey privkey, Map<String, String> additionalFields) throws IOException {
+    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, Map<String, String> additionalFields) throws IOException {
 
         // Read the data from the file
         byte[] byteContent = SecurityUtil.serializeToByteArray(content);
@@ -54,7 +54,7 @@ public class Protect {
                     .cipherContent(byteContent, secretKey)
                     .generateNonce(8)
                     .addProperties(additionalFields)
-                    .signData(byteContent, privkey);
+                    .generateHMAC(byteContent, secretKey.getEncoded());
 
             return JSONUtil.parseJsonToClass(protectedObjectBuilder.build(), ProtectedObject.class);
         } catch(Exception e){

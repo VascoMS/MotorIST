@@ -11,5 +11,5 @@ public class ProtectedObject {
     private String content;
     private String iv;
     private Nonce nonce;
-    private String signature;
+    private String hmac;
 }

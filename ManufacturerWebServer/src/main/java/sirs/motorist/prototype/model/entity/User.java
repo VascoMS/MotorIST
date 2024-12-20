@@ -19,7 +19,6 @@ public class User {
     public User(String userId, String publicKey, Boolean isMechanic) {
         this.userId = userId;
         this.publicKey = publicKey;
-        this.isMechanic = isMechanic;
     }
 }
 

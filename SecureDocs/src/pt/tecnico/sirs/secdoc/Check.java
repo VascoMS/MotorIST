@@ -6,7 +6,7 @@ import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.SecurityUtil;
 
-import java.security.PublicKey;
+import javax.crypto.SecretKey;
 import java.util.*;
 
 public class Check {
@@ -19,22 +19,22 @@ public class Check {
 
     public Check() {}
 
-    public boolean check(ProtectedObject protectedObject, PublicKey pubkey) {
+    public boolean check(ProtectedObject protectedObject, SecretKey secretKey) {
 
         // Extract the content and signature from the json object
         String contentBase64 = protectedObject.getContent();
         // Turned it into a Nonce
         Nonce nonce = protectedObject.getNonce();
         byte[] iv =  Base64.getDecoder().decode(protectedObject.getIv());
-        String signature = protectedObject.getSignature();
+        String hmac = protectedObject.getHmac();
         byte[] content = Base64.getDecoder().decode(contentBase64);
 
-        boolean signatureValid;
+        boolean hmacValid;
         try {
-            signatureValid = SecurityUtil.verifySignature(
+            hmacValid = SecurityUtil.verifyHMAC(
                     content,
-                    signature,
-                    pubkey,
+                    secretKey.getEncoded(),
+                    hmac,
                     SecurityUtil.serializeToByteArray(nonce),
                     iv
             );
@@ -45,11 +45,11 @@ public class Check {
         nonceCleanup();
 
         boolean nonceValid = verifyNonce(nonce);
-        boolean isValid = signatureValid && nonceValid;
+        boolean isValid = hmacValid && nonceValid;
         if (isValid) {
             logger.info("Everything adds up! :D");
         } else {
-            logger.info("Some verification failed :c\n  - HMAC: {}\n  - Nonce: {}", signatureValid, nonceValid);
+            logger.info("Some verification failed :c\n  - HMAC: {}\n  - Nonce: {}", hmacValid, nonceValid);
         }
 
         return isValid;

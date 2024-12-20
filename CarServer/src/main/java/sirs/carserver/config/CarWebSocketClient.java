@@ -53,7 +53,7 @@ public class CarWebSocketClient extends WebSocketClient {
         if (reconnectAttempts < MAX_RETRIES) {
             reconnectAttempts++;
             int reconnectDelay = 1000 * reconnectAttempts; // Exponential backoff
-            logger.info("Reconnecting in " + reconnectDelay / 1000 + " seconds...");
+            logger.info("Reconnecting in {} seconds...", reconnectDelay / 1000);
 
             // Schedule the reconnection attempt after the delay
             if (reconnectTimer != null) {

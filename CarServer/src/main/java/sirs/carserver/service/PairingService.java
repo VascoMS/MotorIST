@@ -70,14 +70,12 @@ public class PairingService {
     }
 
     private String buildJsonPayload(PairingSession pairingSession) {
-        // TODO: We need to create a protected object with the ciphered config, nonce, code, carId and a signature of all these properties
+        // TODO: We need to create a protected object with the ciphered config, nonce, code, carId and a hmac of all these properties
         try {
-            // Get the private key
-            PrivateKey privateKey = keyStoreService.getPrivateKey(carId);
             Protect protector = new Protect();
             // Additional fields to be included in the protected object
             Map<String, String> additionalFields = Map.of("carId", carId, "code", pairingSession.getCode());
-            ProtectedObject protectedObject = protector.protect(pairingSession.getSecretKey(), pairingSession.getDefaultConfig(), privateKey, additionalFields);
+            ProtectedObject protectedObject = protector.protect(pairingSession.getSecretKey(), pairingSession.getDefaultConfig(), additionalFields);
             Gson gson = new Gson();
             return gson.toJson(protectedObject);
         } catch (Exception e) {
@@ -93,6 +91,10 @@ public class PairingService {
         return pairingSession.getCode().equals(code);
     }
 
+    public boolean hasActivePairingSession(){
+        return pairingSession != null;
+    }
+
     public void endPairSession() {
         pairingSession = null;
     }
@@ -100,6 +102,7 @@ public class PairingService {
     private void cleanupExpiredRequests() {
         long now = System.currentTimeMillis();
         if(pairingSession != null && (now - pairingSession.getTimestamp()) > TimeUnit.MINUTES.toMillis(PAIRING_SESSION_TIMEOUT)) {
+            System.out.println("Pairing session timed out...");
             endPairSession();
         }
     }

@@ -9,14 +9,12 @@ import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.cli.dto.FirmwareRequestDto;
 import sirs.motorist.cli.dto.PairingRequestDto;
-import pt.tecnico.sirs.model.SignedRequestData;
 
 public class UserCLI {
     private static final String MANUFACTURER_URL = "http://localhost:8080/api"; //TODO: change to actual URL
     private static final Gson gson = new Gson();
     private static String username;
     private static String password;
-    private static boolean isMechanic;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -43,12 +41,6 @@ public class UserCLI {
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-            }
-
-            if (isMechanic) {
-                mechanicCLI(scanner);
-            } else {
-                userCLI(scanner);
             }
         }
     }
@@ -123,12 +115,18 @@ public class UserCLI {
         System.out.println("2. User");
 
         int role = scanner.nextInt();
-        isMechanic = role == 1;
+        scanner.nextLine();
 
         System.out.print("Enter username: ");
         username = scanner.nextLine();
         System.out.println("Password: ");
         password = scanner.nextLine();
+
+        if (role == 1) {
+            mechanicCLI(scanner);
+        } else {
+            userCLI(scanner);
+        }
     }
 
     private static void pairCar(Scanner scanner) throws Exception {
@@ -141,10 +139,8 @@ public class UserCLI {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath);
 
-        SignedRequestData srd = prepareAndSignTheContentToSend(pairCode, username, password, keyStore);
-
         // Create the request DTO
-        PairingRequestDto dto = new PairingRequestDto(username, srd.signature(), srd.nonce(), pairCode);
+        PairingRequestDto dto = new PairingRequestDto(username, pairCode);
         String body = gson.toJson(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
@@ -181,29 +177,24 @@ public class UserCLI {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(username, password, keyStorePath); // TODO: Do we need to load the keystore everytime?
 
-        SignedRequestData srd = prepareAndSignTheContentToSend(chassisNumber, username, password, keyStore);
-
-        // Create the request DTO
-        FirmwareRequestDto dto = new FirmwareRequestDto(username, srd.signature(), srd.nonce(), chassisNumber);
-        String body = gson.toJson(dto);
-
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
-
-        System.out.println(response);
-    }
-
-    private static SignedRequestData prepareAndSignTheContentToSend(String data, String username, String password, KeyStore keyStore) throws Exception {
         // Get the private key
         PrivateKey privateKey = (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
 
         // Generate a nonce
         Nonce nonce = SecurityUtil.generateNonce(8);
 
+        // Serialize the nonce if mechanico
         byte[] nonceBytes = SecurityUtil.serializeToByteArray(nonce);
 
         // Sign the data
-        String signedData = SecurityUtil.signData(data.getBytes(), privateKey, nonceBytes, null);
+        String signedData = SecurityUtil.signData(chassisNumber.getBytes(), privateKey, nonceBytes);
 
-        return new SignedRequestData(signedData, nonce);
+        // Create the request DTO
+        FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, chassisNumber);
+        String body = gson.toJson(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+
+        System.out.println(response);
     }
 }

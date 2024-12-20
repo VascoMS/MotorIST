@@ -29,12 +29,12 @@ public class SecureDocs {
 
             // Protect the content
             Protect protect = new Protect();
-            ProtectedObject protectedObject = protect.protect(secretKey, content, privateKey);
+            ProtectedObject protectedObject = protect.protect(secretKey, content);
             System.out.println("Protected Object: ");
             System.out.println("  - Content: " + protectedObject.getContent());
             System.out.println("  - IV: " + protectedObject.getIv());
             System.out.println("  - Nonce: " + protectedObject.getNonce());
-            System.out.println("  - Signature: " + protectedObject.getSignature());
+            System.out.println("  - HMAC: " + protectedObject.getHmac());
 
             // Unprotect the content
             Unprotect unprotect = new Unprotect();
@@ -43,11 +43,11 @@ public class SecureDocs {
             System.out.println("  - Content: " + unprotectedContent.getContent());
             System.out.println("  - IV: " + unprotectedContent.getIv());
             System.out.println("  - Nonce: " + unprotectedContent.getNonce());
-            System.out.println("  - Signature: " + unprotectedContent.getSignature());
+            System.out.println("  - HMAC: " + unprotectedContent.getHmac());
 
             // Check the content
             Check check = new Check();
-            boolean isValid = check.check(protectedObject, publicKey);
+            boolean isValid = check.check(protectedObject, secretKey);
             System.out.println("Is the content valid? " + isValid);
 
         } catch (Exception e) {

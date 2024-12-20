@@ -9,14 +9,10 @@ import pt.tecnico.sirs.model.Nonce;
 public class PairingRequestDto {
 
     private String userId;
-    private String userSignature;
-    private Nonce nonce;
     private String pairCode;
 
-    public PairingRequestDto(String userId, String userSignature, Nonce nonce, String pairCode) {
+    public PairingRequestDto(String userId, String pairCode) {
         this.userId = userId;
-        this.userSignature = userSignature;
-        this.nonce = nonce;
         this.pairCode = pairCode;
     }
 }

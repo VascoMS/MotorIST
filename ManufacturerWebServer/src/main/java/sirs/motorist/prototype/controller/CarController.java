@@ -1,6 +1,5 @@
 package sirs.motorist.prototype.controller;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,5 +14,4 @@ public class CarController {
         // TODO: Store pairing session in memory for posterior validation against user code
         return ResponseEntity.ok("Pairing session initiated");
     }
-
 }
