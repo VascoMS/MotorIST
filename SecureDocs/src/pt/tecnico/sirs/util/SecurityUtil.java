@@ -104,7 +104,7 @@ public class SecurityUtil {
         }
     }
 
-    public static KeyStore loadKeyStore(String username, String password, String keyStorePath) throws Exception {
+    public static KeyStore loadKeyStore(String password, String keyStorePath) throws Exception {
         // Load the keystore
         KeyStore keyStore = KeyStore.getInstance("JKS");
         try (InputStream is = new FileInputStream(keyStorePath)) {

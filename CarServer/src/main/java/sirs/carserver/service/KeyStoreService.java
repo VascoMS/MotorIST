@@ -5,9 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
+import pt.tecnico.sirs.util.SecurityUtil;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.PrivateKey;
 
 @Service
@@ -17,27 +21,37 @@ public class KeyStoreService {
 
     private final KeyStore keyStore;
 
+    private static final String KEYSTORE_PATH = "keystore/keystore.jks";
+
     private final String keystorePassword;
 
-    public KeyStoreService(@Value("classpath:keystore.jks") Resource keystoreResource,
-                               @Value("${keystore.password}") String keystorePassword) throws Exception {
+    public KeyStoreService(@Value("${keystore.password}") String keystorePassword) throws Exception {
         // Load the keystore securely
         this.keystorePassword = keystorePassword;
-        this.keyStore = loadKeyStore(keystoreResource, keystorePassword);
-    }
-
-    private KeyStore loadKeyStore(Resource keystoreResource, String keystorePassword) throws Exception {
-        logger.info("Loading keystore...");
-        KeyStore keyStore = KeyStore.getInstance("JKS");
-        try (InputStream is = keystoreResource.getInputStream()) {
-            keyStore.load(is, keystorePassword.toCharArray());
-        }
-        return keyStore;
+        this.keyStore = SecurityUtil.loadKeyStore(keystorePassword, KEYSTORE_PATH);
     }
 
     public PrivateKey getPrivateKey(String alias) throws Exception {
         logger.info("Getting private key from keystore...");
         return (PrivateKey) keyStore.getKey(alias, keystorePassword.toCharArray());
+    }
+
+    public void storeNewKey(SecretKeySpec secretKey, String userId) throws Exception {
+        logger.info("Storing new key in keystore...");
+
+        KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(secretKey);
+
+        KeyStore.PasswordProtection keyPassword = new KeyStore.PasswordProtection(keystorePassword.toCharArray());
+
+        keyStore.setEntry(userId, secretKeyEntry, keyPassword);
+
+        try (FileOutputStream keystoreFile = new FileOutputStream("keystore.jks")) {
+            keyStore.store(keystoreFile, keystorePassword.toCharArray());
+            logger.info("New key stored in keystore successfully.");
+        } catch (Exception e) {
+            logger.error("Failed to store key in keystore.", e);
+            throw e;
+        }
     }
 }
 

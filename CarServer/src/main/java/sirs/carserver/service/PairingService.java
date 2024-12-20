@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.PrivateKey;
+import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -105,6 +106,14 @@ public class PairingService {
             System.out.println("Pairing session timed out...");
             endPairSession();
         }
+    }
+
+    public String getKeyBase64(){
+       return Base64.getEncoder().encodeToString(pairingSession.getSecretKey().getEncoded());
+    }
+
+    public String storeKey(){
+
     }
 }
 
