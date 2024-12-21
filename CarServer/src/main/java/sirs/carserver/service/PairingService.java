@@ -68,7 +68,7 @@ public class PairingService {
         try {
             Protect protector = new Protect();
             // Additional fields to be included in the protected object
-            Map<String, String> additionalFields = Map.of("carId", carId, "code", pairingSession.getCode());
+            Map<String, String> additionalFields = Map.of("operation","initpair", "carId", carId, "code", pairingSession.getCode());
             ProtectedObject protectedObject = protector.protect(pairingSession.getSecretKey(), pairingSession.getDefaultConfig(), true, additionalFields);
             Gson gson = new Gson();
             return gson.toJson(protectedObject);

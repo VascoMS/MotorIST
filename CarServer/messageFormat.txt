@@ -70,7 +70,8 @@ Operations car -> server:
 
 {
     reqId: 2
-    operation: "reposne"
+    operation: "response"
+    success: true/false
 }
 
 Response messages:

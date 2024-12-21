@@ -59,8 +59,8 @@ public class MessageProcessorService implements Subject {
     }
 
     public void pairOperation(JsonObject messageJson) {
-        String code = messageJson.get(CODE_FIELD).getAsString();
-        boolean success = Boolean.parseBoolean(messageJson.get(SUCCESS_FIELD).getAsString());
+        String code = messageJson.get(WebSocketOpsConsts.CODE_FIELD).getAsString();
+        boolean success = Boolean.parseBoolean(messageJson.get(WebSocketOpsConsts.SUCCESS_FIELD).getAsString());
         boolean codeMatches = pairingService.checkPairingSession(code);
         boolean pairResult = success && codeMatches;
         if(pairResult){
