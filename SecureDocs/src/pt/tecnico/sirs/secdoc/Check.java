@@ -42,7 +42,6 @@ public class Check {
             logger.error("Failed to verify hmac: {}", e.getMessage());
             return false;
         }
-        nonceCleanup();
 
         boolean nonceValid = true;
         if (hasNonce) {
@@ -60,11 +59,14 @@ public class Check {
 
     public boolean verifyNonce(Nonce nonce) {
         logger.info("Verifying nonce...");
+        nonceCleanup();
         long timeDelta = System.currentTimeMillis() - nonce.timestamp();
         if (timeDelta > MAX_TIMEDELTA) {
             return false;
         }
-        return !nonces.containsKey(nonce.base64Random());
+        boolean valid = !nonces.containsKey(nonce.base64Random());
+        nonces.put(nonce.base64Random(), nonce.timestamp());
+        return valid;
     }
 
     private synchronized void nonceCleanup() {

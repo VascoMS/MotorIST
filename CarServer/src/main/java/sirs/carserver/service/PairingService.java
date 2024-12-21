@@ -29,6 +29,8 @@ public class PairingService {
     private static final String PAIRING_URI = "http://localhost:8443/car/pair";
     @Value("${car.id}")
     private String carId;
+    @Value("keystore.password")
+    private String password;
 
 
     public PairingService(KeyStoreService keyStoreService, CarWebSocketClient carWebSocketClient) {

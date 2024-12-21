@@ -27,6 +27,8 @@ public class SecurityUtil {
     // Asymmetric cipher: combination of algorithm, block processing, and padding
     public static final String ASYM_CIPHER = "RSA/ECB/PKCS1Padding";
 
+    public static final int RECOMMENDED_NONCE_LENGTH = 8;
+
     private static final SecureRandom secureRandom = new SecureRandom();
 
     public static String decipherContent(String base64Content, IvParameterSpec ivSpec, SecretKeySpec secretKey) throws Exception{

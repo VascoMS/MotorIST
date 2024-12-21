@@ -4,7 +4,12 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pt.tecnico.sirs.model.Nonce;
+import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.JSONUtil;
+import pt.tecnico.sirs.util.SecurityUtil;
+import sirs.carserver.exception.InvalidOperationException;
+import sirs.carserver.model.dto.OperationResponseDto;
 import sirs.carserver.observer.Observer;
 import sirs.carserver.observer.Subject;
 
@@ -39,8 +44,8 @@ public class MessageProcessorService implements Subject {
         this.userService = userService;
     }
 
-    public boolean processMessage(String message) {
-        // TODO: Fix fucked up logic where we use the output of this method to determine the reponse but response operation doesn't require a response to be sent
+    public OperationResponseDto processMessage(String message) throws InvalidOperationException {
+        //
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
         String operation = messageJson.get(OPERATION_FIELD).getAsString();
@@ -62,38 +67,60 @@ public class MessageProcessorService implements Subject {
         };
     }
 
-    public boolean pairOperation(JsonObject messageJson) {
+    public void pairOperation(JsonObject messageJson) {
         String code = messageJson.get(CODE_FIELD).getAsString();
         boolean success = Boolean.parseBoolean(messageJson.get(SUCCESS_FIELD).getAsString());
         boolean codeMatches = pairingService.checkPairingSession(code);
-        if(codeMatches && success){
+        boolean pairResult = success && codeMatches;
+        if(pairResult){
             logger.info("Pairing code: {}", code);
             String userId = messageJson.get(USERID_FIELD).getAsString();
             try {
                 userService.createUser(userId);
             } catch (IOException e) {
                 logger.error("Error creating user: {}", e.getMessage());
-                return false;
+                pairResult = false;
             }
         } else {
             // Code sent by server doesn't match current pairing session code or user input was incorrect
             logger.info("Server code matches: {} | User input matches: {}", codeMatches, success);
         }
-        notifyObservers(success && codeMatches);
+        notifyObservers(pairResult);
         pairingService.endPairSession();
-        return success && codeMatches;
     }
 
-    public boolean updateConfigOperation(JsonObject messageJson) {
-        return true;
+    public OperationResponseDto updateConfigOperation(JsonObject messageJson) {
+        //Get items from messageJson
+        String username = messageJson.get(USERID_FIELD).getAsString();
+        String protectedConfiguration = messageJson.get(CONFIGURATION_FIELD).getAsString();
+        String iv = messageJson.get(IV_FIELD).getAsString();
+        Nonce nonce = JSONUtil.parseJsonToClass(messageJson.get(NONCE_FIELD).getAsJsonObject(), Nonce.class);
+        String hmac = messageJson.get(HMAC_FIELD).getAsString();
+        String requestId = messageJson.get(REQ_ID).getAsString();
+
+        //Generate new protected object, so I can unprotect it
+        ProtectedObject protectedObject = new ProtectedObject(protectedConfiguration, iv, nonce, hmac);
+
+        //Generate new nonce for the operationResponseDTO
+        Nonce responseNonce = SecurityUtil.generateNonce(SecurityUtil.RECOMMENDED_NONCE_LENGTH);
+
+        boolean success = userService.updateConfig(username, protectedObject, protectedConfiguration, iv);
+        return new OperationResponseDto(requestId, success, responseNonce);
     }
 
-    public boolean deleteConfigOperation(JsonObject messageJson) {
-        return true;
+    public OperationResponseDto deleteConfigOperation(JsonObject messageJson) {
+        return null;
     }
 
-    public boolean newUserOperation(JsonObject messageJson) {
-        return true;
+    public void handleServerResponse(JsonObject message) {
+        String reqId = message.get(REQ_ID).getAsString();
+        boolean success = Boolean.parseBoolean(message.get(SUCCESS_FIELD).getAsString());
+        CompletableFuture<Boolean> pendingRequest = pendingRequests.get(reqId);
+        if(pendingRequest != null) {
+            pendingRequest.complete(success);
+        } else {
+            logger.error("No pending request matches response for reqId: {}", reqId);
+        }
     }
 
 

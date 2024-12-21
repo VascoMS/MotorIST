@@ -52,12 +52,16 @@ public class UserConfigServiceImpl implements UserConfigService {
         jsonObj.addProperty("iv", request.getIv());
         jsonObj.addProperty("nonce", nonce);
         jsonObj.addProperty("hmac", request.getHmac());
-        carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj);
-
-        //TODO: Add a wait mechanism for the car answers
-
-        configRepository.save(request);
-        return true;
+        try {
+            boolean success = carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj).get();
+            if(success) {
+                configRepository.save(request);
+            }
+            return success;
+        } catch (Exception e) {
+            logger.error("Failed to update config: {}", e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -65,10 +69,11 @@ public class UserConfigServiceImpl implements UserConfigService {
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("operation", "deleteconfig");
         jsonObj.addProperty("userId", request.getUserId());
-        carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj);
-
-        //TODO: Add a wait mechanism
-
-        return true;
+        try {
+            return carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj).get();
+        } catch (Exception e) {
+            logger.error("Failed to delete config: {}", e.getMessage());
+            return false;
+        }
     }
 }

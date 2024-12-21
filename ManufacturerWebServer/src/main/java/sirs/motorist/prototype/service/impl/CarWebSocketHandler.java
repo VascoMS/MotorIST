@@ -31,7 +31,8 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         System.out.println("Received from car: " + message.getPayload());
-        // Send a command to the car
+        JsonObject messageJson = JSONUtil.parseJson(message.getPayload());
+        switch
 
     }
 
@@ -39,6 +40,11 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         carSessions.remove(session.getId());
         System.out.println("Car disconnected: " + session.getId());
+    }
+
+
+    private void processMessage(String message) {
+
     }
 
     public CompletableFuture<Boolean> sendCommandToCar(String carId, JsonObject jsonObj) {
@@ -60,4 +66,5 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
         }
         return null;
     }
+
 }

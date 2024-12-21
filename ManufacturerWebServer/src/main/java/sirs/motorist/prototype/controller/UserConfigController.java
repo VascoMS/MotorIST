@@ -21,7 +21,7 @@ public class UserConfigController {
     Check check;
 
     @Autowired
-    public UserConfigController(UserConfigService userConfigService) {
+    public UserConfigController(UserConfigService userConfigService, Check nonceChecker) {
         this.userConfigService = userConfigService;
         this.check = nonceChecker;
     }

@@ -9,6 +9,10 @@ Operations server -> car:
     operation: "pair",
     userId: "a23vcs2245",
     success: true/false
+    nonce: {
+        base64: "adadsa"
+        timestamp: 131231321
+    }
 }
 
 {
@@ -37,6 +41,10 @@ Operations server -> car:
     reqid: "2",
     operation: "deleteconfig",
     userId: "a23vcs2245"
+    nonce: {
+        base64: "adadsa"
+        timestamp: 131231321
+    }
 }
 
 {
@@ -48,6 +56,22 @@ Operations server -> car:
 Operations car -> server:
 - send code for pairing
 - periodically send battery and km status
+
+{
+    reqId: "1"
+    operation: "initpair"
+    carId: "tesla-123"
+    code: "A123DF"
+    nonce: {
+        base64: "adadsa"
+        timestamp: 131231321
+    }
+}
+
+{
+    reqId: 2
+    operation: "reposne"
+}
 
 Response messages:
 
