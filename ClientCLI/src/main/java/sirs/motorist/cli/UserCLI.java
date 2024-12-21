@@ -63,7 +63,8 @@ public class UserCLI {
             System.out.println("2. Get a configuration");
             System.out.println("3. Update a configuration");
             System.out.println("4. Delete a configuration");
-            System.out.println("5. Logout");
+            System.out.println("5. Get general car information");
+            System.out.println("6. Logout");
 
             int command = scanner.nextInt();
             scanner.nextLine();
@@ -83,6 +84,9 @@ public class UserCLI {
                         deleteConfig(scanner);
                         break;
                     case 5:
+                        generalCarInfo(scanner);
+                        break;
+                    case 6:
                         System.out.println("Logging out...");
                         return;
                     default:
@@ -264,6 +268,20 @@ public class UserCLI {
         String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+
+        System.out.println(response);
+    }
+
+    private static void generalCarInfo(Scanner scanner) throws Exception{
+        System.out.println("Enter the car chassis number: ");
+        String carId = scanner.nextLine();
+
+        String url = MANUFACTURER_URL + "/user/readCarInfo";
+
+        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
         System.out.println(response);
     }
