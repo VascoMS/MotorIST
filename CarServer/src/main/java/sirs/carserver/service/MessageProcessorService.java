@@ -8,6 +8,7 @@ import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
+import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
 import sirs.carserver.model.dto.OperationResponseDto;
 import sirs.carserver.observer.Observer;
@@ -24,16 +25,6 @@ public class MessageProcessorService implements Subject {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
-    private static final String REQ_ID = "reqId";
-    private static final String IV_FIELD = "iv";
-    private static final String HMAC_FIELD = "hmac";
-    private static final String CODE_FIELD = "code";
-    private static final String NONCE_FIELD = "nonce";
-    private static final String USERID_FIELD = "userId";
-    private static final String SUCCESS_FIELD = "success";
-    private static final String OPERATION_FIELD = "operation";
-    private static final String CONFIGURATION_FIELD = "configuration";
-
     private final PairingService pairingService;
     private final UserService userService;
     private final List<Observer> pairingResultObservers = new ArrayList<>();
@@ -48,7 +39,7 @@ public class MessageProcessorService implements Subject {
         //
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
-        String operation = messageJson.get(OPERATION_FIELD).getAsString();
+        String operation = messageJson.get(WebSocketOpsConsts.OPERATION_FIELD).getAsString();
         return switch (operation) {
             case "pair" -> {
                 pairOperation(messageJson);
@@ -74,7 +65,7 @@ public class MessageProcessorService implements Subject {
         boolean pairResult = success && codeMatches;
         if(pairResult){
             logger.info("Pairing code: {}", code);
-            String userId = messageJson.get(USERID_FIELD).getAsString();
+            String userId = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
             try {
                 userService.createUser(userId);
             } catch (IOException e) {
@@ -83,7 +74,7 @@ public class MessageProcessorService implements Subject {
             }
         } else {
             // Code sent by server doesn't match current pairing session code or user input was incorrect
-            logger.info("Server code matches: {} | User input matches: {}", codeMatches, success);
+            logger.info("Pair failed: Server code matches: {} | User input matches: {}", codeMatches, success);
         }
         notifyObservers(pairResult);
         pairingService.endPairSession();
@@ -91,12 +82,12 @@ public class MessageProcessorService implements Subject {
 
     public OperationResponseDto updateConfigOperation(JsonObject messageJson) {
         //Get items from messageJson
-        String username = messageJson.get(USERID_FIELD).getAsString();
-        String protectedConfiguration = messageJson.get(CONFIGURATION_FIELD).getAsString();
-        String iv = messageJson.get(IV_FIELD).getAsString();
-        Nonce nonce = JSONUtil.parseJsonToClass(messageJson.get(NONCE_FIELD).getAsJsonObject(), Nonce.class);
-        String hmac = messageJson.get(HMAC_FIELD).getAsString();
-        String requestId = messageJson.get(REQ_ID).getAsString();
+        String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
+        String protectedConfiguration = messageJson.get(WebSocketOpsConsts.CONFIGURATION_FIELD).getAsString();
+        String iv = messageJson.get(WebSocketOpsConsts.IV_FIELD).getAsString();
+        Nonce nonce = JSONUtil.parseJsonToClass(messageJson.get(WebSocketOpsConsts.NONCE_FIELD).getAsJsonObject(), Nonce.class);
+        String hmac = messageJson.get(WebSocketOpsConsts.HMAC_FIELD).getAsString();
+        String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
         //Generate new protected object, so I can unprotect it
         ProtectedObject protectedObject = new ProtectedObject(protectedConfiguration, iv, nonce, hmac);
@@ -113,8 +104,8 @@ public class MessageProcessorService implements Subject {
     }
 
     public void handleServerResponse(JsonObject message) {
-        String reqId = message.get(REQ_ID).getAsString();
-        boolean success = Boolean.parseBoolean(message.get(SUCCESS_FIELD).getAsString());
+        String reqId = message.get(WebSocketOpsConsts.REQ_ID).getAsString();
+        boolean success = Boolean.parseBoolean(message.get(WebSocketOpsConsts.  SUCCESS_FIELD).getAsString());
         CompletableFuture<Boolean> pendingRequest = pendingRequests.get(reqId);
         if(pendingRequest != null) {
             pendingRequest.complete(success);

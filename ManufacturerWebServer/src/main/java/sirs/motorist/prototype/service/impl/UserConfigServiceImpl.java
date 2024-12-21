@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
+import sirs.motorist.prototype.consts.WebSocketOpsConsts;
 import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
-import sirs.motorist.prototype.model.dto.UserPairRequestDto;
-import sirs.motorist.prototype.model.entity.CarInfo;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.UserConfigService;
@@ -28,32 +27,22 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public Boolean pairNewUser(UserPairRequestDto request) {
-        return null;
-    }
-
-    @Override
     public Configuration getConfiguration(String userId, String carId) {
-        Configuration config = configRepository.findByUserIdAndCarId(userId, carId);
-        if (config == null) {
-            logger.error("Configuration for that user and car was not found...");
-            return null;
-        }
-        return config;
+        return configRepository.findByUserIdAndCarId(userId, carId);
     }
 
     @Override
     public Boolean updateConfiguration(Configuration request) {
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
-        jsonObj.addProperty("operation", "updateconfig");
-        jsonObj.addProperty("userId", request.getUserId());
-        jsonObj.addProperty("configuration", request.getConfiguration());
-        jsonObj.addProperty("iv", request.getIv());
-        jsonObj.addProperty("nonce", nonce);
-        jsonObj.addProperty("hmac", request.getHmac());
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "updateconfig");
+        jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
+        jsonObj.addProperty(WebSocketOpsConsts.CONFIGURATION_FIELD, request.getConfiguration());
+        jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
+        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
+        jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
-            boolean success = carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj).get();
+            boolean success = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
             if(success) {
                 configRepository.save(request);
             }
@@ -67,10 +56,10 @@ public class UserConfigServiceImpl implements UserConfigService {
     @Override
     public Boolean deleteConfiguration(ConfigurationIdRequestDto request) {
         JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("operation", "deleteconfig");
-        jsonObj.addProperty("userId", request.getUserId());
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "deleteconfig");
+        jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         try {
-            return carWebSocketHandler.sendCommandToCar(request.getCarId(), jsonObj).get();
+            return carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
         } catch (Exception e) {
             logger.error("Failed to delete config: {}", e.getMessage());
             return false;

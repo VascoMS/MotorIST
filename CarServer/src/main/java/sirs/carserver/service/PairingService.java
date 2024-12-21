@@ -80,6 +80,7 @@ public class PairingService {
 
     public boolean checkPairingSession(String code) {
         if(pairingSession == null) {
+            logger.info("No active pairing session...");
             return false;
         }
         return pairingSession.getCode().equals(code);

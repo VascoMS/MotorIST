@@ -1,7 +1,8 @@
 package sirs.motorist.prototype.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import sirs.motorist.prototype.model.entity.Configuration;
+import sirs.motorist.prototype.model.entity.CarInfo;
 
-public interface CarRepository extends MongoRepository<Configuration, String> { // TODO: CHANGE THIS
+public interface CarRepository extends MongoRepository<CarInfo, String> {
+    CarInfo findByCarId(String carId);
 }

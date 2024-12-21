@@ -9,6 +9,7 @@ import pt.tecnico.sirs.secdoc.Check;
 import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
 import sirs.motorist.prototype.model.dto.UserPairRequestDto;
 import sirs.motorist.prototype.model.entity.Configuration;
+import sirs.motorist.prototype.service.PairingService;
 import sirs.motorist.prototype.service.UserConfigService;
 
 @RestController
@@ -18,12 +19,14 @@ public class UserConfigController {
     private static final Logger logger = LoggerFactory.getLogger(UserConfigController.class);
 
     UserConfigService userConfigService;
+    PairingService pairingService;
     Check check;
 
     @Autowired
-    public UserConfigController(UserConfigService userConfigService, Check nonceChecker) {
+    public UserConfigController(UserConfigService userConfigService, PairingService pairingService, Check check) {
         this.userConfigService = userConfigService;
-        this.check = nonceChecker;
+        this.pairingService = pairingService;
+        this.check = check;
     }
 
     @PostMapping("/pair")
@@ -31,7 +34,7 @@ public class UserConfigController {
         if(check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
-        if(!userConfigService.pairNewUser(request)) {
+        if(pairingService.validatePairingSession(request)) {
             return ResponseEntity.badRequest().body("Error pairing new user");
         }
         return ResponseEntity.ok("User paired successfully");

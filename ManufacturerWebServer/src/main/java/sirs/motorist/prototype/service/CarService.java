@@ -1,7 +1,8 @@
 package sirs.motorist.prototype.service;
 
-import sirs.motorist.prototype.model.dto.UserPairRequestDto;
+import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
+import sirs.motorist.prototype.model.entity.CarInfo;
 
 public interface CarService {
-    CarInfo getCarInfo(String carId);
+    CarInfo getCarInfo(ConfigurationIdRequestDto request);
 }

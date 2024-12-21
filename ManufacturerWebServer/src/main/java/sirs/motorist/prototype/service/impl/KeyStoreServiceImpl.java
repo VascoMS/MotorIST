@@ -3,8 +3,8 @@ package sirs.motorist.prototype.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import sirs.motorist.prototype.service.KeyStoreService;
 
 import java.io.InputStream;
