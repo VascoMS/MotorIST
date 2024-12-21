@@ -34,22 +34,32 @@ public class JSONUtil {
     }
 
     /**
-     * Converts a JsonObject to a JSON string
+     * Converts a JsonObject to a class
      * @param jsonObject JsonObject to be converted
-     * @return JSON string with the JsonObject
+     * @param classOfT Class to be converted to
+     * @return Class converted from the JsonObject
      */
-    public static String toJsonString(JsonObject jsonObject) {
-        return gson.toJson(jsonObject);
-    }
-
+    //TODO: check if the parseJsonToClass works
     public static <T> T parseJsonToClass(JsonObject jsonObject, Class<T> classOfT) {
         return gson.fromJson(jsonObject, classOfT);
     }
 
+    /**
+     * Converts a JSON string to a class
+     * @param jsonString JSON string to be converted
+     * @param classOfT Class to be converted to
+     * @return Class converted from the JSON string
+     */
+    //TODO: check if the parseJsonToClass works
     public static <T> T parseJsonToClass(String jsonString, Class<T> classOfT) {
         return gson.fromJson(jsonString, classOfT);
     }
 
+    /**
+     * Converts a class to a JSON string
+     * @param object Object to be converted
+     * @return JSON string with the object
+     */
     public static <T> String parseClassToJsonString(T object) {
         return gson.toJson(object);
     }

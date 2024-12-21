@@ -1,8 +1,16 @@
 package sirs.carserver.service;
 
+import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
+import pt.tecnico.sirs.secdoc.Unprotect;
+import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.model.Config;
 import sirs.carserver.model.User;
 import org.springframework.stereotype.Service;
@@ -12,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -19,7 +28,9 @@ public class UserService {
     private final KeyStoreService keyStoreService;
     private final String carId;
 
-    public UserService(UserRepository userRepository, KeyStoreService keyStoreService, @Value("${car.id}") String carId) {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    public UserService(UserRepository userRepository, KeyStoreService keyStoreService, @Value("${car.id}") String carId, @Value("${audit.file.path}") String filepath) {
         this.userRepository = userRepository;
         this.keyStoreService = keyStoreService;
         this.carId = carId;
@@ -41,13 +52,40 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //TODO: finish this shit
-    public void updateConfig(String username, String configUpdate) {
+    public boolean updateConfig(String username, ProtectedObject protectedObject, String protectedConfiguration, String iv) {
         User user = userRepository.findByUsername(username);
-        user.setConfig(configUpdate);
-        userRepository.save(user);
+        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
 
-        //TODO: create the new audit (append to audit file)
+        //Unprotect the content so we can verify if everything is good for the check
+        Unprotect unprotect = new Unprotect();
+        ProtectedObject unprotectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
+        //Check if object was tampered with
+        Check check = new Check();
+        if(check.check(unprotectedObject, secretKeySpec, true)){
+            user.setConfig(protectedConfiguration);
+            user.setIv(iv);
+            userRepository.save(user);
+
+            logger.info("Successfully updated the config");
+
+            //write onto the auditFile
+            appendFileAudit(username, "updateConfig");
+
+            return true;
+        } else {
+            logger.error("Config update failed, because the check failed");
+            return false;
+        }
+    }
+
+    private void appendFileAudit(String userId, String operation){
+        logger.info("Adding auditMessage onto log file");
+
+        try (FileWriter writer = new FileWriter(filepath, true)) { // Open in append mode
+            writer.write("UserId: " + userId + "Operation: " + operation+"\n");
+        } catch (IOException e) {
+            logger.error("Appending onto the audit file failed with the error: {}",e);
+        }
     }
 }

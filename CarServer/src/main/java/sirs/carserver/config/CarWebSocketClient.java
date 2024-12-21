@@ -4,6 +4,9 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.tecnico.sirs.util.JSONUtil;
+import sirs.carserver.exception.InvalidOperationException;
+import sirs.carserver.model.dto.OperationResponseDto;
 import sirs.carserver.service.MessageProcessorService;
 
 import java.net.URI;
@@ -35,9 +38,17 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         logger.info("Received message from server...");
-        boolean success = messageProcessorService.processMessage(message);
-        // Send response to server
+        try {
+            OperationResponseDto response = messageProcessorService.processMessage(message);
+            if(response != null) {
+                send(JSONUtil.parseClassToJsonString(response));
+            }
+        } catch(InvalidOperationException e){
+            logger.error("Received invalid operation");
+        }
     }
+
+
 
     @Override
     public void onClose(int code, String reason, boolean remote) {

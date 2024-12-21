@@ -5,6 +5,7 @@ Operations server -> car:
 - add new user
 
 {
+    reqid: "1"
     operation: "pair",
     userId: "a23vcs2245",
     success: true/false
@@ -39,32 +40,19 @@ Operations server -> car:
 }
 
 {
-    operation: "newuser",
-    userId: "a23vcs2245",
-    pubKey: "pub_key_xyz"
+    reqId: 1
+    operation: "pair-response",
+    success: true/false
 }
 
 Operations car -> server:
-- send secret key for new user
-- send code for pairing with pairing id
+- send code for pairing
 - periodically send battery and km status
 
-{
-    operation: "newkey",
-    pairingId: "a23vcs2245",
-    carId: "tesla_1234",
-    key: "new_key_xyz"(ciphered)
-}
+Response messages:
 
 {
-    operation: "pair",
-    pairingId: "a23vcs2245",
-    code(hashed): "1234"
-}
-
-{
-    operation: "status",
-    carId: "a23vcs2245",
-    battery: 50,
-    km: 100
+    operation: "response" (car side, server doesn't need the operation field)
+    reqId: "1"
+    success: true
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
+import sirs.motorist.prototype.model.dto.UserPairRequestDto;
+import sirs.motorist.prototype.model.entity.CarInfo;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.UserConfigService;
@@ -23,6 +25,11 @@ public class UserConfigServiceImpl implements UserConfigService {
     public UserConfigServiceImpl(ConfigRepository configRepository, CarWebSocketHandler carWebSocketHandler) {
         this.configRepository = configRepository;
         this.carWebSocketHandler = carWebSocketHandler;
+    }
+
+    @Override
+    public Boolean pairNewUser(UserPairRequestDto request) {
+        return null;
     }
 
     @Override

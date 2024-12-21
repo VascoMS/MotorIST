@@ -29,20 +29,19 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         System.out.println("Received from car: " + message.getPayload());
         // Send a command to the car
 
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         carSessions.remove(session.getId());
         System.out.println("Car disconnected: " + session.getId());
     }
 
     public CompletableFuture<Boolean> sendCommandToCar(String carId, JsonObject jsonObj) {
-        // TODO: Add reqId to message
         WebSocketSession session = carSessions.get(carId);
         if (session != null) {
             String requestId = String.valueOf(System.currentTimeMillis());

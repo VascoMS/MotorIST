@@ -5,22 +5,25 @@ import java.security.PrivateKey;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
+import pt.tecnico.sirs.secdoc.Unprotect;
+import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
-import sirs.motorist.cli.dto.ConfigurationDto;
-import sirs.motorist.cli.dto.ConfigurationIdRequestDto;
-import sirs.motorist.cli.dto.FirmwareRequestDto;
-import sirs.motorist.cli.dto.PairingRequestDto;
+import sirs.motorist.cli.model.dto.ConfigurationDto;
+import sirs.motorist.cli.model.dto.ConfigurationIdRequestDto;
+import sirs.motorist.cli.model.dto.FirmwareRequestDto;
 import sirs.motorist.cli.model.Config;
+import sirs.motorist.cli.model.dto.UserPairRequestDto;
 
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserCLI {
     private static final String MANUFACTURER_URL = "http://localhost:8080/api"; //TODO: change to actual URL
-    private static final Gson gson = new Gson();
+    private static final int NONCE_SIZE = 8;
     private static String username;
     private static String password;
 
@@ -138,6 +141,8 @@ public class UserCLI {
     }
 
     private static void pairCar(Scanner scanner) throws Exception {
+        System.out.println("Enter the car chassis number: ");
+        String carId = scanner.nextLine();
         System.out.println("Enter the pair code: ");
         String pairCode = scanner.nextLine();
 
@@ -147,8 +152,10 @@ public class UserCLI {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
-        PairingRequestDto dto = new PairingRequestDto(username, pairCode);
-        String body = gson.toJson(dto);
+        Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
+
+        UserPairRequestDto dto = new UserPairRequestDto(username, nonce, carId, pairCode);
+        String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
@@ -162,21 +169,41 @@ public class UserCLI {
         System.out.println("Secret key stored successfully");
     }
 
-    private static void getConfig(Scanner scanner) {
+    private static void getConfig(Scanner scanner) throws Exception {
         System.out.println("Enter the car chassis number: ");
         String carId = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/readConfig";
+        String keyStorePath = String.format("keystore/%s.jks", username);
+
+        // Load the key store
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
         ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
-        String body = gson.toJson(dto);
+        String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
-        // TODO: Unprotect and Check
+        JsonObject resJsonObj = JSONUtil.parseJsonToClass(response, JsonObject.class);
+        resJsonObj.remove("userId");
+        resJsonObj.remove("carId");
 
-        System.out.println(response);
+        Unprotect unprotect = new Unprotect();
+        Check check = new Check();
+        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(resJsonObj, ProtectedObject.class);
+        protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
+        boolean configValid = check.check(protectedObject, secretKeySpec, false);
+
+        if (configValid) {
+            System.out.println("Configuration is valid");
+            System.out.println("Configuration: " + protectedObject.getContent());
+        }
+        else {
+            System.out.println("The integrity of the configuration was compromised");
+        }
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
@@ -220,7 +247,7 @@ public class UserCLI {
                 protectedObj.getNonce(),
                 protectedObj.getHmac()
         );
-        String body = gson.toJson(dto);
+        String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
 
@@ -234,7 +261,7 @@ public class UserCLI {
         String url = MANUFACTURER_URL + "/user/deleteConfig";
 
         ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
-        String body = gson.toJson(dto);
+        String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
 
@@ -255,7 +282,7 @@ public class UserCLI {
         PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);
 
         // Generate a nonce
-        Nonce nonce = SecurityUtil.generateNonce(8);
+        Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
         // Serialize the nonce if mechanico
         byte[] nonceBytes = SecurityUtil.serializeToByteArray(nonce);
@@ -265,7 +292,7 @@ public class UserCLI {
 
         // Create the request DTO
         FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, chassisNumber);
-        String body = gson.toJson(dto);
+        String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 

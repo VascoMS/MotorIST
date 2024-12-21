@@ -20,9 +20,13 @@ public class MessageProcessorService implements Subject {
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
     private static final String REQ_ID = "reqId";
+    private static final String IV_FIELD = "iv";
+    private static final String HMAC_FIELD = "hmac";
     private static final String CODE_FIELD = "code";
     private static final String USERID_FIELD = "userId";
     private static final String SUCCESS_FIELD = "success";
+    private static final String OPERATION_FIELD = "operation";
+    private static final String CONFIGURATION_FIELD = "configuration";
 
     private final PairingService pairingService;
     private final UserService userService;
@@ -38,23 +42,23 @@ public class MessageProcessorService implements Subject {
         // TODO: Fix fucked up logic where we use the output of this method to determine the reponse but response operation doesn't require a response to be sent
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
-        String operation = messageJson.get("operation").getAsString();
-        switch (operation) {
-            case "pair":
-                return pairOperation(messageJson);
-            case "updateconfig":
-                return updateConfigOperation(messageJson);
-            case "deleteconfig":
-                return deleteConfigOperation(messageJson);
-            case "newuser":
-                return newUserOperation(messageJson);
-            case "response":
-                //TODO: Handle response from server
-                return true;
-            default:
+        String operation = messageJson.get(OPERATION_FIELD).getAsString();
+        return switch (operation) {
+            case "pair" -> {
+                pairOperation(messageJson);
+                yield null;
+            }
+            case "updateconfig" -> updateConfigOperation(messageJson);
+            case "deleteconfig" -> deleteConfigOperation(messageJson);
+            case "initpair-response" -> {
+                handleServerResponse(messageJson);
+                yield null;
+            }
+            default -> {
                 logger.error("Operation not supported: {}", operation);
-                return false;
-        }
+                throw new InvalidOperationException("Invalid operation: " + operation);
+            }
+        };
     }
 
     public boolean pairOperation(JsonObject messageJson) {

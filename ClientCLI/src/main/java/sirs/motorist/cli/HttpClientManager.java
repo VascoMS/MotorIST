@@ -62,7 +62,7 @@ public class HttpClientManager {
         int statusCode = response.getStatusLine().getStatusCode();
         String responseBody = EntityUtils.toString(response.getEntity());
 
-        if (statusCode >= 200 && statusCode < 300) {
+        if (statusCode == 200) {
             return responseBody;
         } else {
             return "Request failed. Status code: " + statusCode + ". Response: " + responseBody;
