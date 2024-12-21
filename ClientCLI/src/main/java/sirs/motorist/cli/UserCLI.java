@@ -4,7 +4,6 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
