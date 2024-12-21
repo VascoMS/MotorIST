@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import sirs.carserver.repository.UserRepository;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final KeyStoreService keyStoreService;
     private final String carId;
+    private final String filepath;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -34,6 +36,7 @@ public class UserService {
         this.userRepository = userRepository;
         this.keyStoreService = keyStoreService;
         this.carId = carId;
+        this.filepath = filepath;
     }
 
     public void createUser(String username) throws IOException {
@@ -42,14 +45,16 @@ public class UserService {
         Protect protect = new Protect();
         SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
 
-        Map<String, String> additionalFields = Map.of("carId", carId);
-        additionalFields.put("username", username);
+        Map<String, String> additionalFields = Map.of("carId", carId, "username", username);
 
         ProtectedObject protectedConfig = protect.protect(secretKeySpec, config, false, additionalFields);
 
         User user = new User(username, protectedConfig.getContent(), protectedConfig.getIv());
 
         userRepository.save(user);
+
+        //write onto the auditFile
+        appendFileAudit(username, "createUser");
     }
 
     public boolean updateConfig(String username, ProtectedObject protectedObject, String protectedConfiguration, String iv) {

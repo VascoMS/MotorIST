@@ -62,7 +62,7 @@ public class PairingService {
     }
 
     private String buildJsonPayload(PairingSession pairingSession) {
-        // TODO: Add credentials to payload
+        // TODO: Add credentials and nonce to payload.
         try {
             Protect protector = new Protect();
             // Additional fields to be included in the protected object

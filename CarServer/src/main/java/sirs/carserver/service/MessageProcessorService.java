@@ -23,6 +23,7 @@ public class MessageProcessorService implements Subject {
     private static final String IV_FIELD = "iv";
     private static final String HMAC_FIELD = "hmac";
     private static final String CODE_FIELD = "code";
+    private static final String NONCE_FIELD = "nonce";
     private static final String USERID_FIELD = "userId";
     private static final String SUCCESS_FIELD = "success";
     private static final String OPERATION_FIELD = "operation";
