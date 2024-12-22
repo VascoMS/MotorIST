@@ -28,7 +28,6 @@ public class PairingServiceImpl implements PairingService {
         pairingSessions.put(carId, SecurityUtil.hashData(code.getBytes()));
     }
 
-
     @Override
     public boolean validatePairingSession(UserPairRequestDto request) {
         byte[] codeHash = SecurityUtil.hashData(request.getPairCode().getBytes());

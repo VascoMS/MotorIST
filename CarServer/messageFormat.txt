@@ -77,7 +77,7 @@ Operations car -> server:
 Response messages:
 
 {
-    operation: "response" (car side, server doesn't need the operation field)
+    operation: "response"
     reqId: "1"
     success: true
 }

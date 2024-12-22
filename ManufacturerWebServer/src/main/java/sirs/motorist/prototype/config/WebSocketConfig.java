@@ -11,9 +11,15 @@ import sirs.motorist.prototype.service.impl.CarWebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    private final CarWebSocketHandler carWebSocketHandler;
+
+    public WebSocketConfig(CarWebSocketHandler carWebSocketHandler) {
+        this.carWebSocketHandler = carWebSocketHandler;
+    }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CarWebSocketHandler(), "/car-tunnel")
+        registry.addHandler(carWebSocketHandler, "/car-tunnel")
                 .setAllowedOrigins("*");
     }
 }

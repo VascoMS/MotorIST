@@ -34,7 +34,7 @@ public class UserConfigController {
         if(check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
-        if(pairingService.validatePairingSession(request)) {
+        if(!pairingService.validatePairingSession(request)) {
             return ResponseEntity.badRequest().body("Error pairing new user");
         }
         return ResponseEntity.ok("User paired successfully");
