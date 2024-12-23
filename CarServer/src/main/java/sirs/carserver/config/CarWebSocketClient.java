@@ -48,8 +48,6 @@ public class CarWebSocketClient extends WebSocketClient {
         }
     }
 
-
-
     @Override
     public void onClose(int code, String reason, boolean remote) {
         logger.warn("Connection closed: {}", reason);

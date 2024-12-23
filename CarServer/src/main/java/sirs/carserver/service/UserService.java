@@ -1,6 +1,6 @@
 package sirs.carserver.service;
 
-import com.google.gson.JsonObject;
+
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +29,15 @@ public class UserService {
     private final KeyStoreService keyStoreService;
     private final String carId;
     private final String filepath;
+    private final Check check;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(UserRepository userRepository, KeyStoreService keyStoreService, @Value("${car.id}") String carId, @Value("${audit.file.path}") String filepath) {
+    public UserService(UserRepository userRepository,Check check, KeyStoreService keyStoreService, @Value("${car.id}") String carId, @Value("${audit.file.path}") String filepath) {
         this.userRepository = userRepository;
         this.keyStoreService = keyStoreService;
         this.carId = carId;
+        this.check = check;
         this.filepath = filepath;
     }
 
@@ -66,7 +68,6 @@ public class UserService {
         ProtectedObject unprotectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
         //Check if object was tampered with
-        Check check = new Check();
         if(check.check(unprotectedObject, secretKeySpec, true)){
             user.setConfig(protectedConfiguration);
             user.setIv(iv);

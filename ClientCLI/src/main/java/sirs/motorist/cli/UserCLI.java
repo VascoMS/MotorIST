@@ -25,6 +25,7 @@ public class UserCLI {
     private static final int NONCE_SIZE = 8;
     private static String username;
     private static String password;
+    private static final Check check = new Check();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -194,7 +195,6 @@ public class UserCLI {
         resJsonObj.remove("carId");
 
         Unprotect unprotect = new Unprotect();
-        Check check = new Check();
         ProtectedObject protectedObject = JSONUtil.parseJsonToClass(resJsonObj, ProtectedObject.class);
         protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 

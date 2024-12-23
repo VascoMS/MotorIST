@@ -47,8 +47,8 @@ public class SecureDocs {
 
             // Check the content
             Check check = new Check();
-            boolean isValid = check.check(protectedObject, secretKey);
-            System.out.println("Is the content valid? " + isValid);
+            //boolean isValid = check.check(protectedObject, secretKey);
+            //System.out.println("Is the content valid? " + isValid);
 
         } catch (Exception e) {
             e.printStackTrace();
