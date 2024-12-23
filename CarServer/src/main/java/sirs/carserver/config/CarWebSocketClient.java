@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.exception.InvalidOperationException;
-import sirs.carserver.model.dto.OperationResponseDto;
+import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.service.MessageProcessorService;
 
 import java.net.URI;
@@ -39,7 +39,7 @@ public class CarWebSocketClient extends WebSocketClient {
     public void onMessage(String message) {
         logger.info("Received message from server...");
         try {
-            OperationResponseDto response = messageProcessorService.processMessage(message);
+            OpResponseDto response = messageProcessorService.processMessage(message);
             if(response != null) {
                 send(JSONUtil.parseClassToJsonString(response));
             }

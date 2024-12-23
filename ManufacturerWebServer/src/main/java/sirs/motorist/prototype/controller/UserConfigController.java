@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.tecnico.sirs.secdoc.Check;
-import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
+import sirs.motorist.prototype.model.dto.ConfigurationDto;
+import sirs.motorist.prototype.model.dto.DeleteConfigDto;
+import sirs.motorist.prototype.model.dto.InfoGetterDto;
 import sirs.motorist.prototype.model.dto.UserPairRequestDto;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.service.PairingService;
 import sirs.motorist.prototype.service.UserConfigService;
+import sirs.motorist.prototype.service.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -18,20 +21,25 @@ public class UserConfigController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserConfigController.class);
 
+    UserService userService;
     UserConfigService userConfigService;
     PairingService pairingService;
     Check check;
 
     @Autowired
-    public UserConfigController(UserConfigService userConfigService, PairingService pairingService, Check check) {
+    public UserConfigController(UserConfigService userConfigService, PairingService pairingService, Check check, UserService userService) {
         this.userConfigService = userConfigService;
         this.pairingService = pairingService;
         this.check = check;
+        this.userService = userService;
     }
 
     @PostMapping("/pair")
     public ResponseEntity<?> pairNewUser(@RequestBody UserPairRequestDto request) {
-        if(check.verifyNonce(request.getNonce())) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         if(!pairingService.validatePairingSession(request)) {
@@ -41,8 +49,11 @@ public class UserConfigController {
     }
 
     @PostMapping("/readConfig")
-    public ResponseEntity<?> readCurrentConfig(@RequestBody ConfigurationIdRequestDto request) {
-        if(check.verifyNonce(request.getNonce())) {
+    public ResponseEntity<?> readCurrentConfig(@RequestBody InfoGetterDto request) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         Configuration response = userConfigService.getConfiguration(request.getUserId(), request.getCarId());
@@ -54,8 +65,11 @@ public class UserConfigController {
     }
 
     @PutMapping("/updateConfig")
-    public ResponseEntity<?> updateConfig(@RequestBody Configuration request) {
-        if(check.verifyNonce(request.getNonce())) {
+    public ResponseEntity<?> updateConfig(@RequestBody ConfigurationDto request) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         if(!userConfigService.updateConfiguration(request)) {
@@ -64,9 +78,12 @@ public class UserConfigController {
         return ResponseEntity.ok("Configuration updated successfully");
     }
 
-    @PutMapping("/deleteConfig")
-    public ResponseEntity<?> deleteConfig(@RequestBody ConfigurationIdRequestDto request) {
-        if(check.verifyNonce(request.getNonce())) {
+    @DeleteMapping("/deleteConfig")
+    public ResponseEntity<?> deleteConfig(@RequestBody DeleteConfigDto request) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         if(!userConfigService.deleteConfiguration(request)) {

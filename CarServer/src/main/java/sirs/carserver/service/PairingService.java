@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Protect;
 import sirs.carserver.config.CarWebSocketClient;
+import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.PairingSessionException;
 import sirs.carserver.model.PairingSession;
 

@@ -35,7 +35,7 @@ public class PairingServiceImpl implements PairingService {
 
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
-        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "pair");
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_FIELD);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, verifyCodes);
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);

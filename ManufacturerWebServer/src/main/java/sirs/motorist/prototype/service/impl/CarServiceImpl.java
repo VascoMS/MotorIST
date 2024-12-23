@@ -1,37 +1,49 @@
 package sirs.motorist.prototype.service.impl;
 
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
-import sirs.motorist.prototype.model.entity.CarInfo;
+import pt.tecnico.sirs.util.JSONUtil;
+import sirs.motorist.prototype.consts.WebSocketOpsConsts;
+import sirs.motorist.prototype.model.dto.CarInfoDto;
+import sirs.motorist.prototype.model.dto.InfoGetterDto;
 import sirs.motorist.prototype.model.entity.Configuration;
-import sirs.motorist.prototype.repository.CarRepository;
 import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.CarService;
 
 @Service
 public class CarServiceImpl implements CarService {
-    //TODO: Don't store
     private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
-    private final CarRepository carRepository;
     private final ConfigRepository configRepository;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ConfigRepository configRepository) {
-        this.carRepository = carRepository;
+    public CarServiceImpl(ConfigRepository configRepository, CarWebSocketHandler carWebSocketHandler) {
         this.configRepository = configRepository;
     }
 
     @Override
-    public CarInfo getCarInfo(ConfigurationIdRequestDto request) {
-        // TODO:
-        Configuration config = configRepository.findByUserIdAndCarId(request.getUserId(), request.getCarId());
+    public CarInfoDto getCarInfo(InfoGetterDto request) {
+        String userId = request.getUserId();
+        String carId = request.getCarId();
+        Configuration config = configRepository.findByUserIdAndCarId(userId, carId);
         if (config == null) {
             logger.error("Configuration for that user and car was not found...");
             return null;
         }
-        return carRepository.findByCarId(request.getCarId());
+        JsonObject jsonObj = new JsonObject();
+        String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.GENERALCARINFO_OP);
+        jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
+        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
+        try {
+            //TODO: the message needs to send the carinfo, but we only send booleans atm :D
+            JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(carId, jsonObj).get();
+            return JSONUtil.parseJsonToClass(response, CarInfoDto.class);
+        } catch (Exception e) {
+            logger.error("Failed to get car info: {}", e.getMessage());
+            return null;
+        }
     }
 }

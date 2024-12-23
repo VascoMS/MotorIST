@@ -10,6 +10,7 @@ import pt.tecnico.sirs.model.Nonce;
 @AllArgsConstructor
 public class UserPairRequestDto {
     private String userId;
+    private String password;
     private Nonce nonce;
     private String carId;
     private String pairCode;

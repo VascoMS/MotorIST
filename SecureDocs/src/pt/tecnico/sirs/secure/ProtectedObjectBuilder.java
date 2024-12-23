@@ -64,7 +64,7 @@ public class ProtectedObjectBuilder {
 
         // Convert the ciphered content to a base64 string
         String base64Content = Base64.getEncoder().encodeToString(contentCipherBytes);
-        // Add the ciphered content to the JSON objec
+        // Add the ciphered content to the JSON object
 
         logger.info("Adding the ciphered content and IV to the JSON object...");
 

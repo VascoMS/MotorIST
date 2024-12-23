@@ -12,6 +12,7 @@ import pt.tecnico.sirs.secdoc.Check;
 import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
 import sirs.motorist.prototype.model.entity.CarInfo;
 import sirs.motorist.prototype.service.CarService;
+import sirs.motorist.prototype.service.UserService;
 
 @RestController
 @RequestMapping("/car")
@@ -19,6 +20,7 @@ public class CarController {
 
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
 
+    UserService userService;
     CarService carService;
     Check check;
 
@@ -29,8 +31,11 @@ public class CarController {
     }
 
     @PostMapping("/readCarInfo")
-    public ResponseEntity<?> readCarInfo(@RequestBody ConfigurationIdRequestDto request) {
-        if(check.verifyNonce(request.getNonce())) {
+    public ResponseEntity<?> readCarInfo(@RequestBody InfoGetterDto request) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         CarInfo response = carService.getCarInfo(request);

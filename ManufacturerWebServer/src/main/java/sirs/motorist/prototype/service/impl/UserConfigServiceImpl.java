@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
-import sirs.motorist.prototype.model.dto.ConfigurationIdRequestDto;
+import sirs.motorist.prototype.model.dto.ConfigurationDto;
+import sirs.motorist.prototype.model.dto.DeleteConfigDto;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.UserConfigService;
@@ -32,7 +33,7 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public Boolean updateConfiguration(Configuration request) {
+    public Boolean updateConfiguration(ConfigurationDto request) {
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "updateconfig");
@@ -44,7 +45,15 @@ public class UserConfigServiceImpl implements UserConfigService {
         try {
             boolean success = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
             if(success) {
-                configRepository.save(request);
+                Configuration config = new Configuration(
+                        request.getUserId(),
+                        request.getCarId(),
+                        request.getConfiguration(),
+                        request.getIv(),
+                        request.getNonce(),
+                        request.getHmac()
+                );
+                configRepository.save(config);
             }
             return success;
         } catch (Exception e) {
@@ -54,10 +63,14 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public Boolean deleteConfiguration(ConfigurationIdRequestDto request) {
+    public Boolean deleteConfiguration(DeleteConfigDto request) {
         JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "deleteconfig");
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.DELETECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
+        jsonObj.addProperty(WebSocketOpsConsts.CONFIRMATION_PHRASE_FIELD, request.getConfirmationPhrase());
+        jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
+        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, JSONUtil.parseClassToJsonString(request.getNonce()));
+        jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
             return carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
         } catch (Exception e) {

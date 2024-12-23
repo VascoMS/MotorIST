@@ -1,4 +1,4 @@
-package sirs.motorist.cli.model.dto;
+package sirs.motorist.prototype.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -38,13 +38,26 @@ Operations server -> car:
 }
 
 {
+    reqid: "1",
+    operation: "generalcarinfo",
+    userId: "a23vcs2245",
+    nonce: {
+        base64: "adadsa="
+        timestamp: 131231321
+    }
+}
+
+{
     reqid: "2",
     operation: "deleteconfig",
     userId: "a23vcs2245"
+    confirmationPhrase: "asdasdasdadasds"
+    iv: "randomiv"
     nonce: {
-        base64: "adadsa"
-        timestamp: 131231321
+            base64: "adadsa="
+            timestamp: 131231321
     }
+    hmac: "sadbaudqw="
 }
 
 {

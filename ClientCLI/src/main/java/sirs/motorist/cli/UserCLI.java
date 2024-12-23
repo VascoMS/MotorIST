@@ -2,6 +2,7 @@ package sirs.motorist.cli;
 
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.util.Base64;
 import java.util.Scanner;
 
 import com.google.gson.JsonObject;
@@ -12,11 +13,8 @@ import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
 import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
-import sirs.motorist.cli.model.dto.ConfigurationDto;
-import sirs.motorist.cli.model.dto.ConfigurationIdRequestDto;
-import sirs.motorist.cli.model.dto.FirmwareRequestDto;
+import sirs.motorist.cli.model.dto.*;
 import sirs.motorist.cli.model.Config;
-import sirs.motorist.cli.model.dto.UserPairRequestDto;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -173,6 +171,7 @@ public class UserCLI {
         System.out.println("Secret key stored successfully");
     }
 
+    // TODO: extract to another method to avoid duplication
     private static void getConfig(Scanner scanner) throws Exception {
         System.out.println("Enter the car chassis number: ");
         String carId = scanner.nextLine();
@@ -185,7 +184,9 @@ public class UserCLI {
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
-        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
+
+        InfoGetterDto dto = new InfoGetterDto(username, carId, password, nonce);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
@@ -200,9 +201,11 @@ public class UserCLI {
 
         boolean configValid = check.check(protectedObject, secretKeySpec, false);
 
+        String content = base64ToString(protectedObject);
+
         if (configValid) {
             System.out.println("Configuration is valid");
-            System.out.println("Configuration: " + protectedObject.getContent());
+            System.out.println("Configuration: " + content);
         }
         else {
             System.out.println("The integrity of the configuration was compromised");
@@ -239,8 +242,7 @@ public class UserCLI {
         Config config = new Config(out1,out2,pos1,pos3);
         Protect protect = new Protect();
 
-        byte[] configBytes = SecurityUtil.serializeToByteArray(config);
-        ProtectedObject protectedObj = protect.protect(secretKeySpec, configBytes, true);
+        ProtectedObject protectedObj = protect.protect(secretKeySpec, config, true);
 
         ConfigurationDto dto = new ConfigurationDto(
                 username,
@@ -260,29 +262,76 @@ public class UserCLI {
     private static void deleteConfig(Scanner scanner) throws Exception {
         System.out.println("Enter the car chassis number: ");
         String carId = scanner.nextLine();
+        System.out.println("Please confirm the operation by typing \"DELETE <username>\": ");
+        String confirmationPhrase = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/deleteConfig";
+        String keyStorePath = String.format("keystore/%s.jks", username);
 
-        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        // Load the key store
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+
+        Protect protect = new Protect();
+
+        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, confirmationPhrase, true);
+
+        DeleteConfigDto dto = new DeleteConfigDto(
+                username,
+                carId,
+                password,
+                protectedConfirmationPhrase.getContent(),
+                protectedConfirmationPhrase.getIv(),
+                protectedConfirmationPhrase.getNonce(),
+                protectedConfirmationPhrase.getHmac()
+        );
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+        String response = HttpClientManager.executeHttpRequest(url, "DELETE", body);
 
         System.out.println(response);
     }
 
-    private static void generalCarInfo(Scanner scanner) throws Exception{
+    // TODO: extract to another method to avoid duplication
+    private static void generalCarInfo(Scanner scanner) throws Exception {
         System.out.println("Enter the car chassis number: ");
         String carId = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/readCarInfo";
+        String keyStorePath = String.format("keystore/%s.jks", username);
 
-        ConfigurationIdRequestDto dto = new ConfigurationIdRequestDto(username, carId);
+        // Load the key store
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+
+        Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
+
+        InfoGetterDto dto = new InfoGetterDto(username, carId, password, nonce);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
-        System.out.println(response);
+        JsonObject resJsonObj = JSONUtil.parseJsonToClass(response, JsonObject.class);
+        resJsonObj.remove("userId");
+        resJsonObj.remove("carId");
+
+        Unprotect unprotect = new Unprotect();
+        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(resJsonObj, ProtectedObject.class);
+        protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
+
+        boolean configValid = check.check(protectedObject, secretKeySpec, false);
+
+        String content = base64ToString(protectedObject);
+
+        if (configValid) {
+            System.out.println("Car info is valid");
+            System.out.println("Car info: " + content);
+        }
+        else {
+            System.out.println("The integrity of the car info was compromised");
+        }
     }
 
     private static void downloadFirmware(Scanner scanner) throws Exception {

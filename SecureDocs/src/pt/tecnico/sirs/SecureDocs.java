@@ -4,6 +4,7 @@ import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
 import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.util.SecurityUtil;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +12,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 
 public class SecureDocs {
 
@@ -39,16 +41,19 @@ public class SecureDocs {
             // Unprotect the content
             Unprotect unprotect = new Unprotect();
             ProtectedObject unprotectedContent = unprotect.unprotect(protectedObject, secretKey);
+            byte[] unprotectedContentBytes = Base64.getDecoder().decode(unprotectedContent.getContent());
+            String unprotectedPlaintext = SecurityUtil.deserializeFromByteArray(unprotectedContentBytes);
+
             System.out.println("Unprotected Content:");
-            System.out.println("  - Content: " + unprotectedContent.getContent());
+            System.out.println("  - Content: " + unprotectedPlaintext);
             System.out.println("  - IV: " + unprotectedContent.getIv());
             System.out.println("  - Nonce: " + unprotectedContent.getNonce());
             System.out.println("  - HMAC: " + unprotectedContent.getHmac());
 
             // Check the content
             Check check = new Check();
-            //boolean isValid = check.check(protectedObject, secretKey);
-            //System.out.println("Is the content valid? " + isValid);
+            boolean isValid = check.check(protectedObject, secretKey, true);
+            System.out.println("Is the content valid? " + isValid);
 
         } catch (Exception e) {
             e.printStackTrace();

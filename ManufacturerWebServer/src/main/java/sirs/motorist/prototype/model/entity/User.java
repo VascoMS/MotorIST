@@ -16,12 +16,14 @@ public class User {
     @Id
     private String userId;
     private String password;
+    private byte[] salt;
     private String publicKey;
 
 
-    public User(String userId, String publicKey, String password) {
+    public User(String userId, String password, byte[] salt, String publicKey) {
         this.userId = userId;
         this.password = password;
+        this.salt = salt;
         this.publicKey = publicKey;
     }
 

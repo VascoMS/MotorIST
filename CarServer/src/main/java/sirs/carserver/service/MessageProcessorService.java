@@ -10,7 +10,7 @@ import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
-import sirs.carserver.model.dto.OperationResponseDto;
+import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.observer.Observer;
 import sirs.carserver.observer.Subject;
 
@@ -35,7 +35,7 @@ public class MessageProcessorService implements Subject {
         this.userService = userService;
     }
 
-    public OperationResponseDto processMessage(String message) throws InvalidOperationException {
+    public OpResponseDto processMessage(String message) throws InvalidOperationException {
         //
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
@@ -80,7 +80,7 @@ public class MessageProcessorService implements Subject {
         pairingService.endPairSession();
     }
 
-    public OperationResponseDto updateConfigOperation(JsonObject messageJson) {
+    public OpResponseDto updateConfigOperation(JsonObject messageJson) {
         //Get items from messageJson
         String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
         String protectedConfiguration = messageJson.get(WebSocketOpsConsts.CONFIGURATION_FIELD).getAsString();
@@ -96,10 +96,11 @@ public class MessageProcessorService implements Subject {
         Nonce responseNonce = SecurityUtil.generateNonce(SecurityUtil.RECOMMENDED_NONCE_LENGTH);
 
         boolean success = userService.updateConfig(username, protectedObject, protectedConfiguration, iv);
-        return new OperationResponseDto(requestId, success, responseNonce);
+        return new OpResponseDto(requestId, success);
     }
 
-    public OperationResponseDto deleteConfigOperation(JsonObject messageJson) {
+    public OpResponseDto deleteConfigOperation(JsonObject messageJson) {
+        //TODO: implement delete
         return null;
     }
 

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class    GeneralCarInfo {
+public class GeneralCarInfo {
     @Id
     private String id = "thisACarId";
 
