@@ -12,7 +12,6 @@ import java.util.Objects;
 @Getter
 @Document(collection = "users")
 public class User {
-
     @Id
     private String userId;
     private String password;

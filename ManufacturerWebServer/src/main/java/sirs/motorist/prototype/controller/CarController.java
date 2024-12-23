@@ -25,9 +25,10 @@ public class CarController {
     Check check;
 
     @Autowired
-    public CarController(CarService carService, Check nonceChecker) {
+    public CarController(CarService carService, Check nonceChecker, UserService userService) {
         this.carService = carService;
         this.check = nonceChecker;
+        this.userService = userService;
     }
 
     @PostMapping("/readCarInfo")

@@ -1,5 +1,6 @@
 package sirs.motorist.cli;
 
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.Base64;
@@ -156,7 +157,7 @@ public class UserCLI {
 
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
-        UserPairRequestDto dto = new UserPairRequestDto(username, nonce, carId, pairCode);
+        UserPairRequestDto dto = new UserPairRequestDto(username, password, nonce, carId, pairCode);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
@@ -247,6 +248,7 @@ public class UserCLI {
         ConfigurationDto dto = new ConfigurationDto(
                 username,
                 carId,
+                password,
                 protectedObj.getContent(),
                 protectedObj.getIv(),
                 protectedObj.getNonce(),
@@ -363,5 +365,10 @@ public class UserCLI {
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
         System.out.println(response);
+    }
+
+    private static String base64ToString(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
+        byte[] contentBytes = Base64.getDecoder().decode(protectedObject.getContent());
+        return SecurityUtil.deserializeFromByteArray(contentBytes);
     }
 }

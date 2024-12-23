@@ -36,7 +36,7 @@ public class UserConfigServiceImpl implements UserConfigService {
     public Boolean updateConfiguration(ConfigurationDto request) {
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
-        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "updateconfig");
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.UPDATECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.CONFIGURATION_FIELD, request.getConfiguration());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());

@@ -118,9 +118,11 @@ public class ProtectedObjectBuilder {
         }
         mac.update(this.iv);
 
-        for (String field : this.additionalProperties) {
-            byte[] fieldBytes = field.getBytes();
-            mac.update(fieldBytes);
+        if(additionalProperties != null){
+            for (String field : this.additionalProperties) {
+                byte[] fieldBytes = field.getBytes();
+                mac.update(fieldBytes);
+            }
         }
 
         byte[] hmacBytes = mac.doFinal(data);
