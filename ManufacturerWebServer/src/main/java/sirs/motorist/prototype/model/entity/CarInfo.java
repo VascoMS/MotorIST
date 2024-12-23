@@ -10,11 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class CarInfo {
     private String carId;
     private String firmwareVersion;
-    private int batteryLevel;
 
-    public CarInfo(String carId, String firmwareVersion, int batteryLevel) {
+    public CarInfo(String carId, String firmwareVersion) {
         this.carId = carId;
         this.firmwareVersion = firmwareVersion;
-        this.batteryLevel = batteryLevel;
     }
 }

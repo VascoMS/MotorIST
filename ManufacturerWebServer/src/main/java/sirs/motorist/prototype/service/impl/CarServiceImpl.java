@@ -13,9 +13,8 @@ import sirs.motorist.prototype.service.CarService;
 
 @Service
 public class CarServiceImpl implements CarService {
-
+    //TODO: Don't store
     private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
-
     private final CarRepository carRepository;
     private final ConfigRepository configRepository;
 
@@ -27,6 +26,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarInfo getCarInfo(ConfigurationIdRequestDto request) {
+        // TODO:
         Configuration config = configRepository.findByUserIdAndCarId(request.getUserId(), request.getCarId());
         if (config == null) {
             logger.error("Configuration for that user and car was not found...");

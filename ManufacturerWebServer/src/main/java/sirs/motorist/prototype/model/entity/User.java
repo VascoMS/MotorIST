@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
+
 
 @Setter
 @Getter
@@ -13,16 +15,19 @@ public class User {
 
     @Id
     private String userId;
+    private String password;
     private String publicKey;
 
-    public User(String userId, String publicKey) {
+
+    public User(String userId, String publicKey, String password) {
         this.userId = userId;
+        this.password = password;
         this.publicKey = publicKey;
     }
 
     public boolean isMechanic(){
         // Only mechanics have a public key
-        return !publicKey.isEmpty();
+        return Objects.nonNull(publicKey);
     }
 }
 
