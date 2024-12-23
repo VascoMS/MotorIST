@@ -6,16 +6,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
+import sirs.carserver.model.GeneralCarInfo;
+import sirs.carserver.model.dto.OpResponseWithContentDto;
 import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.observer.Observer;
 import sirs.carserver.observer.Subject;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,12 +31,16 @@ public class MessageProcessorService implements Subject {
 
     private final PairingService pairingService;
     private final UserService userService;
+    private final CarInfoService carInfoService;
+    private final KeyStoreService keyStoreService;
     private final List<Observer> pairingResultObservers = new ArrayList<>();
     private static final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingRequests = new ConcurrentHashMap<>();
 
-    public MessageProcessorService(PairingService pairingService, UserService userService) {
+    public MessageProcessorService(PairingService pairingService, UserService userService, CarInfoService carInfoService, KeyStoreService keyStoreService) {
         this.pairingService = pairingService;
         this.userService = userService;
+        this.carInfoService = carInfoService;
+        this.keyStoreService = keyStoreService;
     }
 
     public OpResponseDto processMessage(String message) throws InvalidOperationException {
@@ -97,13 +106,27 @@ public class MessageProcessorService implements Subject {
     }
 
     public OpResponseDto deleteConfigOperation(JsonObject messageJson) {
-        //TODO: implement delete
+        //TODO: Implement
         return null;
     }
 
     public OpResponseDto carInfoOperation(JsonObject messageJson){
-        //TODO: Implement
-        return null;
+        String userId = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
+        String reqId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
+        SecretKeySpec secretKey = keyStoreService.getSecretKeySpec(userId);
+        if(secretKey == null){
+            logger.error("No secret key found for user: {}", userId);
+            return new OpResponseDto(reqId, false);
+        }
+        GeneralCarInfo carInfo = carInfoService.getCarInfo(userId);
+        Protect protect = new Protect();
+        try {
+            ProtectedObject protectedCarInfo = protect.protect(secretKey, carInfo, false);
+            return new OpResponseWithContentDto(reqId, true, protectedCarInfo);
+        } catch (IOException e) {
+            logger.error("Error protecting car info: {}", e.getMessage());
+            return new OpResponseDto(reqId, false);
+        }
     }
 
     public void handleServerResponse(JsonObject message) {

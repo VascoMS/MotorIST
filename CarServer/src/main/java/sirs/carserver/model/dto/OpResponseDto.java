@@ -2,17 +2,17 @@ package sirs.carserver.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 public class OpResponseDto {
-    private String requestId;
+    private final String requestId;
     private final String operation = "response";
-    private String content;
-    private boolean success;
+    private final boolean success;
 
     public OpResponseDto(String reqId, boolean success){
         this.requestId = reqId;
         this.success = success;
     }
+
 }

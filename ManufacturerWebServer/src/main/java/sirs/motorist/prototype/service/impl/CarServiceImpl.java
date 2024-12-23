@@ -40,7 +40,6 @@ public class CarServiceImpl implements CarService {
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
         try {
-            //TODO: the message needs to send the carinfo, but we only send booleans atm :D
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(carId, jsonObj).get();
             return JSONUtil.parseJsonToClass(response, CarInfoDto.class);
         } catch (Exception e) {

@@ -61,8 +61,15 @@ public class UserService {
 
     public boolean updateConfig(String username, ProtectedObject protectedObject, String protectedConfiguration, String iv) {
         User user = userRepository.findByUsername(username);
+        if(user == null) {
+            logger.error("User not found: {}", username);
+            return false;
+        }
         SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
-
+        if (secretKeySpec == null) {
+            logger.error("Secret Key not found for user: {}", username);
+            return false;
+        }
         //Unprotect the content so we can verify if everything is good for the check
         Unprotect unprotect = new Unprotect();
         ProtectedObject unprotectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
@@ -87,11 +94,10 @@ public class UserService {
 
     private void appendFileAudit(String userId, String operation){
         logger.info("Adding auditMessage onto log file");
-
         try (FileWriter writer = new FileWriter(filepath, true)) { // Open in append mode
             writer.write("UserId: " + userId + "Operation: " + operation+"\n");
         } catch (IOException e) {
-            logger.error("Appending onto the audit file failed with the error: {}",e);
+            logger.error("Appending onto the audit file failed with the error: {}",e.getMessage());
         }
     }
 }

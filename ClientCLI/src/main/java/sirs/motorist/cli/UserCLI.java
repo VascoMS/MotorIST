@@ -178,39 +178,7 @@ public class UserCLI {
         String carId = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/readConfig";
-        String keyStorePath = String.format("keystore/%s.jks", username);
-
-        // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
-
-        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
-
-        Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
-
-        InfoGetterDto dto = new InfoGetterDto(username, carId, password, nonce);
-        String body = JSONUtil.parseClassToJsonString(dto);
-
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
-
-        JsonObject resJsonObj = JSONUtil.parseJsonToClass(response, JsonObject.class);
-        resJsonObj.remove("userId");
-        resJsonObj.remove("carId");
-
-        Unprotect unprotect = new Unprotect();
-        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(resJsonObj, ProtectedObject.class);
-        protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
-
-        boolean configValid = check.check(protectedObject, secretKeySpec, false);
-
-        String content = base64ToString(protectedObject);
-
-        if (configValid) {
-            System.out.println("Configuration is valid");
-            System.out.println("Configuration: " + content);
-        }
-        else {
-            System.out.println("The integrity of the configuration was compromised");
-        }
+        sendRequestAndCheckResponse(url, carId, "User Configuration");
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
@@ -295,12 +263,15 @@ public class UserCLI {
         System.out.println(response);
     }
 
-    // TODO: extract to another method to avoid duplication
     private static void generalCarInfo(Scanner scanner) throws Exception {
         System.out.println("Enter the car chassis number: ");
         String carId = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/readCarInfo";
+        sendRequestAndCheckResponse(carId, url, "Car Info");
+    }
+
+    private static void sendRequestAndCheckResponse(String carId, String url, String contentLabel) throws Exception {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
@@ -324,15 +295,15 @@ public class UserCLI {
         protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
         boolean configValid = check.check(protectedObject, secretKeySpec, false);
-
+        // TODO: Deserialize and discuss method extraction
         String content = base64ToString(protectedObject);
 
         if (configValid) {
-            System.out.println("Car info is valid");
-            System.out.println("Car info: " + content);
+            System.out.println(contentLabel + " is valid");
+            System.out.println(contentLabel + ": " + content);
         }
         else {
-            System.out.println("The integrity of the car info was compromised");
+            System.out.println("The integrity of the " + contentLabel + " was compromised");
         }
     }
 
