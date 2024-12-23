@@ -43,7 +43,8 @@ public class UserConfigServiceImpl implements UserConfigService {
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
-            boolean success = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            boolean success = carWebSocketHandler.checkSuccess(response);
             if(success) {
                 Configuration config = new Configuration(
                         request.getUserId(),
@@ -72,7 +73,8 @@ public class UserConfigServiceImpl implements UserConfigService {
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, JSONUtil.parseClassToJsonString(request.getNonce()));
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
-            return carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            return carWebSocketHandler.checkSuccess(response);
         } catch (Exception e) {
             logger.error("Failed to delete config: {}", e.getMessage());
             return false;

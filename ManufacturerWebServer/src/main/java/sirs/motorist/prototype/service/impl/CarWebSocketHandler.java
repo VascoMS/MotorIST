@@ -28,7 +28,7 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     private final ConcurrentHashMap<String, WebSocketSession> wsSessions = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> carSessions = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, CompletableFuture<JsonObject>> pendingRequests = new ConcurrentHashMap<>();
     private final PairingService pairingService;
 
     public CarWebSocketHandler(@Lazy PairingService pairingService){
@@ -84,13 +84,16 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     public void handleResponseOp(JsonObject messageJson){
         logger.info("Received response operation");
         String reqId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
-        boolean success = Boolean.parseBoolean(messageJson.get(WebSocketOpsConsts.  SUCCESS_FIELD).getAsString());
-        CompletableFuture<Boolean> pendingRequest = pendingRequests.get(reqId);
+        CompletableFuture<JsonObject> pendingRequest = pendingRequests.get(reqId);
         if(pendingRequest != null) {
-            pendingRequest.complete(success);
+            pendingRequest.complete(messageJson);
         } else {
             logger.error("No pending request matches response for reqId: {}", reqId);
         }
+    }
+
+    public boolean checkSuccess(JsonObject messageJson) {
+        return Boolean.parseBoolean(messageJson.get(WebSocketOpsConsts.SUCCESS_FIELD).getAsString());
     }
 
     @Override
@@ -102,12 +105,12 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
         carSessions.values().remove(session.getId());
     }
 
-    public CompletableFuture<Boolean> sendMessageToCarWithResponse(String carId, JsonObject jsonObj) {
+    public CompletableFuture<JsonObject> sendMessageToCarWithResponse(String carId, JsonObject jsonObj) {
         WebSocketSession session = getCarSession(carId);
         if (session != null) {
             String requestId = String.valueOf(System.currentTimeMillis());
             // Store the CompletableFuture for tracking response
-            CompletableFuture<Boolean> future = new CompletableFuture<>();
+            CompletableFuture<JsonObject> future = new CompletableFuture<>();
             pendingRequests.put(requestId, future);
             jsonObj.addProperty("reqid", requestId);
             String command = JSONUtil.parseClassToJsonString(jsonObj);

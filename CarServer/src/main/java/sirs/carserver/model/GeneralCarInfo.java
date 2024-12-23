@@ -11,7 +11,6 @@ import lombok.Setter;
 public class GeneralCarInfo {
     @Id
     private String id = "thisACarId";
-
     private boolean isLocked;
     private String firmwareVersion;
     private int batteryLevel;

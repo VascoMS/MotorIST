@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.JSONUtil;
-import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
 import sirs.carserver.model.dto.OpResponseDto;
@@ -41,16 +40,17 @@ public class MessageProcessorService implements Subject {
         JsonObject messageJson = JSONUtil.parseJson(message);
         String operation = messageJson.get(WebSocketOpsConsts.OPERATION_FIELD).getAsString();
         return switch (operation) {
-            case "pair" -> {
+            case WebSocketOpsConsts.PAIR_OP -> {
                 pairOperation(messageJson);
                 yield null;
             }
-            case "updateconfig" -> updateConfigOperation(messageJson);
-            case "deleteconfig" -> deleteConfigOperation(messageJson);
-            case "initpair-response" -> {
+            case WebSocketOpsConsts.UPDATECONFIG_OP -> updateConfigOperation(messageJson);
+            case WebSocketOpsConsts.DELETECONFIG_OP -> deleteConfigOperation(messageJson);
+            case WebSocketOpsConsts.INITPAIRRESPONSE_OP -> {
                 handleServerResponse(messageJson);
                 yield null;
             }
+            case WebSocketOpsConsts.GENERALCARINFO_OP -> carInfoOperation(messageJson);
             default -> {
                 logger.error("Operation not supported: {}", operation);
                 throw new InvalidOperationException("Invalid operation: " + operation);
@@ -92,15 +92,17 @@ public class MessageProcessorService implements Subject {
         //Generate new protected object, so I can unprotect it
         ProtectedObject protectedObject = new ProtectedObject(protectedConfiguration, iv, nonce, hmac);
 
-        //Generate new nonce for the operationResponseDTO
-        Nonce responseNonce = SecurityUtil.generateNonce(SecurityUtil.RECOMMENDED_NONCE_LENGTH);
-
         boolean success = userService.updateConfig(username, protectedObject, protectedConfiguration, iv);
         return new OpResponseDto(requestId, success);
     }
 
     public OpResponseDto deleteConfigOperation(JsonObject messageJson) {
         //TODO: implement delete
+        return null;
+    }
+
+    public OpResponseDto carInfoOperation(JsonObject messageJson){
+        //TODO: Implement
         return null;
     }
 

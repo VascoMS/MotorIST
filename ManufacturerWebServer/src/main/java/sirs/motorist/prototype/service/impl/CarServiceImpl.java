@@ -17,10 +17,12 @@ import sirs.motorist.prototype.service.CarService;
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
     private final ConfigRepository configRepository;
+    private final CarWebSocketHandler carWebSocketHandler;
 
     @Autowired
     public CarServiceImpl(ConfigRepository configRepository, CarWebSocketHandler carWebSocketHandler) {
         this.configRepository = configRepository;
+        this.carWebSocketHandler = carWebSocketHandler;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class CarServiceImpl implements CarService {
         String carId = request.getCarId();
         Configuration config = configRepository.findByUserIdAndCarId(userId, carId);
         if (config == null) {
-            logger.error("Configuration for that user and car was not found...");
+            logger.error("User {} isn't registered with car {}...", userId, carId);
             return null;
         }
         JsonObject jsonObj = new JsonObject();
