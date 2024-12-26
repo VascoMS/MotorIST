@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.tecnico.sirs.model.Nonce;
+import pt.tecnico.sirs.model.ProtectedObject;
+
+import java.util.Map;
 
 public class JSONUtil {
 
@@ -62,5 +64,11 @@ public class JSONUtil {
      */
     public static <T> String parseClassToJsonString(T object) {
         return gson.toJson(object);
+    }
+
+    public static JsonObject mapToJsonObject(Map<String, String> map, ProtectedObject protectedObject) {
+        JsonObject combined = gson.toJsonTree(protectedObject).getAsJsonObject();
+        map.forEach((key, value) -> combined.add(key, gson.toJsonTree(value)));
+        return combined;
     }
 }

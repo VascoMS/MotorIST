@@ -10,6 +10,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponentsBuilder;
+import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
 import sirs.motorist.prototype.service.PairingService;
@@ -42,7 +43,7 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
                 .build()
                 .getQueryParams()
                 .getFirst("carId");
-        if (carId == null){
+        if (carId == null) {
             try {
                 logger.error("Car id not found in uri, closing session...");
                 session.close();
@@ -72,7 +73,9 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
         String reqId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
         String carId = messageJson.get(WebSocketOpsConsts.CARID_FIELD).getAsString();
         String code = messageJson.get(WebSocketOpsConsts.CODE_FIELD).getAsString();
-        pairingService.initPairingSession(carId, code);
+        // Ignores previous fields which aren't part of the ProtectedObject
+        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);
+        pairingService.initPairingSession(carId, code, protectedObject);
         JsonObject response = new JsonObject();
         response.addProperty(WebSocketOpsConsts.REQ_ID, reqId);
         response.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "initpair-response");
@@ -128,12 +131,15 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
     public void sendMessageToCarNoResponse(String carId, JsonObject jsonObj) {
         WebSocketSession session = getCarSession(carId);
         if (session != null) {
+            logger.info("Sending message to car without response: {}", jsonObj);
             String command = JSONUtil.parseClassToJsonString(jsonObj);
             try {
                 session.sendMessage(new TextMessage(command));
             } catch (IOException e) {
                 logger.error("Error sending message to car: {}", e.getMessage());
             }
+        } else {
+            logger.error("Car session not found for carId: {}", carId);
         }
     }
 

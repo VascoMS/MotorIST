@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
 import sirs.motorist.prototype.model.dto.ConfigurationDto;
@@ -61,6 +62,12 @@ public class UserConfigServiceImpl implements UserConfigService {
             logger.error("Failed to update config: {}", e.getMessage());
             return false;
         }
+    }
+
+    public Boolean updateConfigurationLocal(String carId, String userId, String configuration, String iv, Nonce nonce, String hmac){
+        Configuration config = new Configuration(userId, carId, configuration, iv, nonce, hmac);
+        configRepository.save(config);
+        return true;
     }
 
     @Override

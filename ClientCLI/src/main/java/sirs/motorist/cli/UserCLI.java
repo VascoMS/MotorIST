@@ -35,7 +35,8 @@ public class UserCLI {
             System.out.println("Welcome to the Motorist CLI");
             System.out.println("Choose what to do: ");
             System.out.println("1. Login");
-            System.out.println("2. Exit");
+            System.out.println("2. Register");
+            System.out.println("3. Exit");
 
             int command = scanner.nextInt();
             scanner.nextLine();
@@ -46,6 +47,9 @@ public class UserCLI {
                         insertCredentials(scanner);
                         break;
                     case 2:
+                        registerNewUser(scanner);
+                        break;
+                    case 3:
                         System.out.println("Exiting...");
                         return;
                     default:
@@ -151,6 +155,21 @@ public class UserCLI {
         }
     }
 
+    private static void registerNewUser(Scanner scanner) {
+        System.out.println("Username: ");
+        String name = scanner.nextLine();
+        System.out.println("Password: ");
+        String pass = scanner.nextLine();
+        
+        String url = MANUFACTURER_URL + "/user/newUser";
+        UserCredentialsDto dto = new UserCredentialsDto(name, pass);
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+
+        System.out.println(response);
+    }
+
     private static void changeCar(Scanner scanner) {
         System.out.println("Enter the chassis number: ");
         carId = scanner.nextLine();
@@ -164,7 +183,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
 
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
@@ -209,7 +228,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -242,7 +261,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -275,7 +294,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -311,7 +330,7 @@ public class UserCLI {
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
 
         // Get the private key
         PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);

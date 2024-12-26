@@ -3,6 +3,7 @@ package sirs.carserver.service;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class MessageProcessorService implements Subject {
     // TODO: IF WE HAVE TIME, UserId, ReqId and Operation as independent fields, protected object info as sub json
-
+    // TODO: Check nonces from server
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
     private final PairingService pairingService;
@@ -36,7 +37,7 @@ public class MessageProcessorService implements Subject {
     private final List<Observer> pairingResultObservers = new ArrayList<>();
     private static final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingRequests = new ConcurrentHashMap<>();
 
-    public MessageProcessorService(PairingService pairingService, UserService userService, CarInfoService carInfoService, KeyStoreService keyStoreService) {
+    public MessageProcessorService(@Lazy PairingService pairingService, UserService userService, CarInfoService carInfoService, KeyStoreService keyStoreService) {
         this.pairingService = pairingService;
         this.userService = userService;
         this.carInfoService = carInfoService;
@@ -158,12 +159,10 @@ public class MessageProcessorService implements Subject {
         }
     }
 
-    public CompletableFuture<Boolean> addPendingRequest() {
-        String requestId = String.valueOf(System.currentTimeMillis());
-
+    public CompletableFuture<Boolean> addPendingRequest(String reqId) {
         // Store the CompletableFuture for tracking response
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        pendingRequests.put(requestId, future);
+        pendingRequests.put(reqId, future);
         return future;
     }
 

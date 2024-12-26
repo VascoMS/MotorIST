@@ -9,6 +9,7 @@ import pt.tecnico.sirs.util.SecurityUtil;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.security.Key;
@@ -23,14 +24,15 @@ public class KeyStoreService {
 
     private final KeyStore keyStore;
 
-    private static final String KEYSTORE_PATH = "keystore/keystore.jks";
-
     private final String keystorePassword;
 
-    public KeyStoreService(@Value("${keystore.password}") String keystorePassword) throws Exception {
+    private final String keystorePath;
+
+    public KeyStoreService(@Value("${keystore.password}") String keystorePassword, @Value("${keystore.path}") String keystorePath) throws Exception {
         // Load the keystore securely
         this.keystorePassword = keystorePassword;
-        this.keyStore = SecurityUtil.loadKeyStore(keystorePassword, KEYSTORE_PATH);
+        this.keyStore = SecurityUtil.loadKeyStore(keystorePassword, keystorePath, "JCEKS");
+        this.keystorePath = keystorePath;
     }
 
     public PrivateKey getPrivateKey(String alias) throws Exception {
@@ -59,7 +61,7 @@ public class KeyStoreService {
 
         keyStore.setEntry(userId, secretKeyEntry, keyPassword);
 
-        try (FileOutputStream keystoreFile = new FileOutputStream("keystore.jks")) {
+        try (FileOutputStream keystoreFile = new FileOutputStream(keystorePath)) {
             keyStore.store(keystoreFile, keystorePassword.toCharArray());
             logger.info("New key stored in keystore successfully.");
         } catch (Exception e) {

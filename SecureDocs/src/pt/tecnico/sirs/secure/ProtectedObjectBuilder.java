@@ -11,6 +11,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,9 @@ public class ProtectedObjectBuilder {
     }
 
     public ProtectedObjectBuilder addProperties(Map<String, String> properties){
+        if(additionalProperties == null){
+            additionalProperties = new ArrayList<>();
+        }
         for(Map.Entry<String, String> entry : properties.entrySet()){
             this.jsonObject.addProperty(entry.getKey(), entry.getValue());
             this.additionalProperties.add(entry.getValue());

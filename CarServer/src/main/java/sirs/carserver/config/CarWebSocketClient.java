@@ -1,10 +1,12 @@
 package sirs.carserver.config;
 
+import com.google.gson.JsonObject;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.tecnico.sirs.util.JSONUtil;
+import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
 import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.service.MessageProcessorService;
@@ -32,7 +34,6 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshake) {
         logger.info("WebSocket connection opened...");
-        send("Hello from the car!"); // Send message after connection is established
     }
 
     @Override
@@ -60,10 +61,12 @@ public class CarWebSocketClient extends WebSocketClient {
         attemptReconnect();
     }
 
-    public CompletableFuture<Boolean> sendRequest(String payload) {
-        CompletableFuture<Boolean> future = messageProcessorService.addPendingRequest();
+    public CompletableFuture<Boolean> sendRequest(JsonObject payload) {
+        String reqId = String.valueOf(System.currentTimeMillis());
+        payload.addProperty(WebSocketOpsConsts.REQ_ID, reqId);
+        CompletableFuture<Boolean> future = messageProcessorService.addPendingRequest(reqId);
         // Send the message
-        send(payload);
+        send(payload.toString());
         return future;
     }
 

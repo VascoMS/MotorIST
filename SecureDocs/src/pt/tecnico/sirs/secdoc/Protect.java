@@ -46,32 +46,6 @@ public class Protect {
 
     }
 
-    public <T extends Serializable> ProtectedObject protect(SecretKeySpec secretKey, T content, boolean hasNonce, Map<String, String> additionalFields) throws IOException {
-
-        // Read the data from the file
-        byte[] byteContent = SecurityUtil.serializeToByteArray(content);
-
-        //------------------------------BUILD PROTECTED OBJECT------------------------------------------
-        try {
-            ProtectedObjectBuilder protectedObjectBuilder = new ProtectedObjectBuilder();
-            protectedObjectBuilder
-                    .cipherContent(byteContent, secretKey);
-
-            if (hasNonce) {
-                protectedObjectBuilder.generateNonce(8);
-            }
-
-            protectedObjectBuilder.addProperties(additionalFields)
-                    .generateHMAC(byteContent, secretKey.getEncoded());
-
-            return JSONUtil.parseJsonToClass(protectedObjectBuilder.build(), ProtectedObject.class);
-        } catch(Exception e){
-            logger.error("Failed to build protected object: {}", e.getMessage());
-            return null;
-        }
-
-    }
-
     public static void writeProtectedDocument(String filePath, JsonObject protectedObject){
         try (FileWriter fileWriter = new FileWriter(filePath)) {
             // Convert JsonObject to JSON string and write to the file

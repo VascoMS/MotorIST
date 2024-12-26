@@ -1,12 +1,14 @@
 package sirs.carserver.service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Protect;
+import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.config.CarWebSocketClient;
 import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.PairingSessionException;
@@ -27,11 +29,9 @@ public class PairingService {
     private final CarWebSocketClient carWebSocketClient;
     private final KeyStoreService keyStoreService;
     private static final long PAIRING_SESSION_TIMEOUT = 2;
-    private static final String PAIRING_URI = "http://localhost:8443/car/pair";
     @Value("${car.id}")
     private String carId;
-    @Value("keystore.password")
-    private String password;
+
 
 
     public PairingService(KeyStoreService keyStoreService, CarWebSocketClient carWebSocketClient) {
@@ -48,7 +48,7 @@ public class PairingService {
         }
         PairingSession newPairingSession = new PairingSession();
         // Creating request to send to manufacturer for pairing code verification
-        String jsonPayload = buildJsonPayload(pairingSession);
+        JsonObject jsonPayload = buildJsonPayload(newPairingSession);
         if(jsonPayload == null) {
             throw new PairingSessionException("Error building json payload for pairing request.");
         }
@@ -64,16 +64,15 @@ public class PairingService {
         }
     }
 
-    private String buildJsonPayload(PairingSession pairingSession) {
-        // TODO: Add credentials and nonce to payload.
+    private JsonObject buildJsonPayload(PairingSession pairingSession) {
+        // TODO: Add nonce to payload.
         try {
             Protect protector = new Protect();
             // Additional fields to be included in the protected object
             Map<String, String> additionalFields = Map.of(WebSocketOpsConsts.OPERATION_FIELD,WebSocketOpsConsts.INITPAIR_OP,
                     WebSocketOpsConsts.CARID_FIELD, carId, WebSocketOpsConsts.CODE_FIELD, pairingSession.getCode());
-            ProtectedObject protectedObject = protector.protect(pairingSession.getSecretKey(), pairingSession.getDefaultConfig(), true, additionalFields);
-            Gson gson = new Gson();
-            return gson.toJson(protectedObject);
+            ProtectedObject protectedObject = protector.protect(pairingSession.getSecretKey(), pairingSession.getDefaultConfig(), true);
+            return JSONUtil.mapToJsonObject(additionalFields, protectedObject);
         } catch (Exception e) {
             logger.error("Error preparing and signing session payload: {}", e.getMessage());
             return null;

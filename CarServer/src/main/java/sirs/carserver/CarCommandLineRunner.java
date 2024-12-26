@@ -52,7 +52,7 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
                 }
                 case 2 -> {
                     System.out.println("Exiting...");
-                    return;
+                    System.exit(0);
                 }
                 default -> System.out.println("Invalid command...");
             }

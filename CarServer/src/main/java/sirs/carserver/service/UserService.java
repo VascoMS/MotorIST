@@ -16,7 +16,6 @@ import sirs.carserver.repository.UserRepository;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -44,9 +43,7 @@ public class UserService {
         Protect protect = new Protect();
         SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
 
-        Map<String, String> additionalFields = Map.of("carId", carId, "username", username);
-
-        ProtectedObject protectedConfig = protect.protect(secretKeySpec, config, false, additionalFields);
+        ProtectedObject protectedConfig = protect.protect(secretKeySpec, config, false);
 
         User user = new User(username, protectedConfig.getContent(), protectedConfig.getIv());
 
