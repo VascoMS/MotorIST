@@ -112,7 +112,7 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
             // Store the CompletableFuture for tracking response
             CompletableFuture<JsonObject> future = new CompletableFuture<>();
             pendingRequests.put(requestId, future);
-            jsonObj.addProperty("reqid", requestId);
+            jsonObj.addProperty(WebSocketOpsConsts.REQ_ID, requestId);
             String command = JSONUtil.parseClassToJsonString(jsonObj);
             try {
                 session.sendMessage(new TextMessage(command));

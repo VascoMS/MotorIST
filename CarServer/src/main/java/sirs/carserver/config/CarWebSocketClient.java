@@ -43,7 +43,7 @@ public class CarWebSocketClient extends WebSocketClient {
             if(response != null) {
                 send(JSONUtil.parseClassToJsonString(response));
             }
-        } catch(InvalidOperationException e){
+        } catch(InvalidOperationException e) {
             logger.error("Received invalid operation");
         }
     }

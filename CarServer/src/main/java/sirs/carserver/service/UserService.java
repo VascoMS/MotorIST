@@ -59,7 +59,7 @@ public class UserService {
         appendFileAudit(username, "createUser");
     }
 
-    public boolean updateConfig(String username, ProtectedObject protectedObject, String protectedConfiguration, String iv) {
+    public boolean updateConfig(String username, ProtectedObject protectedObject) {
         User user = userRepository.findByUsername(username);
         if(user == null) {
             logger.error("User not found: {}", username);
@@ -76,8 +76,8 @@ public class UserService {
 
         //Check if object was tampered with
         if(check.check(unprotectedObject, secretKeySpec, true)){
-            user.setConfig(protectedConfiguration);
-            user.setIv(iv);
+            user.setConfig(protectedObject.getContent());
+            user.setIv(protectedObject.getIv());
             userRepository.save(user);
 
             logger.info("Successfully updated the config");

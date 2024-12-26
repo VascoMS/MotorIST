@@ -19,22 +19,24 @@ Operations server -> car:
     reqid: "1",
     operation: "updateconfig",
     userId: "a23vcs2245",
-    configuration(ciphered): {
-    	"ac": [
-       	    { "out1": "789"},
-       	    { "out2": "1011"}
-    	],
-    	"seat": [
-       	    { "pos1": "0"},
-       	    { "pos3": "6"}
-    	]
+    protected: {
+     configuration(ciphered): {
+         	"ac": [
+            	    { "out1": "789"},
+            	    { "out2": "1011"}
+         	],
+         	"seat": [
+            	    { "pos1": "0"},
+            	    { "pos3": "6"}
+         	]
      }
      iv: "adasdasda"
-     nonce: {
-        base64: "adadsa"
-        timestamp: 131231321
-     }
+    nonce: {
+             base64: "adadsa"
+             timestamp: 131231321
+          }
      hmac: "ydqwgyddhqsd"
+    }
 }
 
 {

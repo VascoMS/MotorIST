@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class MessageProcessorService implements Subject {
+    // TODO: IF WE HAVE TIME, UserId, ReqId and Operation as independent fields, protected object info as sub json
 
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessorService.class);
 
@@ -44,7 +45,7 @@ public class MessageProcessorService implements Subject {
     }
 
     public OpResponseDto processMessage(String message) throws InvalidOperationException {
-        //
+        // Returns null if no response is needed
         logger.info("Processing message: {}", message);
         JsonObject messageJson = JSONUtil.parseJson(message);
         String operation = messageJson.get(WebSocketOpsConsts.OPERATION_FIELD).getAsString();
@@ -98,16 +99,17 @@ public class MessageProcessorService implements Subject {
         String hmac = messageJson.get(WebSocketOpsConsts.HMAC_FIELD).getAsString();
         String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
-        //Generate new protected object, so I can unprotect it
+        // Generate new protected object, so I can unprotect it
         ProtectedObject protectedObject = new ProtectedObject(protectedConfiguration, iv, nonce, hmac);
 
-        boolean success = userService.updateConfig(username, protectedObject, protectedConfiguration, iv);
+        boolean success = userService.updateConfig(username, protectedObject);
         return new OpResponseDto(requestId, success);
     }
 
     public OpResponseDto deleteConfigOperation(JsonObject messageJson) {
-        //TODO: Implement
-        return null;
+        String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
+        String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
+
     }
 
     public OpResponseDto carInfoOperation(JsonObject messageJson){

@@ -1,6 +1,7 @@
 package sirs.motorist.cli;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.Base64;
@@ -24,6 +25,7 @@ public class UserCLI {
     private static final int NONCE_SIZE = 8;
     private static String username;
     private static String password;
+    private static String carId;
     private static final Check check = new Check();
 
     public static void main(String[] args) {
@@ -63,7 +65,8 @@ public class UserCLI {
             System.out.println("3. Update a configuration");
             System.out.println("4. Delete a configuration");
             System.out.println("5. Get general car information");
-            System.out.println("6. Logout");
+            System.out.println("6. Change car");
+            System.out.println("7. Logout");
 
             int command = scanner.nextInt();
             scanner.nextLine();
@@ -74,7 +77,7 @@ public class UserCLI {
                         pairCar(scanner);
                         break;
                     case 2:
-                        getConfig(scanner);
+                        getConfig();
                         break;
                     case 3:
                         updateConfig(scanner);
@@ -83,9 +86,12 @@ public class UserCLI {
                         deleteConfig(scanner);
                         break;
                     case 5:
-                        generalCarInfo(scanner);
+                        generalCarInfo();
                         break;
                     case 6:
+                        changeCar(scanner);
+                        break;
+                    case 7:
                         System.out.println("Logging out...");
                         return;
                     default:
@@ -109,7 +115,7 @@ public class UserCLI {
             try {
                 switch (command) {
                     case 1:
-                        downloadFirmware(scanner);
+                        downloadFirmware();
                         break;
                     case 2:
                         System.out.println("logging out...");
@@ -136,6 +142,8 @@ public class UserCLI {
         System.out.println("Password: ");
         password = scanner.nextLine();
 
+        changeCar(scanner);
+
         if (role == 1) {
             mechanicCLI(scanner);
         } else {
@@ -143,9 +151,12 @@ public class UserCLI {
         }
     }
 
+    private static void changeCar(Scanner scanner) {
+        System.out.println("Enter the chassis number: ");
+        carId = scanner.nextLine();
+    }
+
     private static void pairCar(Scanner scanner) throws Exception {
-        System.out.println("Enter the car chassis number: ");
-        String carId = scanner.nextLine();
         System.out.println("Enter the pair code: ");
         String pairCode = scanner.nextLine();
 
@@ -173,18 +184,12 @@ public class UserCLI {
     }
 
     // TODO: extract to another method to avoid duplication
-    private static void getConfig(Scanner scanner) throws Exception {
-        System.out.println("Enter the car chassis number: ");
-        String carId = scanner.nextLine();
-
+    private static void getConfig() throws Exception {
         String url = MANUFACTURER_URL + "/user/readConfig";
         sendRequestAndCheckResponse(url, carId, "User Configuration");
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
-        System.out.println("Enter the car chassis number: ");
-        String carId = scanner.nextLine();
-
         System.out.print("Enter AC out1 value: ");
         int out1 = scanner.nextInt();
 
@@ -230,8 +235,6 @@ public class UserCLI {
     }
 
     private static void deleteConfig(Scanner scanner) throws Exception {
-        System.out.println("Enter the car chassis number: ");
-        String carId = scanner.nextLine();
         System.out.println("Please confirm the operation by typing \"DELETE <username>\": ");
         String confirmationPhrase = scanner.nextLine();
 
@@ -263,10 +266,7 @@ public class UserCLI {
         System.out.println(response);
     }
 
-    private static void generalCarInfo(Scanner scanner) throws Exception {
-        System.out.println("Enter the car chassis number: ");
-        String carId = scanner.nextLine();
-
+    private static void generalCarInfo() throws Exception {
         String url = MANUFACTURER_URL + "/user/readCarInfo";
         sendRequestAndCheckResponse(carId, url, "Car Info");
     }
@@ -307,15 +307,12 @@ public class UserCLI {
         }
     }
 
-    private static void downloadFirmware(Scanner scanner) throws Exception {
-        System.out.println("Enter the chassis number: ");
-        String chassisNumber = scanner.nextLine();
-
+    private static void downloadFirmware() throws Exception {
         String url = MANUFACTURER_URL + "/firmware/download";
         String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath); // TODO: Do we need to load the keystore everytime?
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         // Get the private key
         PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);
@@ -327,10 +324,10 @@ public class UserCLI {
         byte[] nonceBytes = SecurityUtil.serializeToByteArray(nonce);
 
         // Sign the data
-        String signedData = SecurityUtil.signData(chassisNumber.getBytes(), privateKey, nonceBytes, null);
+        String signedData = SecurityUtil.signData(carId.getBytes(), privateKey, nonceBytes, null);
 
         // Create the request DTO
-        FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, chassisNumber);
+        FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, carId);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
@@ -338,7 +335,7 @@ public class UserCLI {
         System.out.println(response);
     }
 
-    private static String base64ToString(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
+    private static <T extends Serializable> T base64ToString(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
         byte[] contentBytes = Base64.getDecoder().decode(protectedObject.getContent());
         return SecurityUtil.deserializeFromByteArray(contentBytes);
     }
