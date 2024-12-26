@@ -117,14 +117,28 @@ public class SecurityUtil {
         }
     }
 
-    public static KeyStore loadKeyStore(String password, String keyStorePath, String type) throws Exception {
+    public static KeyStore loadKeyStore(String password, String keyStorePath) throws Exception {
         // Load the keystore
-        KeyStore keyStore = KeyStore.getInstance(type);
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
         try (InputStream is = new FileInputStream(keyStorePath)) {
             keyStore.load(is, password.toCharArray());
         }
         return keyStore;
     }
+
+    public static KeyStore loadOrCreateKeyStore(String password, String keyStorePath) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        try (InputStream is = new FileInputStream(keyStorePath)) {
+            keyStore.load(is, password.toCharArray());
+        } catch (FileNotFoundException e) {
+            keyStore.load(null, password.toCharArray());
+            try (OutputStream os = new FileOutputStream(keyStorePath)) {
+                keyStore.store(os, password.toCharArray());
+            }
+        }
+        return keyStore;
+    }
+
 
     public static SecretKeySpec loadSecretKeyFromKeyStore(String username, String password, KeyStore keyStore) throws Exception {
         SecretKey secretKey = (SecretKey) keyStore.getKey(username + "_secret", password.toCharArray());
@@ -135,7 +149,7 @@ public class SecurityUtil {
         return (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
     }
 
-    public static void saveSecretKeyInKeyStore(KeyStore keyStore, String inputtedSecretKey, String username, String password, String keyStorePath) throws Exception {
+    public static void saveSecretKeyInKeyStore(KeyStore keyStore, String inputtedSecretKey, String keyPrefix, String password, String keyStorePath) throws Exception {
         // Create a SecretKeySpec from the inputted one
         SecretKey secretKey = new SecretKeySpec(inputtedSecretKey.getBytes(), "AES");
 
@@ -144,7 +158,7 @@ public class SecurityUtil {
         KeyStore.PasswordProtection protection = new KeyStore.PasswordProtection(password.toCharArray());
 
         // Store the secret key with an alias
-        String alias = username + "_secret";
+        String alias = keyPrefix + "_secret";
         keyStore.setEntry(alias, secretKeyEntry, protection);
 
         // Save the updated KeyStore to the file

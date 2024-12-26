@@ -43,14 +43,13 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
             System.out.println("Choose a command: ");
             System.out.println("1. Pair with app");
             System.out.println("2. Exit");
-            int command = scanner.nextInt();
-            scanner.nextLine();
+            String command = scanner.nextLine();
             switch (command) {
-                case 1 -> {
+                case "1" -> {
                     System.out.println("Starting pair, please input the following code in your app:");
                     pairWithApp();
                 }
-                case 2 -> {
+                case "2" -> {
                     System.out.println("Exiting...");
                     System.exit(0);
                 }

@@ -31,7 +31,7 @@ public class KeyStoreService {
     public KeyStoreService(@Value("${keystore.password}") String keystorePassword, @Value("${keystore.path}") String keystorePath) throws Exception {
         // Load the keystore securely
         this.keystorePassword = keystorePassword;
-        this.keyStore = SecurityUtil.loadKeyStore(keystorePassword, keystorePath, "JCEKS");
+        this.keyStore = SecurityUtil.loadKeyStore(keystorePassword, keystorePath);
         this.keystorePath = keystorePath;
     }
 

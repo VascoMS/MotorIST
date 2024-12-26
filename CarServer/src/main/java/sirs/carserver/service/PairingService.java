@@ -84,7 +84,8 @@ public class PairingService {
             logger.info("No active pairing session...");
             return false;
         }
-        return pairingSession.getCode().equals(code);
+        byte[] codeBytes = Base64.getDecoder().decode(code);
+        return pairingSession.validateCode(codeBytes);
     }
 
     public boolean hasActivePairingSession(){

@@ -11,6 +11,7 @@ import sirs.motorist.prototype.model.dto.UserPairRequestDto;
 import sirs.motorist.prototype.service.PairingService;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,13 +34,16 @@ public class PairingServiceImpl implements PairingService {
 
     @Override
     public boolean validatePairingSession(UserPairRequestDto request) {
-        byte[] codeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
-        boolean verifyCodes = Arrays.equals(pairingSessions.get(request.getCarId()).hashedCode(), codeHash);
+        byte[] userCodeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
+        byte[] carCodeHash = pairingSessions.get(request.getCarId()).hashedCode();
+        boolean verifyCodes = Arrays.equals(userCodeHash, carCodeHash);
 
+        String base64hashedCode = Base64.getEncoder().encodeToString(carCodeHash);
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_FIELD);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
+        jsonObj.addProperty(WebSocketOpsConsts.CODE_FIELD, base64hashedCode);
         jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, verifyCodes);
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
 

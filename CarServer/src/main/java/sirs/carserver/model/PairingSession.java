@@ -2,8 +2,11 @@ package sirs.carserver.model;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Objects;
 
 import lombok.Getter;
+import pt.tecnico.sirs.util.SecurityUtil;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
@@ -44,5 +47,9 @@ public class PairingSession {
             pairingCode.append(ALPHANUMERIC_CHARACTERS.charAt(randomIndex));
         }
         return pairingCode.toString();
+    }
+
+    public boolean validateCode(byte[] code) {
+        return Arrays.equals(SecurityUtil.hashData(this.code.getBytes()), code);
     }
 }

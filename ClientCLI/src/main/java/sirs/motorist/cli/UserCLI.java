@@ -21,11 +21,12 @@ import sirs.motorist.cli.model.Config;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserCLI {
-    private static final String MANUFACTURER_URL = "http://localhost:8080/api"; //TODO: change to actual URL
+    private static final String MANUFACTURER_URL = "http://localhost:8443/";
     private static final int NONCE_SIZE = 8;
     private static String username;
     private static String password;
     private static String carId;
+    private static String keyStorePath;
     private static final Check check = new Check();
 
     public static void main(String[] args) {
@@ -38,22 +39,17 @@ public class UserCLI {
             System.out.println("2. Register");
             System.out.println("3. Exit");
 
-            int command = scanner.nextInt();
-            scanner.nextLine();
+            String command = scanner.nextLine();
 
             try {
                 switch (command) {
-                    case 1:
-                        insertCredentials(scanner);
-                        break;
-                    case 2:
-                        registerNewUser(scanner);
-                        break;
-                    case 3:
+                    case "1" -> insertCredentials(scanner);
+                    case "2" -> registerNewUser(scanner);
+                    case "3" -> {
                         System.out.println("Exiting...");
                         return;
-                    default:
-                        System.out.println("Invalid command");
+                    }
+                    default -> System.out.println("Invalid command");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -72,34 +68,21 @@ public class UserCLI {
             System.out.println("6. Change car");
             System.out.println("7. Logout");
 
-            int command = scanner.nextInt();
-            scanner.nextLine();
+            String command = scanner.nextLine();;
 
             try {
                 switch (command) {
-                    case 1:
-                        pairCar(scanner);
-                        break;
-                    case 2:
-                        getConfig();
-                        break;
-                    case 3:
-                        updateConfig(scanner);
-                        break;
-                    case 4:
-                        deleteConfig(scanner);
-                        break;
-                    case 5:
-                        generalCarInfo();
-                        break;
-                    case 6:
-                        changeCar(scanner);
-                        break;
-                    case 7:
+                    case "1" -> pairCar(scanner);
+                    case "2" -> getConfig();
+                    case "3" -> updateConfig(scanner);
+                    case "4" -> deleteConfig(scanner);
+                    case "5" -> generalCarInfo();
+                    case "6" -> changeCar(scanner);
+                    case "7" -> {
                         System.out.println("Logging out...");
                         return;
-                    default:
-                        System.out.println("Invalid command");
+                    }
+                    default -> System.out.println("Invalid command");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -113,19 +96,16 @@ public class UserCLI {
             System.out.println("1. Download the firmware");
             System.out.println("2. Logout");
 
-            int command = scanner.nextInt();
-            scanner.nextLine();
+            String command = scanner.nextLine();
 
             try {
                 switch (command) {
-                    case 1:
-                        downloadFirmware();
-                        break;
-                    case 2:
+                    case "1" -> downloadFirmware();
+                    case "2" -> {
                         System.out.println("logging out...");
                         return;
-                    default:
-                        System.out.println("Invalid command");
+                    }
+                    default -> System.out.println("Invalid command");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -143,8 +123,10 @@ public class UserCLI {
 
         System.out.print("Enter username: ");
         username = scanner.nextLine();
-        System.out.println("Password: ");
+        System.out.print("Password: ");
         password = scanner.nextLine();
+
+        keyStorePath = String.format("keystore/%s.p12", username);
 
         changeCar(scanner);
 
@@ -156,11 +138,11 @@ public class UserCLI {
     }
 
     private static void registerNewUser(Scanner scanner) {
-        System.out.println("Username: ");
+        System.out.print("Username: ");
         String name = scanner.nextLine();
-        System.out.println("Password: ");
+        System.out.print("Password: ");
         String pass = scanner.nextLine();
-        
+
         String url = MANUFACTURER_URL + "/user/newUser";
         UserCredentialsDto dto = new UserCredentialsDto(name, pass);
         String body = JSONUtil.parseClassToJsonString(dto);
@@ -176,14 +158,10 @@ public class UserCLI {
     }
 
     private static void pairCar(Scanner scanner) throws Exception {
-        System.out.println("Enter the pair code: ");
+        System.out.print("Enter the pair code: ");
         String pairCode = scanner.nextLine();
 
-        String url = MANUFACTURER_URL + "/car/pair";
-        String keyStorePath = String.format("keystore/%s.jks", username);
-
-        // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
+        String url = MANUFACTURER_URL + "/user/pair";
 
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
@@ -194,15 +172,17 @@ public class UserCLI {
 
         System.out.println(response);
 
-        System.out.println("Enter the new secret key: ");
+        System.out.print("Enter the new secret key: ");
         String inputtedSecretKey = scanner.nextLine();
 
-        SecurityUtil.saveSecretKeyInKeyStore(keyStore, username, password, keyStorePath, inputtedSecretKey);
+        // Load the key store
+        KeyStore keyStore = SecurityUtil.loadOrCreateKeyStore(password, keyStorePath);
+
+        SecurityUtil.saveSecretKeyInKeyStore(keyStore, carId, password, keyStorePath, inputtedSecretKey);
 
         System.out.println("Secret key stored successfully");
     }
 
-    // TODO: extract to another method to avoid duplication
     private static void getConfig() throws Exception {
         String url = MANUFACTURER_URL + "/user/readConfig";
         sendRequestAndCheckResponse(url, carId, "User Configuration");
@@ -225,10 +205,9 @@ public class UserCLI {
         scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/updateConfig";
-        String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -258,10 +237,9 @@ public class UserCLI {
         String confirmationPhrase = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/deleteConfig";
-        String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -291,10 +269,8 @@ public class UserCLI {
     }
 
     private static void sendRequestAndCheckResponse(String carId, String url, String contentLabel) throws Exception {
-        String keyStorePath = String.format("keystore/%s.jks", username);
-
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
 
@@ -327,10 +303,9 @@ public class UserCLI {
 
     private static void downloadFirmware() throws Exception {
         String url = MANUFACTURER_URL + "/firmware/download";
-        String keyStorePath = String.format("keystore/%s.jks", username);
 
         // Load the key store
-        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath, "JCEKS");
+        KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         // Get the private key
         PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);
@@ -338,7 +313,7 @@ public class UserCLI {
         // Generate a nonce
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
-        // Serialize the nonce if mechanico
+        // Serialize the nonce if mechanic
         byte[] nonceBytes = SecurityUtil.serializeToByteArray(nonce);
 
         // Sign the data
