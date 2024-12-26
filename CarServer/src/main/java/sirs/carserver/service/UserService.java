@@ -1,16 +1,13 @@
 package sirs.carserver.service;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
-import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.model.Config;
 import sirs.carserver.model.User;
 import org.springframework.stereotype.Service;
@@ -60,12 +57,12 @@ public class UserService {
     }
 
     public boolean updateConfig(String username, ProtectedObject protectedObject) {
+        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
         User user = userRepository.findByUsername(username);
-        if(user == null) {
+        if(user == null){
             logger.error("User not found: {}", username);
             return false;
         }
-        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
         if (secretKeySpec == null) {
             logger.error("Secret Key not found for user: {}", username);
             return false;
@@ -88,6 +85,32 @@ public class UserService {
             return true;
         } else {
             logger.error("Config update failed, because the check failed");
+            return false;
+        }
+    }
+
+    public boolean deleteConfig(String username, ProtectedObject protectedObject) {
+        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
+        if (secretKeySpec == null) {
+            logger.error("Secret Key not found for user: {}", username);
+            return false;
+        }
+        //Unprotect the content so we can verify if everything is good for the check
+        Unprotect unprotect = new Unprotect();
+        ProtectedObject unprotectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
+
+        //Check if object was tampered with
+        if(check.check(unprotectedObject, secretKeySpec, true)){
+            userRepository.deleteById(username);
+
+            logger.info("Successfully deleted user config");
+
+            //write onto the auditFile
+            appendFileAudit(username, "deleteConfig");
+
+            return true;
+        } else {
+            logger.error("Delete config failed, because the check failed");
             return false;
         }
     }

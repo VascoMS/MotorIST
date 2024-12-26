@@ -20,7 +20,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,14 +92,10 @@ public class MessageProcessorService implements Subject {
     public OpResponseDto updateConfigOperation(JsonObject messageJson) {
         //Get items from messageJson
         String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
-        String protectedConfiguration = messageJson.get(WebSocketOpsConsts.CONFIGURATION_FIELD).getAsString();
-        String iv = messageJson.get(WebSocketOpsConsts.IV_FIELD).getAsString();
-        Nonce nonce = JSONUtil.parseJsonToClass(messageJson.get(WebSocketOpsConsts.NONCE_FIELD).getAsJsonObject(), Nonce.class);
-        String hmac = messageJson.get(WebSocketOpsConsts.HMAC_FIELD).getAsString();
         String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
         // Generate new protected object, so I can unprotect it
-        ProtectedObject protectedObject = new ProtectedObject(protectedConfiguration, iv, nonce, hmac);
+        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);
 
         boolean success = userService.updateConfig(username, protectedObject);
         return new OpResponseDto(requestId, success);
@@ -110,6 +105,9 @@ public class MessageProcessorService implements Subject {
         String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
         String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
+        ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);
+        boolean success = userService.deleteConfig(username, protectedObject);
+        return new OpResponseDto(requestId, success);
     }
 
     public OpResponseDto carInfoOperation(JsonObject messageJson){

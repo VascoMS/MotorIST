@@ -15,7 +15,7 @@ Operations server -> car:
     }
 }
 
-{
+{   IDEAL MESSAGE FORMAT
     reqid: "1",
     operation: "updateconfig",
     userId: "a23vcs2245",

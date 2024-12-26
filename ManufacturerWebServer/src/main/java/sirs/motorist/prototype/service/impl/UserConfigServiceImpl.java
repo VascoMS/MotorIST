@@ -38,7 +38,7 @@ public class UserConfigServiceImpl implements UserConfigService {
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.UPDATECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
-        jsonObj.addProperty(WebSocketOpsConsts.CONFIGURATION_FIELD, request.getConfiguration());
+        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfiguration());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
@@ -68,7 +68,7 @@ public class UserConfigServiceImpl implements UserConfigService {
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.DELETECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
-        jsonObj.addProperty(WebSocketOpsConsts.CONFIRMATION_PHRASE_FIELD, request.getConfirmationPhrase());
+        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfirmationPhrase());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, JSONUtil.parseClassToJsonString(request.getNonce()));
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
