@@ -21,4 +21,13 @@ public class Config implements Serializable {
         this.pos1 = pos1;
         this.pos3 = pos3;
     }
+
+    @Override
+    public String toString() {
+        return "Config:\n" +
+                "\tout1= " + out1 + "\n" +
+                "\tout2=" + out2 + "\n" +
+                "\tpos1=" + pos1 + "\n" +
+                "\tpos3=" + pos3 + "\n";
+    }
 }

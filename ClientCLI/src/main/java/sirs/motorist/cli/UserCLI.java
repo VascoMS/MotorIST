@@ -295,12 +295,11 @@ public class UserCLI {
         protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
         boolean configValid = check.check(protectedObject, secretKeySpec, false);
-        // TODO: Deserialize and discuss method extraction
-        String content = base64ToString(protectedObject);
+        Config config = base64ToString(protectedObject);
 
         if (configValid) {
             System.out.println(contentLabel + " is valid");
-            System.out.println(contentLabel + ": " + content);
+            System.out.println(contentLabel + ": " + config.toString());
         }
         else {
             System.out.println("The integrity of the " + contentLabel + " was compromised");
