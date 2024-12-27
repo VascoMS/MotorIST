@@ -68,7 +68,7 @@ public class UserCLI {
             System.out.println("6. Change car");
             System.out.println("7. Logout");
 
-            String command = scanner.nextLine();;
+            String command = scanner.nextLine();
 
             try {
                 switch (command) {
@@ -153,7 +153,7 @@ public class UserCLI {
     }
 
     private static void changeCar(Scanner scanner) {
-        System.out.println("Enter the chassis number: ");
+        System.out.print("Enter the chassis number: ");
         carId = scanner.nextLine();
     }
 
@@ -175,10 +175,12 @@ public class UserCLI {
         System.out.print("Enter the new secret key: ");
         String inputtedSecretKey = scanner.nextLine();
 
+        byte[] secretKeyBytes = Base64.getDecoder().decode(inputtedSecretKey);
+
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadOrCreateKeyStore(password, keyStorePath);
 
-        SecurityUtil.saveSecretKeyInKeyStore(keyStore, carId, password, keyStorePath, inputtedSecretKey);
+        SecurityUtil.saveSecretKeyInKeyStore(keyStore, secretKeyBytes, carId, password, keyStorePath);
 
         System.out.println("Secret key stored successfully");
     }

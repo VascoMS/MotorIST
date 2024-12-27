@@ -149,9 +149,9 @@ public class SecurityUtil {
         return (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
     }
 
-    public static void saveSecretKeyInKeyStore(KeyStore keyStore, String inputtedSecretKey, String keyPrefix, String password, String keyStorePath) throws Exception {
+    public static void saveSecretKeyInKeyStore(KeyStore keyStore, byte[] inputtedSecretKey, String keyPrefix, String password, String keyStorePath) throws Exception {
         // Create a SecretKeySpec from the inputted one
-        SecretKey secretKey = new SecretKeySpec(inputtedSecretKey.getBytes(), "AES");
+        SecretKey secretKey = new SecretKeySpec(inputtedSecretKey, "AES");
 
         // Store the SecretKey in the KeyStore
         KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(secretKey);

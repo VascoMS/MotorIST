@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkCredentials(String userId, String password) {
         User storedUser = userRepository.findByUserId(userId);
+        if(storedUser == null) {
+            logger.error("User {} not found", userId);
+            return false;
+        }
+
         String inputHashedPassword;
         try {
             inputHashedPassword = hashPassword(password, storedUser.getSalt());
