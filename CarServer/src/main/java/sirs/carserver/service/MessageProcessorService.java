@@ -123,7 +123,7 @@ public class MessageProcessorService implements Subject {
             logger.error("No secret key found for user: {}", userId);
             return new OpResponseDto(reqId, false);
         }
-        GeneralCarInfo carInfo = carInfoService.getCarInfo(userId);
+        GeneralCarInfo carInfo = carInfoService.getCarInfo();
         Protect protect = new Protect();
         try {
             ProtectedObject protectedCarInfo = protect.protect(secretKey, carInfo, false);

@@ -1,5 +1,6 @@
 package sirs.motorist.cli;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.KeyStore;
@@ -328,6 +329,14 @@ public class UserCLI {
         String response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
         System.out.println(response);
+
+        try (FileWriter writer = new FileWriter("files/firmware.json")) {
+            // Serialize the object to JSON and write it to a file
+            JSONUtil.serializeAndWriteToFile(response, writer); //TODO: check if the response is a SignedFirmwareDto
+            System.out.println("JSON written to file.");
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
     }
 
     private static <T extends Serializable> T base64ToString(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {

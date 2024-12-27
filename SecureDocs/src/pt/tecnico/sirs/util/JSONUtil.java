@@ -3,10 +3,13 @@ package pt.tecnico.sirs.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.tecnico.sirs.model.ProtectedObject;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Map;
 
 public class JSONUtil {
@@ -15,6 +18,14 @@ public class JSONUtil {
 
     // TODO: Added prettyPrinting --> GsonBuilder().setPrettyPrinting().create();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    public static JsonObject parseFileReaderToJson(FileReader reader) {
+        return JsonParser.parseReader(reader).getAsJsonObject();
+    }
+
+    public static void serializeAndWriteToFile(Object object, FileWriter writer) {
+        gson.toJson(object, writer);
+    }
 
     /**
      * Converts an object to a byte array using JSON serialization

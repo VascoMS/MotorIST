@@ -4,18 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.core.io.Resource;
 import pt.tecnico.sirs.util.SecurityUtil;
 
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.PrivateKey;
+import java.security.*;
 
 @Service
 public class KeyStoreService {
@@ -38,6 +31,11 @@ public class KeyStoreService {
     public PrivateKey getPrivateKey(String alias) throws Exception {
         logger.info("Getting private key from keystore...");
         return (PrivateKey) keyStore.getKey(alias, keystorePassword.toCharArray());
+    }
+
+    public PublicKey getPublicKey(String alias) throws Exception {
+        logger.info("Getting public key from keystore...");
+        return (PublicKey) keyStore.getKey(alias, keystorePassword.toCharArray());
     }
 
     public SecretKeySpec getSecretKeySpec(String alias){

@@ -14,7 +14,7 @@ public class GeneralCarInfo implements Serializable {
     @Id
     private String id;
     private boolean isLocked;
-    private String firmwareVersion;
+    private int firmwareVersion;
     private int batteryLevel;
     private int totalKms;
 }
