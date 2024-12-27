@@ -8,6 +8,8 @@ import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
 import sirs.motorist.prototype.model.PairingSessionRecord;
 import sirs.motorist.prototype.model.dto.UserPairRequestDto;
+import sirs.motorist.prototype.model.entity.Configuration;
+import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.PairingService;
 
 import java.util.Arrays;
@@ -20,10 +22,12 @@ public class PairingServiceImpl implements PairingService {
 
     private final Map<String, PairingSessionRecord> pairingSessions;
     private final CarWebSocketHandler carWebSocketHandler;
+    private final ConfigRepository configRepository;
 
-    PairingServiceImpl(CarWebSocketHandler carWebSocketHandler) {
+    PairingServiceImpl(CarWebSocketHandler carWebSocketHandler, ConfigRepository configRepository) {
         this.pairingSessions = new ConcurrentHashMap<>();
         this.carWebSocketHandler = carWebSocketHandler;
+        this.configRepository = configRepository;
     }
 
     @Override
@@ -35,10 +39,11 @@ public class PairingServiceImpl implements PairingService {
     @Override
     public boolean validatePairingSession(UserPairRequestDto request) {
         byte[] userCodeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
-        byte[] carCodeHash = pairingSessions.get(request.getCarId()).hashedCode();
-        boolean verifyCodes = Arrays.equals(userCodeHash, carCodeHash);
+        PairingSessionRecord pairingSession = pairingSessions.get(request.getCarId());
+        byte[] hashedCode = pairingSession.hashedCode();
+        boolean verifyCodes = Arrays.equals(userCodeHash, hashedCode);
 
-        String base64hashedCode = Base64.getEncoder().encodeToString(carCodeHash);
+        String base64hashedCode = Base64.getEncoder().encodeToString(hashedCode);
         JsonObject jsonObj = new JsonObject();
         String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_FIELD);
@@ -48,6 +53,18 @@ public class PairingServiceImpl implements PairingService {
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
 
         carWebSocketHandler.sendMessageToCarNoResponse(request.getCarId(), jsonObj);
+
+        ProtectedObject protectedConfig = pairingSession.protectedConfig();
+        Configuration configuration = new Configuration(
+                request.getUserId(),
+                request.getCarId(),
+                protectedConfig.getContent(),
+                protectedConfig.getIv(),
+                protectedConfig.getNonce(),
+                protectedConfig.getHmac()
+        );
+        configRepository.save(configuration);
+
         pairingSessions.remove(request.getCarId());
 
         return verifyCodes;

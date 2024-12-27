@@ -5,12 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.consts.WebSocketOpsConsts;
 import sirs.carserver.exception.InvalidOperationException;
+import sirs.carserver.exception.PairingSessionException;
 import sirs.carserver.model.GeneralCarInfo;
 import sirs.carserver.model.dto.OpResponseWithContentDto;
 import sirs.carserver.model.dto.OpResponseDto;
@@ -77,7 +77,11 @@ public class MessageProcessorService implements Subject {
             logger.info("Pairing code: {}", code);
             String userId = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
             try {
+                pairingService.storeKey(userId);
                 userService.createUser(userId);
+            } catch (PairingSessionException e) {
+                logger.error("Error storing the new key: {}", e.getMessage());
+                pairResult = false;
             } catch (IOException e) {
                 logger.error("Error creating user: {}", e.getMessage());
                 pairResult = false;

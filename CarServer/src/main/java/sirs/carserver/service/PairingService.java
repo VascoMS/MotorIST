@@ -1,6 +1,5 @@
 package sirs.carserver.service;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,17 +103,20 @@ public class PairingService {
         }
     }
 
-    public String storeKey() throws PairingSessionException {
+    public void storeKey(String userId) throws PairingSessionException {
         if(pairingSession == null) {
             throw new PairingSessionException("No active pairing session...");
         }
         try {
-            keyStoreService.storeNewKey(pairingSession.getSecretKey(), carId);
-            return Base64.getEncoder().encodeToString(pairingSession.getSecretKey().getEncoded());
+            keyStoreService.storeNewKey(pairingSession.getSecretKey(), userId);
         } catch (Exception e) {
             logger.error("Error storing key: {}", e.getMessage());
             throw new PairingSessionException("Error storing key...");
         }
+    }
+
+    public String getKey() {
+        return Base64.getEncoder().encodeToString(pairingSession.getSecretKey().getEncoded());
     }
 }
 

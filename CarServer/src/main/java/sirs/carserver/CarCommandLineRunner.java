@@ -72,14 +72,9 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
     public void update(boolean pairingSuccess) {
         // TODO: clear key from console output
         if(pairingSuccess){
-            try {
-                String key = pairingService.storeKey();
-                String output = "New secret key (DON'T SHARE WITH ANYONE): " + key;
-                System.out.println(output);
-            } catch (PairingSessionException e){
-                logger.error("Error storing key {}", e.getMessage());
-                System.out.println("Error storing key...");
-            }
+            String key = pairingService.getKey();
+            String output = "New secret key (DON'T SHARE WITH ANYONE): " + key;
+            System.out.println(output);
         } else {
             System.out.println("Failed to pair...");
         }

@@ -37,20 +37,20 @@ public class UserService {
         this.filepath = filepath;
     }
 
-    public void createUser(String username) throws IOException {
+    public void createUser(String userId) throws IOException {
         Config config = new Config();
 
         Protect protect = new Protect();
-        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
+        SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(userId);
 
         ProtectedObject protectedConfig = protect.protect(secretKeySpec, config, false);
 
-        User user = new User(username, protectedConfig.getContent(), protectedConfig.getIv());
+        User user = new User(userId, protectedConfig.getContent(), protectedConfig.getIv());
 
         userRepository.save(user);
 
         //write onto the auditFile
-        appendFileAudit(username, "createUser");
+        appendFileAudit(userId, "createUser");
     }
 
     public boolean updateConfig(String username, ProtectedObject protectedObject) {
