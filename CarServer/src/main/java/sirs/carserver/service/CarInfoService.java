@@ -49,6 +49,8 @@ public class CarInfoService {
         GeneralCarInfo carInfo = carInfoRepository.findById(carId).orElse(null);
         if (carInfo == null) {
             throw new InstallFirmwareException("Car not found");
+        } else if (carInfo.getFirmwareVersion() > signedFirmwareDto.getFirmwareVersion()) {
+            throw new InstallFirmwareException("The firmware version is older than the current one");
         }
 
         carInfo.setFirmwareVersion(signedFirmwareDto.getFirmwareVersion());
