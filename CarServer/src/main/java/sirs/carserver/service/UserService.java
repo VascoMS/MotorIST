@@ -1,9 +1,11 @@
 package sirs.carserver.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
@@ -53,6 +55,7 @@ public class UserService {
         appendFileAudit(userId, "createUser");
     }
 
+    @Transactional
     public boolean updateConfig(String username, ProtectedObject protectedObject) {
         SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
         User user = userRepository.findByUsername(username);
@@ -86,7 +89,9 @@ public class UserService {
         }
     }
 
+    @Transactional
     public boolean deleteConfig(String username, ProtectedObject protectedObject) {
+        logger.info("Delete configuration for user: {}", username);
         SecretKeySpec secretKeySpec = keyStoreService.getSecretKeySpec(username);
         if (secretKeySpec == null) {
             logger.error("Secret Key not found for user: {}", username);
@@ -99,12 +104,15 @@ public class UserService {
         //Check if object was tampered with
         if(check.check(unprotectedObject, secretKeySpec, true)){
             userRepository.deleteById(username);
-
+            try {
+                keyStoreService.deleteKey(username);
+            } catch (Exception e) {
+                logger.error("Unable to delete key for user: {}", username);
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            }
             logger.info("Successfully deleted user config");
-
             //write onto the auditFile
             appendFileAudit(username, "deleteConfig");
-
             return true;
         } else {
             logger.error("Delete config failed, because the check failed");

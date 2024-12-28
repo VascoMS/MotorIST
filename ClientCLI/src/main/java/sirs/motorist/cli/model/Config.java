@@ -2,6 +2,7 @@ package sirs.motorist.cli.model;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 
 @Getter
@@ -22,12 +23,19 @@ public class Config implements Serializable {
         this.pos3 = pos3;
     }
 
+    public Config() {
+        this.out1 = 0;
+        this.out2 = 0;
+        this.pos1 = 0;
+        this.pos3 = 0;
+    }
+
     @Override
     public String toString() {
         return "Config:\n" +
-                "\tout1= " + out1 + "\n" +
-                "\tout2=" + out2 + "\n" +
-                "\tpos1=" + pos1 + "\n" +
-                "\tpos3=" + pos3 + "\n";
+                "\tout1 = " + out1 + "\n" +
+                "\tout2 = " + out2 + "\n" +
+                "\tpos1 = " + pos1 + "\n" +
+                "\tpos3 = " + pos3 + "\n";
     }
 }

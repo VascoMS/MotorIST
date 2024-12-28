@@ -108,6 +108,7 @@ public class MessageProcessorService implements Subject {
 
     public OpResponseDto deleteConfigOperation(JsonObject messageJson) {
         String username = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
+        logger.info("Deleting user: {}", username);
         String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
         ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);

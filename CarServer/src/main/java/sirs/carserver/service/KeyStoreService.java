@@ -45,7 +45,7 @@ public class KeyStoreService {
             Key key = keyStore.getKey(alias, keystorePassword.toCharArray());
             return new SecretKeySpec(key.getEncoded(), key.getAlgorithm());
         } catch (Exception e) {
-            logger.error("Failed to get secret key from keystore.", e);
+            logger.error("Failed to get secret key from keystore: {}", e.getMessage());
             return null;
         }
     }
@@ -65,6 +65,20 @@ public class KeyStoreService {
         } catch (Exception e) {
             logger.error("Failed to store key in keystore.", e);
             throw e;
+        }
+    }
+
+    public void deleteKey(String userId) throws Exception {
+        if (keyStore.containsAlias(userId)) {
+            // Delete the entry
+            keyStore.deleteEntry(userId);
+            logger.info("Removed key for user: {}", userId);
+        } else {
+            logger.error("Unable to remove key for user: {}", userId);
+        }
+        // Save the updated KeyStore back to the file
+        try (FileOutputStream fos = new FileOutputStream(keystorePath)) {
+            keyStore.store(fos, keystorePassword.toCharArray());
         }
     }
 }

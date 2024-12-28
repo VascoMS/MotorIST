@@ -41,7 +41,9 @@ public class PairingServiceImpl implements PairingService {
         byte[] userCodeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
         PairingSessionRecord pairingSession = pairingSessions.get(request.getCarId());
         byte[] hashedCode = pairingSession.hashedCode();
+        boolean userExists = configRepository.existsById(request.getUserId());
         boolean verifyCodes = Arrays.equals(userCodeHash, hashedCode);
+        boolean pairSuccessful = !userExists && verifyCodes;
 
         String base64hashedCode = Base64.getEncoder().encodeToString(hashedCode);
         JsonObject jsonObj = new JsonObject();
@@ -49,24 +51,25 @@ public class PairingServiceImpl implements PairingService {
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_FIELD);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.CODE_FIELD, base64hashedCode);
-        jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, verifyCodes);
+        jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, pairSuccessful);
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
 
         carWebSocketHandler.sendMessageToCarNoResponse(request.getCarId(), jsonObj);
+        if(pairSuccessful) {
+            ProtectedObject protectedConfig = pairingSession.protectedConfig();
+            Configuration configuration = new Configuration(
+                    request.getUserId(),
+                    request.getCarId(),
+                    protectedConfig.getContent(),
+                    protectedConfig.getIv(),
+                    protectedConfig.getNonce(),
+                    protectedConfig.getHmac()
+            );
+            configRepository.save(configuration);
 
-        ProtectedObject protectedConfig = pairingSession.protectedConfig();
-        Configuration configuration = new Configuration(
-                request.getUserId(),
-                request.getCarId(),
-                protectedConfig.getContent(),
-                protectedConfig.getIv(),
-                protectedConfig.getNonce(),
-                protectedConfig.getHmac()
-        );
-        configRepository.save(configuration);
+            pairingSessions.remove(request.getCarId());
+        }
 
-        pairingSessions.remove(request.getCarId());
-
-        return verifyCodes;
+        return pairSuccessful;
     }
 }

@@ -140,8 +140,8 @@ public class SecurityUtil {
     }
 
 
-    public static SecretKeySpec loadSecretKeyFromKeyStore(String username, String password, KeyStore keyStore) throws Exception {
-        SecretKey secretKey = (SecretKey) keyStore.getKey(username + "_secret", password.toCharArray());
+    public static SecretKeySpec loadSecretKeyFromKeyStore(String carId, String password, KeyStore keyStore) throws Exception {
+        SecretKey secretKey = (SecretKey) keyStore.getKey(carId + "_secret", password.toCharArray());
         return new SecretKeySpec(secretKey.getEncoded(), "AES");
     }
 

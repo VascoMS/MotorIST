@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @Getter
 public class OpResponseDto {
-    private final String requestId;
+    private final String reqId;
     private final String operation = "response";
     private final boolean success;
 
     public OpResponseDto(String reqId, boolean success){
-        this.requestId = reqId;
+        this.reqId = reqId;
         this.success = success;
     }
 

@@ -1,1 +1,19 @@
-Just a log file for the future --> change to append only
+Just a log file for the future --> change to append onlyUserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: updateConfig
+UserId: DiogoOperation: updateConfig
+UserId: DiogoOperation: updateConfig
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser

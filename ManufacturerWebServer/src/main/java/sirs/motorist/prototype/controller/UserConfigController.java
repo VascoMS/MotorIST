@@ -78,7 +78,7 @@ public class UserConfigController {
         return ResponseEntity.ok("Configuration updated successfully");
     }
 
-    @DeleteMapping("/deleteConfig")
+    @PutMapping("/deleteConfig")
     public ResponseEntity<?> deleteConfig(@RequestBody DeleteConfigDto request) {
         if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid credentials");
@@ -87,8 +87,8 @@ public class UserConfigController {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
         if(!userConfigService.deleteConfiguration(request)) {
-            return ResponseEntity.badRequest().body("Error resetting the configuration");
+            return ResponseEntity.badRequest().body("Error deleting the configuration and user");
         }
-        return ResponseEntity.ok("Configuration was reset successfully");
+        return ResponseEntity.ok("User and car configuration were deleted successfully");
     }
 }

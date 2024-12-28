@@ -53,6 +53,7 @@ public class CarInfoService {
             throw new InstallFirmwareException("The firmware version is older than the current one");
         }
 
+
         carInfo.setFirmwareVersion(signedFirmwareDto.getFirmwareVersion());
         carInfoRepository.save(carInfo);
     }

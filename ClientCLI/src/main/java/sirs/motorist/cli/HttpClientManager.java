@@ -9,63 +9,56 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class HttpClientManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpClientManager.class);
+
     private static final HttpClient httpClient = HttpClients.createDefault();
 
-    public static String executeHttpRequest(String url, String method, String jsonBody) {
+    public static HttpResponse executeHttpRequest(String url, String method, String jsonBody) {
         try {
             return switch (method) {
                 case "GET" -> sendGetRequest(url);
                 case "POST" -> sendPostRequest(url, jsonBody);
                 case "PUT" -> sendPutRequest(url, jsonBody);
                 case "DELETE" -> sendDeleteRequest(url);
-                default -> "Invalid HTTP method";
+                default -> {
+                    logger.error("Invalid method: {}", method);
+                    yield null;
+                }
             };
         } catch (Exception e) {
-            return "Error: " + e.getMessage();
+            logger.error("Error executing request: {}", e.getMessage());
+            return null;
         }
     }
 
-    private static String sendGetRequest(String url) throws IOException {
+    private static HttpResponse sendGetRequest(String url) throws IOException {
         HttpGet request = new HttpGet(url);
-        HttpResponse response = httpClient.execute(request);
-        return handleResponse(response);
+        return httpClient.execute(request);
     }
 
-    private static String sendPostRequest(String url, String jsonBody) throws IOException {
+    private static HttpResponse sendPostRequest(String url, String jsonBody) throws IOException {
         HttpPost request = new HttpPost(url);
         request.setEntity(new StringEntity(jsonBody));
         request.setHeader("Content-Type", "application/json");
-        HttpResponse response = httpClient.execute(request);
-        return handleResponse(response);
+        return httpClient.execute(request);
     }
 
-    private static String sendPutRequest(String url, String jsonBody) throws IOException {
+    private static HttpResponse sendPutRequest(String url, String jsonBody) throws IOException {
         HttpPut request = new HttpPut(url);
         request.setEntity(new StringEntity(jsonBody));
         request.setHeader("Content-Type", "application/json");
-        HttpResponse response = httpClient.execute(request);
-        return handleResponse(response);
+        return httpClient.execute(request);
     }
 
-    private static String sendDeleteRequest(String url) throws IOException {
+    private static HttpResponse sendDeleteRequest(String url) throws IOException {
         HttpDelete request = new HttpDelete(url);
-        HttpResponse response = httpClient.execute(request);
-        return handleResponse(response);
-    }
-
-    private static String handleResponse(HttpResponse response) throws IOException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        String responseBody = EntityUtils.toString(response.getEntity());
-
-        if (statusCode == 200) {
-            return responseBody;
-        } else {
-            return "Request failed. Status code: " + statusCode + ". Response: " + responseBody;
-        }
+        return httpClient.execute(request);
     }
 }

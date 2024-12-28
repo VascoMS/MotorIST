@@ -9,6 +9,8 @@ import java.util.Base64;
 import java.util.Scanner;
 
 import com.google.gson.JsonObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Check;
@@ -16,8 +18,8 @@ import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
 import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
-import sirs.motorist.cli.model.dto.*;
 import sirs.motorist.cli.model.Config;
+import sirs.motorist.cli.model.dto.*;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -138,7 +140,7 @@ public class UserCLI {
         }
     }
 
-    private static void registerNewUser(Scanner scanner) {
+    private static void registerNewUser(Scanner scanner) throws IOException {
         System.out.print("Username: ");
         String name = scanner.nextLine();
         System.out.print("Password: ");
@@ -148,9 +150,13 @@ public class UserCLI {
         UserCredentialsDto dto = new UserCredentialsDto(name, pass);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
-        System.out.println(response);
+        if(response != null) {
+            System.out.println(EntityUtils.toString(response.getEntity()));
+        } else {
+            System.out.println("Error registering new user");
+        }
     }
 
     private static void changeCar(Scanner scanner) {
@@ -169,26 +175,35 @@ public class UserCLI {
         UserPairRequestDto dto = new UserPairRequestDto(username, password, nonce, carId, pairCode);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
-        System.out.println(response);
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
 
-        System.out.print("Enter the new secret key: ");
-        String inputtedSecretKey = scanner.nextLine();
+        if(response.getStatusLine().getStatusCode() == 200) {
+            System.out.print("Enter the new secret key: ");
+            String inputtedSecretKey = scanner.nextLine();
 
-        byte[] secretKeyBytes = Base64.getDecoder().decode(inputtedSecretKey);
+            byte[] secretKeyBytes = Base64.getDecoder().decode(inputtedSecretKey);
 
-        // Load the key store
-        KeyStore keyStore = SecurityUtil.loadOrCreateKeyStore(password, keyStorePath);
+            // Load the key store
+            KeyStore keyStore = SecurityUtil.loadOrCreateKeyStore(password, keyStorePath);
 
-        SecurityUtil.saveSecretKeyInKeyStore(keyStore, secretKeyBytes, carId, password, keyStorePath);
+            System.out.println("Storing key: " + carId + "_secret");
 
-        System.out.println("Secret key stored successfully");
+            SecurityUtil.saveSecretKeyInKeyStore(keyStore, secretKeyBytes, carId, password, keyStorePath);
+
+            System.out.println("Secret key stored successfully");
+        } else {
+            System.out.println("Pairing failed: " + EntityUtils.toString(response.getEntity()));
+        }
     }
 
     private static void getConfig() throws Exception {
         String url = MANUFACTURER_URL + "/user/readConfig";
-        sendRequestAndCheckResponse(url, carId, "User Configuration");
+        sendRequestAndCheckResponse(carId, url, "User Configuration");
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
@@ -212,7 +227,7 @@ public class UserCLI {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
-        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
         Config config = new Config(out1,out2,pos1,pos3);
         Protect protect = new Protect();
@@ -230,9 +245,14 @@ public class UserCLI {
         );
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "PUT", body);
 
-        System.out.println(response);
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+
+        System.out.println(EntityUtils.toString(response.getEntity()));
     }
 
     private static void deleteConfig(Scanner scanner) throws Exception {
@@ -244,7 +264,7 @@ public class UserCLI {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
-        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
         Protect protect = new Protect();
 
@@ -261,9 +281,14 @@ public class UserCLI {
         );
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "DELETE", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "PUT", body);
 
-        System.out.println(response);
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+
+        System.out.println(EntityUtils.toString(response.getEntity()));
     }
 
     private static void generalCarInfo() throws Exception {
@@ -272,19 +297,31 @@ public class UserCLI {
     }
 
     private static void sendRequestAndCheckResponse(String carId, String url, String contentLabel) throws Exception {
+        System.out.println("KeyStore path: " + keyStorePath);
+
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
-        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(username, password, keyStore);
+        System.out.println("Storing key: " + carId + "_secret");
+
+        SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
 
         InfoGetterDto dto = new InfoGetterDto(username, carId, password, nonce);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+        if(response.getStatusLine().getStatusCode() != 200) {
+            System.out.println("Error: " + EntityUtils.toString(response.getEntity()));
+            return;
+        }
 
-        JsonObject resJsonObj = JSONUtil.parseJsonToClass(response, JsonObject.class);
+        JsonObject resJsonObj = JSONUtil.parseJsonToClass(EntityUtils.toString(response.getEntity()), JsonObject.class);
         resJsonObj.remove("userId");
         resJsonObj.remove("carId");
 
@@ -293,7 +330,7 @@ public class UserCLI {
         protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
         boolean configValid = check.check(protectedObject, secretKeySpec, false);
-        Config config = base64ToString(protectedObject);
+        Config config = deserializeIntoObject(protectedObject);
 
         if (configValid) {
             System.out.println(contentLabel + " is valid");
@@ -326,20 +363,24 @@ public class UserCLI {
         FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, carId);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        String response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
-        System.out.println(response);
+        if(response != null && response.getStatusLine().getStatusCode() == 200) {
+            System.out.println(EntityUtils.toString(response.getEntity()));
 
-        try (FileWriter writer = new FileWriter("files/firmware.json")) {
-            // Serialize the object to JSON and write it to a file
-            JSONUtil.serializeAndWriteToFile(response, writer); //TODO: check if the response is a SignedFirmwareDto
-            System.out.println("JSON written to file.");
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
+            try (FileWriter writer = new FileWriter("files/firmware.json")) {
+                // Serialize the object to JSON and write it to a file
+                JSONUtil.serializeAndWriteToFile(response, writer); //TODO: check if the response is a SignedFirmwareDto
+                System.out.println("JSON written to file.");
+            } catch (IOException e) {
+                System.out.println("Error writing to file: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Error downloading firmware");
         }
     }
 
-    private static <T extends Serializable> T base64ToString(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
+    private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
         byte[] contentBytes = Base64.getDecoder().decode(protectedObject.getContent());
         return SecurityUtil.deserializeFromByteArray(contentBytes);
     }

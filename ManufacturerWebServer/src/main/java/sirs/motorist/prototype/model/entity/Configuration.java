@@ -10,19 +10,19 @@ import pt.tecnico.sirs.model.Nonce;
 @Setter
 @Document(collection = "configs")
 public class Configuration {
-
     @Id
+    private String id;
     private String userId;
     private String carId;
-    private String configuration;
+    private String content;
     private String iv;
     private Nonce nonce;
     private String hmac;
 
-    public Configuration(String userId, String carId, String configuration, String iv, Nonce nonce, String hmac) {
+    public Configuration(String userId, String carId, String content, String iv, Nonce nonce, String hmac) {
         this.userId = userId;
         this.carId = carId;
-        this.configuration = configuration;
+        this.content = content;
         this.iv = iv;
         this.nonce = nonce;
         this.hmac = hmac;

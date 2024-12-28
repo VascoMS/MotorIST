@@ -1,5 +1,6 @@
 package sirs.motorist.prototype.service.impl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,14 @@ public class UserConfigServiceImpl implements UserConfigService {
 
     @Override
     public Boolean updateConfiguration(ConfigurationDto request) {
+        // TODO: We should consider passing the JsonObject building of the ProtectedObject into the class
         JsonObject jsonObj = new JsonObject();
-        String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
+        JsonElement nonce = request.getNonce().toJsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.UPDATECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfiguration());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
-        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
+        jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
@@ -73,15 +75,21 @@ public class UserConfigServiceImpl implements UserConfigService {
     @Override
     public Boolean deleteConfiguration(DeleteConfigDto request) {
         JsonObject jsonObj = new JsonObject();
+        JsonElement nonce = request.getNonce().toJsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.DELETECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfirmationPhrase());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
-        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, JSONUtil.parseClassToJsonString(request.getNonce()));
+        jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
-            return carWebSocketHandler.checkSuccess(response);
+            boolean success = carWebSocketHandler.checkSuccess(response);
+
+            if(success) {
+                configRepository.deleteConfigurationByUserIdAndCarId(request.getUserId(), request.getCarId());
+            }
+            return success;
         } catch (Exception e) {
             logger.error("Failed to delete config: {}", e.getMessage());
             return false;

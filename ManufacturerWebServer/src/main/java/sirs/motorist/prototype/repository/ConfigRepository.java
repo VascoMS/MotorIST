@@ -7,4 +7,6 @@ import sirs.motorist.prototype.model.entity.Configuration;
 public interface ConfigRepository extends MongoRepository<Configuration, String> {
     @Query("{ 'userId': ?0, 'carId': ?1 }")
     Configuration findByUserIdAndCarId(String userId, String carId);
+
+    void deleteConfigurationByUserIdAndCarId(String userId, String carId);
 }
