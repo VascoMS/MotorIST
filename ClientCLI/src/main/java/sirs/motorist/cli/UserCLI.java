@@ -18,8 +18,8 @@ import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
 import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
-import sirs.motorist.cli.model.Config;
 import sirs.motorist.cli.model.dto.*;
+import sirs.motorist.common.Config;
 
 import javax.crypto.spec.SecretKeySpec;
 

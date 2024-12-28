@@ -10,10 +10,10 @@ import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
-import sirs.carserver.model.Config;
 import sirs.carserver.model.User;
 import org.springframework.stereotype.Service;
 import sirs.carserver.repository.UserRepository;
+import sirs.motorist.common.Config;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileWriter;

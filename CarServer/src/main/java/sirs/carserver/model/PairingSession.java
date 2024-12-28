@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import lombok.Getter;
 import pt.tecnico.sirs.util.SecurityUtil;
+import sirs.motorist.common.Config;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;

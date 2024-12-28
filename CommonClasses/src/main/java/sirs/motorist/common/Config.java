@@ -1,4 +1,4 @@
-package sirs.motorist.cli.model;
+package sirs.motorist.common;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +8,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class Config implements Serializable {
+
     //ac
     private int out1;
     private int out2;

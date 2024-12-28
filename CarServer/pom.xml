@@ -38,7 +38,11 @@
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.2</version> <!-- Use the latest version -->
         </dependency>
-
+        <dependency>
+            <groupId>sirs.motorist.common</groupId>
+            <artifactId>CommonClasses</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

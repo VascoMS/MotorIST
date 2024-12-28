@@ -16,6 +16,7 @@ import sirs.carserver.model.dto.OpResponseWithContentDto;
 import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.observer.Observer;
 import sirs.carserver.observer.Subject;
+import sirs.motorist.common.CarInfo;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
@@ -124,7 +125,8 @@ public class MessageProcessorService implements Subject {
             logger.error("No secret key found for user: {}", userId);
             return new OpResponseDto(reqId, false);
         }
-        GeneralCarInfo carInfo = carInfoService.getCarInfo();
+        GeneralCarInfo generalcarInfo = carInfoService.getCarInfo();
+        CarInfo carInfo = mapToCarInfo(generalcarInfo);
         Protect protect = new Protect();
         try {
             ProtectedObject protectedCarInfo = protect.protect(secretKey, carInfo, false);
@@ -137,7 +139,7 @@ public class MessageProcessorService implements Subject {
 
     public void handleServerResponse(JsonObject message) {
         String reqId = message.get(WebSocketOpsConsts.REQ_ID).getAsString();
-        boolean success = Boolean.parseBoolean(message.get(WebSocketOpsConsts.  SUCCESS_FIELD).getAsString());
+        boolean success = Boolean.parseBoolean(message.get(WebSocketOpsConsts.SUCCESS_FIELD).getAsString());
         CompletableFuture<Boolean> pendingRequest = pendingRequests.get(reqId);
         if(pendingRequest != null) {
             pendingRequest.complete(success);
@@ -169,6 +171,15 @@ public class MessageProcessorService implements Subject {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         pendingRequests.put(reqId, future);
         return future;
+    }
+
+    private CarInfo mapToCarInfo(GeneralCarInfo generalCarInfo) {
+        CarInfo carInfo = new CarInfo();
+        carInfo.setBatteryLevel(generalCarInfo.getBatteryLevel());
+        carInfo.setFirmwareVersion(generalCarInfo.getFirmwareVersion());
+        carInfo.setLocked(generalCarInfo.isLocked());
+        carInfo.setTotalKms(generalCarInfo.getTotalKms());
+        return carInfo;
     }
 
 }
