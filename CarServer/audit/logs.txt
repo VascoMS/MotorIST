@@ -17,3 +17,10 @@ UserId: DiogoOperation: deleteConfig
 UserId: DiogoOperation: createUser
 UserId: DiogoOperation: deleteConfig
 UserId: DiogoOperation: createUser
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: updateConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: updateConfig
+UserId: DiogoOperation: deleteConfig
+UserId: DiogoOperation: createUser
+UserId: DiogoOperation: updateConfig

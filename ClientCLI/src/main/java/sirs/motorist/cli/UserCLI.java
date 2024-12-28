@@ -191,8 +191,6 @@ public class UserCLI {
             // Load the key store
             KeyStore keyStore = SecurityUtil.loadOrCreateKeyStore(password, keyStorePath);
 
-            System.out.println("Storing key: " + carId + "_secret");
-
             SecurityUtil.saveSecretKeyInKeyStore(keyStore, secretKeyBytes, carId, password, keyStorePath);
 
             System.out.println("Secret key stored successfully");
@@ -297,8 +295,6 @@ public class UserCLI {
     }
 
     private static void sendRequestAndCheckResponse(String carId, String url, String contentLabel) throws Exception {
-        System.out.println("KeyStore path: " + keyStorePath);
-
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 

@@ -11,7 +11,6 @@ import pt.tecnico.sirs.model.Nonce;
 @Document(collection = "configs")
 public class Configuration {
     @Id
-    private String id;
     private String userId;
     private String carId;
     private String content;
