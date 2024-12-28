@@ -1885,3 +1885,945 @@ java.lang.NullPointerException: Cannot invoke "pt.tecnico.sirs.model.ProtectedOb
 2024-12-28T17:46:06.778Z  INFO 28624 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
 2024-12-28T17:46:06.784Z  INFO 28624 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-12-28T17:46:06.788Z  INFO 28624 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T17:52:57.691Z  INFO 23808 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 23808 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T17:52:57.694Z  INFO 23808 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T17:52:58.514Z  INFO 23808 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T17:52:58.655Z  INFO 23808 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 115 ms. Found 2 JPA repository interfaces.
+2024-12-28T17:52:59.171Z  INFO 23808 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T17:52:59.304Z  INFO 23808 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@64f1fd08
+2024-12-28T17:52:59.308Z  INFO 23808 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T17:52:59.455Z  INFO 23808 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T17:52:59.567Z  INFO 23808 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T17:52:59.665Z  INFO 23808 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T17:53:00.062Z  INFO 23808 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T17:53:00.140Z  INFO 23808 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T17:53:01.909Z  INFO 23808 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T17:53:01.982Z  INFO 23808 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T17:53:02.864Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T17:53:02.966Z  INFO 23808 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 6.158 seconds (process running for 7.071)
+2024-12-28T17:53:18.042Z  INFO 23808 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T17:53:18.043Z  INFO 23808 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T17:53:18.043Z  INFO 23808 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T17:53:18.044Z  INFO 23808 --- [main] pt.tecnico.sirs.util.SecurityUtil        : Generating nonce...
+2024-12-28T17:53:18.047Z  INFO 23808 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T17:53:18.047Z  INFO 23808 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T17:53:18.108Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T17:53:18.108Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.c.service.MessageProcessorService      : Processing message: {
+  "reqId": "1735408398069",
+  "operation": "initpair-response",
+  "success": true
+}
+2024-12-28T17:53:23.925Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T17:53:23.925Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "pair",
+  "userId": "Diogo",
+  "code": "lPV2dWU5Xztj+tD75esylUu1NGBjaa6B0KPCYz0sz0I\u003d",
+  "success": true,
+  "nonce": "{\n  \"base64Random\": \"J8wFj7U8De8\",\n  \"timestamp\": 1735408403175\n}"
+}
+2024-12-28T17:53:23.926Z  INFO 23808 --- [WebSocketConnectReadThread-46] pt.tecnico.sirs.util.SecurityUtil        : Hashing data...
+2024-12-28T17:53:23.927Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.c.service.MessageProcessorService      : Pairing code: lPV2dWU5Xztj+tD75esylUu1NGBjaa6B0KPCYz0sz0I=
+2024-12-28T17:53:23.927Z  INFO 23808 --- [WebSocketConnectReadThread-46] sirs.carserver.service.KeyStoreService   : Storing new key in keystore...
+2024-12-28T17:53:23.984Z  INFO 23808 --- [WebSocketConnectReadThread-46] sirs.carserver.service.KeyStoreService   : New key stored in keystore successfully.
+2024-12-28T17:53:23.985Z  INFO 23808 --- [WebSocketConnectReadThread-46] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T17:53:24.020Z  INFO 23808 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T17:53:24.020Z  INFO 23808 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T17:53:24.020Z  INFO 23808 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T17:53:24.020Z  INFO 23808 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T17:53:24.021Z  INFO 23808 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T17:53:24.163Z  INFO 23808 --- [WebSocketConnectReadThread-46] sirs.carserver.service.UserService       : Adding auditMessage onto log file
+2024-12-28T17:59:18.304Z  WARN 23808 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T17:59:18.305Z  INFO 23808 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T17:59:18.304Z  INFO 23808 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T17:59:18.311Z  INFO 23808 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T17:59:18.317Z  INFO 23808 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:03:23.665Z  INFO 12304 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 12304 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:03:23.669Z  INFO 12304 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:03:24.327Z  INFO 12304 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:03:24.399Z  INFO 12304 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:03:24.976Z  INFO 12304 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:03:25.092Z  INFO 12304 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@45e1aa48
+2024-12-28T18:03:25.094Z  INFO 12304 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:03:25.188Z  INFO 12304 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:03:25.267Z  INFO 12304 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:03:25.324Z  INFO 12304 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:03:25.756Z  INFO 12304 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:03:25.855Z  INFO 12304 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:03:26.917Z  INFO 12304 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:03:26.968Z  INFO 12304 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:03:27.515Z  INFO 12304 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:03:27.602Z  INFO 12304 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.625 seconds (process running for 5.719)
+2024-12-28T18:12:08.692Z  INFO 12304 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:12:08.693Z  WARN 12304 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:12:08.693Z  INFO 12304 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:12:08.699Z  INFO 12304 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:12:08.704Z  INFO 12304 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:12:24.103Z  INFO 17484 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 17484 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:12:24.107Z  INFO 17484 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:12:24.822Z  INFO 17484 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:12:24.962Z  INFO 17484 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 130 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:12:25.531Z  INFO 17484 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:12:25.638Z  INFO 17484 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@692e028d
+2024-12-28T18:12:25.640Z  INFO 17484 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:12:25.757Z  INFO 17484 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:12:25.854Z  INFO 17484 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:12:25.906Z  INFO 17484 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:12:26.336Z  INFO 17484 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:12:26.421Z  INFO 17484 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:12:27.363Z  INFO 17484 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:12:27.407Z  WARN 17484 --- [main] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL "alter table general_car_info add column car_id varchar(255) not null" via JDBC [[SQLITE_ERROR] SQL error or missing database (Cannot add a NOT NULL column with default value NULL)]
+
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table general_car_info add column car_id varchar(255) not null" via JDBC [[SQLITE_ERROR] SQL error or missing database (Cannot add a NOT NULL column with default value NULL)]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:576) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:516) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:334) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:84) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:233) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1421) ~[na:na]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-6.2.0.jar:6.2.0]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.2.0.jar:6.2.0]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419) ~[spring-orm-6.2.0.jar:6.2.0]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400) ~[spring-orm-6.2.0.jar:6.2.0]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1849) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1798) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:601) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:336) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:288) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:334) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204) ~[spring-beans-6.2.0.jar:6.2.0]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970) ~[spring-context-6.2.0.jar:6.2.0]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.0.jar:6.2.0]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.0.jar:3.4.0]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.0.jar:3.4.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.0.jar:3.4.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.0.jar:3.4.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.0.jar:3.4.0]
+	at sirs.carserver.CarApplication.main(CarApplication.java:13) ~[classes/:na]
+Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (Cannot add a NOT NULL column with default value NULL)
+	at org.sqlite.core.DB.newSQLException(DB.java:1179) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.core.DB.newSQLException(DB.java:1190) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.core.DB.execute(DB.java:988) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.core.CoreStatement.exec(CoreStatement.java:91) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Statement.lambda$execute$0(JDBC3Statement.java:56) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Statement.withConnectionTimeout(JDBC3Statement.java:458) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:44) ~[sqlite-jdbc-3.47.0.0.jar:na]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94) ~[HikariCP-5.1.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-5.1.0.jar:na]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.6.3.Final.jar:6.6.3.Final]
+	... 36 common frames omitted
+
+2024-12-28T18:12:27.417Z  INFO 17484 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:12:28.030Z  INFO 17484 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:12:28.116Z  INFO 17484 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.718 seconds (process running for 5.524)
+2024-12-28T18:16:08.539Z  INFO 17484 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:16:08.540Z  WARN 17484 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:16:08.541Z  INFO 17484 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:16:08.544Z  INFO 17484 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:16:08.549Z  INFO 17484 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:16:29.717Z  INFO 27136 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 27136 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:16:29.721Z  INFO 27136 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:16:30.359Z  INFO 27136 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:16:30.441Z  INFO 27136 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 68 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:16:31.084Z  INFO 27136 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:16:31.200Z  INFO 27136 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@27df0f3d
+2024-12-28T18:16:31.203Z  INFO 27136 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:16:31.311Z  INFO 27136 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:16:31.375Z  INFO 27136 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:16:31.427Z  INFO 27136 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:16:31.805Z  INFO 27136 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:16:31.887Z  INFO 27136 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:16:32.841Z  INFO 27136 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:16:32.884Z  INFO 27136 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:16:33.422Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:16:33.502Z  INFO 27136 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.444 seconds (process running for 5.268)
+2024-12-28T18:18:37.965Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:18:37.965Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"aaTp2sTUZDA\",\n  \"timestamp\": 1735409917250\n}",
+  "reqId": "1735409917962"
+}
+2024-12-28T18:18:37.972Z  INFO 27136 --- [WebSocketConnectReadThread-43] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:18:38.120Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:18:38.121Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:18:38.122Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:18:38.123Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:18:38.123Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:21:08.319Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:21:08.320Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"SW4Rdm3v1Vg\",\n  \"timestamp\": 1735410067799\n}",
+  "reqId": "1735410068317"
+}
+2024-12-28T18:21:08.320Z  INFO 27136 --- [WebSocketConnectReadThread-43] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:21:08.356Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:21:08.356Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:21:08.356Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:21:08.356Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:21:08.356Z  INFO 27136 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:22:32.265Z  WARN 27136 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:22:32.265Z  INFO 27136 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:22:32.269Z  INFO 27136 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:22:32.282Z  INFO 27136 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:22:32.318Z  INFO 27136 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:24:08.738Z  INFO 27016 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 27016 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:24:08.743Z  INFO 27016 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:24:09.502Z  INFO 27016 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:24:09.616Z  INFO 27016 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 100 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:24:10.269Z  INFO 27016 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:24:10.388Z  INFO 27016 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@692e028d
+2024-12-28T18:24:10.390Z  INFO 27016 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:24:10.561Z  INFO 27016 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:24:10.649Z  INFO 27016 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:24:10.701Z  INFO 27016 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:24:11.109Z  INFO 27016 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:24:11.195Z  INFO 27016 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:24:12.154Z  INFO 27016 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:24:12.203Z  INFO 27016 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:24:12.728Z  INFO 27016 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:24:12.812Z  INFO 27016 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.845 seconds (process running for 6.0)
+2024-12-28T18:24:22.147Z  INFO 27016 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:24:22.148Z  INFO 27016 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"6VGEjZtowic\",\n  \"timestamp\": 1735410261270\n}",
+  "reqId": "1735410262141"
+}
+2024-12-28T18:24:22.157Z  INFO 27016 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:24:22.294Z  INFO 27016 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:24:22.295Z  INFO 27016 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:24:22.296Z  INFO 27016 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:24:22.296Z  INFO 27016 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:24:22.296Z  INFO 27016 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:33:53.267Z  WARN 27016 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:33:53.267Z  INFO 27016 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:33:53.267Z  INFO 27016 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:33:53.274Z  INFO 27016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:33:53.285Z  INFO 27016 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:34:04.672Z  INFO 21624 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 21624 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:34:04.674Z  INFO 21624 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:34:05.476Z  INFO 21624 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:34:05.621Z  INFO 21624 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 121 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:34:06.234Z  INFO 21624 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:34:06.360Z  INFO 21624 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@36061cf3
+2024-12-28T18:34:06.363Z  INFO 21624 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:34:06.492Z  INFO 21624 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:34:06.577Z  INFO 21624 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:34:06.632Z  INFO 21624 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:34:07.051Z  INFO 21624 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:34:07.160Z  INFO 21624 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:34:08.134Z  INFO 21624 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:34:08.170Z  INFO 21624 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:34:08.702Z  INFO 21624 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:34:08.783Z  INFO 21624 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.836 seconds (process running for 5.735)
+2024-12-28T18:34:18.823Z  INFO 21624 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:34:18.823Z  INFO 21624 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"9NNilk8ziEE\",\n  \"timestamp\": 1735410858005\n}",
+  "reqId": "1735410858813"
+}
+2024-12-28T18:34:18.830Z  INFO 21624 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:34:18.979Z  INFO 21624 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:34:18.979Z  INFO 21624 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:34:18.980Z  INFO 21624 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:34:18.980Z  INFO 21624 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:34:18.981Z  INFO 21624 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:35:42.103Z  INFO 21624 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:35:42.104Z  WARN 21624 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:35:42.105Z  INFO 21624 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:35:42.110Z  INFO 21624 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:35:42.117Z  INFO 21624 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:35:53.182Z  INFO 5040 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 5040 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:35:53.187Z  INFO 5040 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:35:53.979Z  INFO 5040 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:35:54.124Z  INFO 5040 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 120 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:35:54.714Z  INFO 5040 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:35:54.829Z  INFO 5040 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@282ffbf5
+2024-12-28T18:35:54.832Z  INFO 5040 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:35:55.039Z  INFO 5040 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:35:55.123Z  INFO 5040 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:35:55.186Z  INFO 5040 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:35:55.638Z  INFO 5040 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:35:55.753Z  INFO 5040 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:35:56.832Z  INFO 5040 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:35:56.874Z  INFO 5040 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:35:57.418Z  INFO 5040 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:35:57.515Z  INFO 5040 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.119 seconds (process running for 6.294)
+2024-12-28T18:36:05.761Z  INFO 5040 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:36:05.762Z  INFO 5040 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"MqsPCbhqd8Q\",\n  \"timestamp\": 1735410964892\n}",
+  "reqId": "1735410965753"
+}
+2024-12-28T18:36:05.769Z  INFO 5040 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:36:05.912Z  INFO 5040 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:36:05.913Z  INFO 5040 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:36:05.914Z  INFO 5040 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:36:05.914Z  INFO 5040 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:36:05.915Z  INFO 5040 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:37:07.671Z  INFO 5040 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:37:07.672Z  WARN 5040 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:37:07.672Z  INFO 5040 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:37:07.678Z  INFO 5040 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:37:07.681Z  INFO 5040 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:38:55.364Z  INFO 480 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 480 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:38:55.366Z  INFO 480 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:38:56.179Z  INFO 480 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:38:56.336Z  INFO 480 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 137 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:38:57.014Z  INFO 480 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:38:57.123Z  INFO 480 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@282ffbf5
+2024-12-28T18:38:57.125Z  INFO 480 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:38:57.245Z  INFO 480 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:38:57.317Z  INFO 480 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:38:57.362Z  INFO 480 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:38:57.713Z  INFO 480 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:38:57.798Z  INFO 480 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:38:58.713Z  INFO 480 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:38:58.756Z  INFO 480 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:38:59.327Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:38:59.424Z  INFO 480 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.838 seconds (process running for 5.821)
+2024-12-28T18:39:09.874Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:39:09.874Z  INFO 480 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"jEYyAXcMAas\",\n  \"timestamp\": 1735411149125\n}",
+  "reqId": "1735411149868"
+}
+2024-12-28T18:39:09.882Z  INFO 480 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:39:10.020Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:39:10.021Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:39:10.022Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:39:10.022Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:39:10.023Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:41:23.329Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:41:23.329Z  INFO 480 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"GkzPpWXzBPg\",\n  \"timestamp\": 1735411269080\n}",
+  "reqId": "1735411283328"
+}
+2024-12-28T18:41:23.329Z  INFO 480 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:41:23.354Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:41:23.354Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:41:23.355Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:41:23.355Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:41:23.355Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:45:31.702Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:45:31.702Z  INFO 480 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"fKPA-y7GzDU\",\n  \"timestamp\": 1735411515571\n}",
+  "reqId": "1735411531701"
+}
+2024-12-28T18:45:31.703Z  INFO 480 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:45:31.739Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:45:31.739Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:45:31.740Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:45:31.740Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:45:31.740Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:45:52.467Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:45:52.467Z  INFO 480 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"hm6EBxfbKUQ\",\n  \"timestamp\": 1735411551902\n}",
+  "reqId": "1735411552467"
+}
+2024-12-28T18:45:52.467Z  INFO 480 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:45:52.505Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:45:52.506Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:45:52.506Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:45:52.506Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:45:52.506Z  INFO 480 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:47:38.563Z  INFO 480 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:47:38.589Z  WARN 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:47:38.589Z  INFO 480 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:47:38.595Z  INFO 480 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:47:38.675Z  INFO 480 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:49:11.163Z  INFO 25212 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 25212 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:49:11.167Z  INFO 25212 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:49:11.935Z  INFO 25212 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:49:12.059Z  INFO 25212 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 108 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:49:12.716Z  INFO 25212 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:49:12.827Z  INFO 25212 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@44550792
+2024-12-28T18:49:12.832Z  INFO 25212 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:49:12.944Z  INFO 25212 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:49:13.024Z  INFO 25212 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:49:13.072Z  INFO 25212 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:49:13.467Z  INFO 25212 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:49:13.546Z  INFO 25212 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:49:14.503Z  INFO 25212 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:49:14.542Z  INFO 25212 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:49:15.069Z  INFO 25212 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:49:15.148Z  INFO 25212 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.699 seconds (process running for 5.689)
+2024-12-28T18:50:03.825Z  INFO 25212 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:50:03.831Z  INFO 25212 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T18:50:03.835Z  WARN 25212 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T18:50:03.835Z  INFO 25212 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T18:50:03.842Z  INFO 25212 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T18:50:12.725Z  INFO 19856 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 19856 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T18:50:12.730Z  INFO 19856 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T18:50:13.686Z  INFO 19856 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T18:50:13.851Z  INFO 19856 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 142 ms. Found 2 JPA repository interfaces.
+2024-12-28T18:50:14.436Z  INFO 19856 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T18:50:14.541Z  INFO 19856 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@64469d8
+2024-12-28T18:50:14.543Z  INFO 19856 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T18:50:14.662Z  INFO 19856 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T18:50:14.739Z  INFO 19856 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T18:50:14.800Z  INFO 19856 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T18:50:15.180Z  INFO 19856 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T18:50:15.265Z  INFO 19856 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T18:50:16.247Z  INFO 19856 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T18:50:16.284Z  INFO 19856 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T18:50:16.797Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T18:50:16.876Z  INFO 19856 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.147 seconds (process running for 6.163)
+2024-12-28T18:50:54.020Z  INFO 19856 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:50:54.021Z  INFO 19856 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:50:54.022Z  INFO 19856 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:50:54.023Z  INFO 19856 --- [main] pt.tecnico.sirs.util.SecurityUtil        : Generating nonce...
+2024-12-28T18:50:54.026Z  INFO 19856 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:50:54.026Z  INFO 19856 --- [main] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:50:54.085Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:50:54.085Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "reqId": "1735411854046",
+  "operation": "initpair-response",
+  "success": true
+}
+2024-12-28T18:51:00.337Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:51:00.337Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "pair",
+  "userId": "Diogo",
+  "code": "Z9UyQOX2VRd6z/3kV0ini6U8orbESS+TJeAZ65/05EE\u003d",
+  "success": true,
+  "nonce": "{\n  \"base64Random\": \"NcESF5hBvCA\",\n  \"timestamp\": 1735411859577\n}"
+}
+2024-12-28T18:51:00.338Z  INFO 19856 --- [WebSocketConnectReadThread-45] pt.tecnico.sirs.util.SecurityUtil        : Hashing data...
+2024-12-28T18:51:00.338Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Pairing code: Z9UyQOX2VRd6z/3kV0ini6U8orbESS+TJeAZ65/05EE=
+2024-12-28T18:51:00.338Z  INFO 19856 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Storing new key in keystore...
+2024-12-28T18:51:00.391Z  INFO 19856 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : New key stored in keystore successfully.
+2024-12-28T18:51:00.392Z  INFO 19856 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:51:00.427Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:51:00.427Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:51:00.428Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:51:00.428Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:51:00.428Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T18:51:00.561Z  INFO 19856 --- [WebSocketConnectReadThread-45] sirs.carserver.service.UserService       : Adding auditMessage onto log file
+2024-12-28T18:51:08.515Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T18:51:08.516Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"kLzLlF1uEr8\",\n  \"timestamp\": 1735411868486\n}",
+  "reqId": "1735411868513"
+}
+2024-12-28T18:51:08.516Z  INFO 19856 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T18:51:08.557Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T18:51:08.557Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T18:51:08.558Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T18:51:08.558Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T18:51:08.558Z  INFO 19856 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:00:51.737Z  INFO 19856 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:00:51.738Z  WARN 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:00:51.738Z  INFO 19856 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:00:51.741Z  INFO 19856 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:00:51.743Z  INFO 19856 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:01:03.404Z  INFO 17956 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 17956 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:01:03.407Z  INFO 17956 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:01:04.176Z  INFO 17956 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:01:04.284Z  INFO 17956 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 93 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:01:04.770Z  INFO 17956 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:01:04.881Z  INFO 17956 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@20134094
+2024-12-28T19:01:04.884Z  INFO 17956 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:01:05.048Z  INFO 17956 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:01:05.121Z  INFO 17956 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:01:05.171Z  INFO 17956 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:01:05.523Z  INFO 17956 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:01:05.590Z  INFO 17956 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:01:07.090Z  INFO 17956 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:01:07.152Z  INFO 17956 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:01:07.845Z  INFO 17956 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:01:07.960Z  INFO 17956 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.133 seconds (process running for 5.987)
+2024-12-28T19:01:28.468Z  INFO 17956 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:01:28.468Z  INFO 17956 --- [WebSocketConnectReadThread-44] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"gokLe0jyQ18\",\n  \"timestamp\": 1735412487950\n}",
+  "reqId": "1735412488460"
+}
+2024-12-28T19:01:28.476Z  INFO 17956 --- [WebSocketConnectReadThread-44] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:01:28.620Z  INFO 17956 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:01:28.620Z  INFO 17956 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:01:28.621Z  INFO 17956 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:01:28.621Z  INFO 17956 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:01:28.621Z  INFO 17956 --- [WebSocketConnectReadThread-44] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:03:58.286Z  INFO 17956 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:03:58.286Z  WARN 17956 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:03:58.287Z  INFO 17956 --- [WebSocketConnectReadThread-44] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:03:58.291Z  INFO 17956 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:03:58.294Z  INFO 17956 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:04:11.825Z  INFO 2716 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 2716 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:04:11.828Z  INFO 2716 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:04:12.397Z  INFO 2716 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:04:12.476Z  INFO 2716 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 68 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:04:12.802Z  INFO 2716 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:04:12.888Z  INFO 2716 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@5e519ad3
+2024-12-28T19:04:12.890Z  INFO 2716 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:04:12.969Z  INFO 2716 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:04:13.031Z  INFO 2716 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:04:13.068Z  INFO 2716 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:04:13.357Z  INFO 2716 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:04:13.423Z  INFO 2716 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:04:14.413Z  INFO 2716 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:04:14.452Z  INFO 2716 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:04:14.975Z  INFO 2716 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:04:15.048Z  INFO 2716 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 3.869 seconds (process running for 6.838)
+2024-12-28T19:06:10.071Z  INFO 2716 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:06:10.071Z  INFO 2716 --- [WebSocketConnectReadThread-43] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"VLKHnLN4Uks\",\n  \"timestamp\": 1735412662904\n}",
+  "reqId": "1735412770067"
+}
+2024-12-28T19:06:30.373Z  INFO 2716 --- [WebSocketConnectReadThread-43] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:07:16.003Z  WARN 2716 --- [connectionLostChecker-1] s.carserver.config.CarWebSocketClient    : Connection closed: The connection was closed because the other endpoint did not respond with a pong in time. For more information check: https://github.com/TooTallNate/Java-WebSocket/wiki/Lost-connection-detection
+2024-12-28T19:07:16.006Z  INFO 2716 --- [connectionLostChecker-1] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:07:21.778Z  INFO 2716 --- [Timer-0] s.carserver.config.CarWebSocketClient    : Attempting to reconnect...
+2024-12-28T19:07:21.787Z  INFO 2716 --- [WebSocketConnectReadThread-287] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:07:21.790Z  INFO 2716 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:07:21.793Z  INFO 2716 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:07:21.794Z  INFO 2716 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:07:21.795Z  INFO 2716 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:07:21.798Z  INFO 2716 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:08:06.691Z  WARN 2716 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m11s883ms641µs400ns).
+2024-12-28T19:08:32.263Z  WARN 2716 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:08:32.264Z  INFO 2716 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Reconnecting in 2 seconds...
+2024-12-28T19:08:34.805Z  INFO 2716 --- [Timer-1] s.carserver.config.CarWebSocketClient    : Attempting to reconnect...
+2024-12-28T19:08:46.768Z  INFO 2716 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:08:46.772Z  INFO 2716 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:08:46.775Z  INFO 2716 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:08:49.757Z  INFO 16932 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 16932 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:08:49.759Z  INFO 16932 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:08:50.283Z  INFO 16932 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:08:50.371Z  INFO 16932 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:08:50.731Z  INFO 16932 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:08:50.822Z  INFO 16932 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@59072e9d
+2024-12-28T19:08:50.825Z  INFO 16932 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:08:50.907Z  INFO 16932 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:08:50.983Z  INFO 16932 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:08:51.020Z  INFO 16932 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:08:51.358Z  INFO 16932 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:08:51.433Z  INFO 16932 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:08:52.480Z  INFO 16932 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:08:52.525Z  INFO 16932 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:08:53.198Z  INFO 16932 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.059 seconds (process running for 5.082)
+2024-12-28T19:08:56.405Z  INFO 16932 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:08:56.443Z  INFO 16932 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:08:56.444Z  WARN 16932 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:08:56.445Z  INFO 16932 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:08:56.447Z  INFO 16932 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:08:56.451Z  INFO 16932 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:09:35.329Z  INFO 12280 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 12280 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:09:35.336Z  INFO 12280 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:09:36.446Z  INFO 12280 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:09:36.613Z  INFO 12280 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 140 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:09:37.144Z  INFO 12280 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:09:37.249Z  INFO 12280 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@467b684d
+2024-12-28T19:09:37.253Z  INFO 12280 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:09:37.374Z  INFO 12280 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:09:37.459Z  INFO 12280 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:09:37.506Z  INFO 12280 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:09:37.786Z  INFO 12280 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:09:37.850Z  INFO 12280 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:09:38.750Z  INFO 12280 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:09:38.787Z  INFO 12280 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:09:39.328Z  INFO 12280 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:09:39.404Z  INFO 12280 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.821 seconds (process running for 6.118)
+2024-12-28T19:10:56.237Z  INFO 12280 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:10:56.237Z  INFO 12280 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"k67DUUttl3I\",\n  \"timestamp\": 1735413026104\n}",
+  "reqId": "1735413056235"
+}
+2024-12-28T19:11:01.025Z  INFO 12280 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:11:01.142Z  INFO 12280 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:11:01.142Z  INFO 12280 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:11:01.142Z  INFO 12280 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:11:01.142Z  INFO 12280 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:11:01.143Z  INFO 12280 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:11:33.102Z  INFO 12280 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:11:33.103Z  WARN 12280 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:11:33.103Z  INFO 12280 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:11:33.106Z  INFO 12280 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:11:33.109Z  INFO 12280 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:11:42.471Z  INFO 20668 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 20668 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:11:42.475Z  INFO 20668 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:11:43.630Z  INFO 20668 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:11:43.751Z  INFO 20668 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 106 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:11:44.213Z  INFO 20668 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:11:44.319Z  INFO 20668 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@3ee0b4f7
+2024-12-28T19:11:44.323Z  INFO 20668 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:11:44.451Z  INFO 20668 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:11:44.543Z  INFO 20668 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:11:44.584Z  INFO 20668 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:11:44.886Z  INFO 20668 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:11:44.958Z  INFO 20668 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:11:45.933Z  INFO 20668 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:11:45.975Z  INFO 20668 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:11:46.519Z  INFO 20668 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:11:46.601Z  INFO 20668 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.025 seconds (process running for 6.269)
+2024-12-28T19:12:03.895Z  INFO 20668 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:12:03.896Z  INFO 20668 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"dgKIJkQEnbM\",\n  \"timestamp\": 1735413112069\n}",
+  "reqId": "1735413123881"
+}
+2024-12-28T19:12:03.907Z  INFO 20668 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:12:04.019Z  INFO 20668 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:12:04.019Z  INFO 20668 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:12:04.020Z  INFO 20668 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:12:04.020Z  INFO 20668 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:12:04.020Z  INFO 20668 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:12:58.660Z  INFO 20668 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:12:58.660Z  WARN 20668 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:12:58.661Z  INFO 20668 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:12:58.665Z  INFO 20668 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:12:58.668Z  INFO 20668 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:13:26.562Z  INFO 22496 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 22496 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:13:26.567Z  INFO 22496 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:13:27.540Z  INFO 22496 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:13:27.666Z  INFO 22496 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 109 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:13:28.134Z  INFO 22496 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:13:28.248Z  INFO 22496 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@337bbfdf
+2024-12-28T19:13:28.250Z  INFO 22496 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:13:28.335Z  INFO 22496 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:13:28.405Z  INFO 22496 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:13:28.442Z  INFO 22496 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:13:28.790Z  INFO 22496 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:13:28.863Z  INFO 22496 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:13:29.926Z  INFO 22496 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:13:29.967Z  INFO 22496 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:13:30.502Z  INFO 22496 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:13:30.581Z  INFO 22496 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.96 seconds (process running for 6.3)
+2024-12-28T19:14:06.490Z  INFO 22496 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:14:06.490Z  INFO 22496 --- [WebSocketConnectReadThread-46] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"BDhbCNgrdUU\",\n  \"timestamp\": 1735413221912\n}",
+  "reqId": "1735413246476"
+}
+2024-12-28T19:14:06.497Z  INFO 22496 --- [WebSocketConnectReadThread-46] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:14:15.353Z  INFO 22496 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:14:15.356Z  INFO 22496 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:14:15.357Z  INFO 22496 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:14:15.358Z  INFO 22496 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:14:15.359Z  INFO 22496 --- [WebSocketConnectReadThread-46] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:14:43.569Z  WARN 22496 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=45s196ms443µs900ns).
+2024-12-28T19:16:07.045Z  INFO 22496 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:16:07.046Z  WARN 22496 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:16:07.047Z  INFO 22496 --- [WebSocketConnectReadThread-46] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:16:07.051Z  INFO 22496 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:16:07.054Z  INFO 22496 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:16:19.001Z  INFO 2028 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 2028 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:16:19.009Z  INFO 2028 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:16:19.795Z  INFO 2028 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:16:19.998Z  INFO 2028 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 174 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:16:20.609Z  INFO 2028 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:16:20.730Z  INFO 2028 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@467b684d
+2024-12-28T19:16:20.734Z  INFO 2028 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:16:20.825Z  INFO 2028 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:16:20.914Z  INFO 2028 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:16:20.955Z  INFO 2028 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:16:21.354Z  INFO 2028 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:16:21.432Z  INFO 2028 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:16:22.667Z  INFO 2028 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:16:22.722Z  INFO 2028 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:16:23.334Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:16:23.412Z  INFO 2028 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.258 seconds (process running for 6.503)
+2024-12-28T19:16:58.556Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:16:58.556Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"HASba6o4iAs\",\n  \"timestamp\": 1735413406640\n}",
+  "reqId": "1735413418539"
+}
+2024-12-28T19:16:58.563Z  INFO 2028 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:17:00.804Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:17:00.804Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:17:00.805Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:17:00.805Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:17:00.805Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:25:33.022Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:25:33.023Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"_PEZY9usngY\",\n  \"timestamp\": 1735413924171\n}",
+  "reqId": "1735413933022"
+}
+2024-12-28T19:25:33.023Z  INFO 2028 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:25:33.892Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:25:33.892Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:25:33.892Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:25:33.893Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:25:33.893Z  INFO 2028 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:26:52.551Z  INFO 2028 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:26:52.553Z  WARN 2028 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:26:52.553Z  INFO 2028 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:26:52.556Z  INFO 2028 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:26:52.559Z  INFO 2028 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:28:19.614Z  INFO 13728 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 13728 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:28:19.622Z  INFO 13728 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:28:20.656Z  INFO 13728 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:28:20.785Z  INFO 13728 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 114 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:28:21.289Z  INFO 13728 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:28:21.403Z  INFO 13728 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@6cff61fc
+2024-12-28T19:28:21.408Z  INFO 13728 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:28:21.521Z  INFO 13728 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:28:21.617Z  INFO 13728 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:28:21.658Z  INFO 13728 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:28:22.008Z  INFO 13728 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:28:22.082Z  INFO 13728 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:28:23.094Z  INFO 13728 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:28:23.138Z  INFO 13728 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:28:23.677Z  INFO 13728 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:28:23.761Z  INFO 13728 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 5.075 seconds (process running for 6.28)
+2024-12-28T19:28:31.594Z  INFO 13728 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:28:31.594Z  INFO 13728 --- [WebSocketConnectReadThread-45] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"2LmGfyP9qCk\",\n  \"timestamp\": 1735414110937\n}",
+  "reqId": "1735414111588"
+}
+2024-12-28T19:28:31.601Z  INFO 13728 --- [WebSocketConnectReadThread-45] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:28:31.712Z  INFO 13728 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:28:31.713Z  INFO 13728 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:28:31.713Z  INFO 13728 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:28:31.713Z  INFO 13728 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:28:31.714Z  INFO 13728 --- [WebSocketConnectReadThread-45] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:34:24.287Z  INFO 13728 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:34:24.288Z  WARN 13728 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:34:24.288Z  INFO 13728 --- [WebSocketConnectReadThread-45] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:34:24.293Z  INFO 13728 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:34:24.295Z  INFO 13728 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:34:42.475Z  INFO 8876 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 8876 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:34:42.476Z  INFO 8876 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:34:43.257Z  INFO 8876 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:34:43.395Z  INFO 8876 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 116 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:34:43.941Z  INFO 8876 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:34:44.118Z  INFO 8876 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@692e028d
+2024-12-28T19:34:44.120Z  INFO 8876 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:34:44.226Z  INFO 8876 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:34:44.295Z  INFO 8876 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:34:44.348Z  INFO 8876 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:34:44.715Z  INFO 8876 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:34:44.787Z  INFO 8876 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:34:45.626Z  INFO 8876 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:34:45.660Z  INFO 8876 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:34:46.109Z  INFO 8876 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:34:46.191Z  INFO 8876 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.546 seconds (process running for 5.394)
+2024-12-28T19:35:01.707Z  INFO 8876 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:35:01.707Z  INFO 8876 --- [WebSocketConnectReadThread-43] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"a4cUhRU0-10\",\n  \"timestamp\": 1735414501124\n}",
+  "reqId": "1735414501702"
+}
+2024-12-28T19:35:01.711Z  INFO 8876 --- [WebSocketConnectReadThread-43] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:35:01.800Z  INFO 8876 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:35:01.801Z  INFO 8876 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:35:01.801Z  INFO 8876 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:35:01.801Z  INFO 8876 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:35:01.801Z  INFO 8876 --- [WebSocketConnectReadThread-43] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:37:12.901Z  INFO 8876 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:37:12.902Z  WARN 8876 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:37:12.903Z  INFO 8876 --- [WebSocketConnectReadThread-43] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:37:12.906Z  INFO 8876 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:37:12.909Z  INFO 8876 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-28T19:37:26.035Z  INFO 14276 --- [main] sirs.carserver.CarApplication            : Starting CarApplication using Java 17.0.8 with PID 14276 (C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver\target\classes started by Miguel in C:\Users\Miguel\Projetos\SIRS\SIRS_MotorIST\Carserver)
+2024-12-28T19:37:26.039Z  INFO 14276 --- [main] sirs.carserver.CarApplication            : No active profile set, falling back to 1 default profile: "default"
+2024-12-28T19:37:26.737Z  INFO 14276 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-28T19:37:26.871Z  INFO 14276 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 117 ms. Found 2 JPA repository interfaces.
+2024-12-28T19:37:27.412Z  INFO 14276 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-28T19:37:27.515Z  INFO 14276 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@2e807c54
+2024-12-28T19:37:27.517Z  INFO 14276 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-28T19:37:27.625Z  INFO 14276 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-28T19:37:27.699Z  INFO 14276 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-28T19:37:27.748Z  INFO 14276 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-28T19:37:28.122Z  INFO 14276 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-28T19:37:28.191Z  INFO 14276 --- [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.47
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-28T19:37:29.019Z  INFO 14276 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-28T19:37:29.054Z  INFO 14276 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:37:29.535Z  INFO 14276 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : WebSocket connection opened...
+2024-12-28T19:37:29.601Z  INFO 14276 --- [main] sirs.carserver.CarApplication            : Started CarApplication in 4.238 seconds (process running for 4.941)
+2024-12-28T19:37:38.862Z  INFO 14276 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : Received message from server...
+2024-12-28T19:37:38.862Z  INFO 14276 --- [WebSocketConnectReadThread-42] s.c.service.MessageProcessorService      : Processing message: {
+  "operation": "generalcarinfo",
+  "userId": "Diogo",
+  "nonce": "{\n  \"base64Random\": \"71UNag6MABw\",\n  \"timestamp\": 1735414658291\n}",
+  "reqId": "1735414658857"
+}
+2024-12-28T19:37:38.868Z  INFO 14276 --- [WebSocketConnectReadThread-42] sirs.carserver.service.KeyStoreService   : Getting secret key from keystore...
+2024-12-28T19:37:38.955Z  INFO 14276 --- [WebSocketConnectReadThread-42] p.t.sirs.secure.ProtectedObjectBuilder   : Generating the IV...
+2024-12-28T19:37:38.955Z  INFO 14276 --- [WebSocketConnectReadThread-42] p.t.sirs.secure.ProtectedObjectBuilder   : Ciphering the content...
+2024-12-28T19:37:38.955Z  INFO 14276 --- [WebSocketConnectReadThread-42] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the ciphered content and IV to the JSON object...
+2024-12-28T19:37:38.956Z  INFO 14276 --- [WebSocketConnectReadThread-42] p.t.sirs.secure.ProtectedObjectBuilder   : Generating HMAC...
+2024-12-28T19:37:38.956Z  INFO 14276 --- [WebSocketConnectReadThread-42] p.t.sirs.secure.ProtectedObjectBuilder   : Adding the HMAC to the JSON object...
+2024-12-28T19:37:56.394Z  INFO 14276 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-28T19:37:56.395Z  WARN 14276 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : Connection closed: 
+2024-12-28T19:37:56.396Z  INFO 14276 --- [WebSocketConnectReadThread-42] s.carserver.config.CarWebSocketClient    : Reconnecting in 1 seconds...
+2024-12-28T19:37:56.400Z  INFO 14276 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-28T19:37:56.403Z  INFO 14276 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

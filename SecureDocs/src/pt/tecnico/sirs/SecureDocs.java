@@ -42,7 +42,7 @@ public class SecureDocs {
             Unprotect unprotect = new Unprotect();
             ProtectedObject unprotectedContent = unprotect.unprotect(protectedObject, secretKey);
             byte[] unprotectedContentBytes = Base64.getDecoder().decode(unprotectedContent.getContent());
-            String unprotectedPlaintext = SecurityUtil.deserializeFromByteArray(unprotectedContentBytes);
+            String unprotectedPlaintext = SecurityUtil.deserializeFromByteArray(unprotectedContentBytes, String.class);
 
             System.out.println("Unprotected Content:");
             System.out.println("  - Content: " + unprotectedPlaintext);

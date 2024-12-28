@@ -19,6 +19,7 @@ import pt.tecnico.sirs.secdoc.Unprotect;
 import pt.tecnico.sirs.util.JSONUtil;
 import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.motorist.cli.model.dto.*;
+import sirs.motorist.common.CarInfo;
 import sirs.motorist.common.Config;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -201,7 +202,7 @@ public class UserCLI {
 
     private static void getConfig() throws Exception {
         String url = MANUFACTURER_URL + "/user/readConfig";
-        sendRequestAndCheckResponse(carId, url, "User Configuration");
+        sendRequestAndCheckResponse(carId, url, "User Configuration", Config.class);
     }
 
     private static void updateConfig(Scanner scanner) throws Exception {
@@ -290,11 +291,11 @@ public class UserCLI {
     }
 
     private static void generalCarInfo() throws Exception {
-        String url = MANUFACTURER_URL + "/user/readCarInfo";
-        sendRequestAndCheckResponse(carId, url, "Car Info");
+        String url = MANUFACTURER_URL + "/car/readCarInfo";
+        sendRequestAndCheckResponse(carId, url, "Car Info", CarInfo.class);
     }
 
-    private static void sendRequestAndCheckResponse(String carId, String url, String contentLabel) throws Exception {
+    private static <T extends Serializable> void sendRequestAndCheckResponse(String carId, String url, String contentLabel, Class<T> clazz) throws Exception {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
@@ -326,11 +327,11 @@ public class UserCLI {
         protectedObject = unprotect.unprotect(protectedObject, secretKeySpec);
 
         boolean configValid = check.check(protectedObject, secretKeySpec, false);
-        Config config = deserializeIntoObject(protectedObject);
+        T content = deserializeIntoObject(protectedObject, clazz);
 
         if (configValid) {
             System.out.println(contentLabel + " is valid");
-            System.out.println(contentLabel + ": " + config.toString());
+            System.out.println(contentLabel + ": " + content.toString());
         }
         else {
             System.out.println("The integrity of the " + contentLabel + " was compromised");
@@ -376,8 +377,8 @@ public class UserCLI {
         }
     }
 
-    private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject) throws IOException, ClassNotFoundException {
+    private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject, Class<T> clazz) throws IOException, ClassNotFoundException {
         byte[] contentBytes = Base64.getDecoder().decode(protectedObject.getContent());
-        return SecurityUtil.deserializeFromByteArray(contentBytes);
+        return SecurityUtil.deserializeFromByteArray(contentBytes, clazz);
     }
 }

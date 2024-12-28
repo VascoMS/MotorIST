@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
-import sirs.motorist.prototype.model.dto.CarInfoDto;
+import sirs.motorist.prototype.model.dto.ProtectedCarInfoDto;
 import sirs.motorist.prototype.model.dto.InfoGetterDto;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.repository.ConfigRepository;
@@ -26,7 +26,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarInfoDto getCarInfo(InfoGetterDto request) {
+    public ProtectedCarInfoDto getCarInfo(InfoGetterDto request) {
         String userId = request.getUserId();
         String carId = request.getCarId();
         Configuration config = configRepository.findByUserIdAndCarId(userId, carId);
@@ -41,7 +41,7 @@ public class CarServiceImpl implements CarService {
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
         try {
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(carId, jsonObj).get();
-            return JSONUtil.parseJsonToClass(response, CarInfoDto.class);
+            return JSONUtil.parseJsonToClass(response, ProtectedCarInfoDto.class);
         } catch (Exception e) {
             logger.error("Failed to get car info: {}", e.getMessage());
             return null;

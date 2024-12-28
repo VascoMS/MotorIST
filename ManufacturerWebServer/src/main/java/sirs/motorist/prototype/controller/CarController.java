@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pt.tecnico.sirs.secdoc.Check;
-import sirs.motorist.prototype.model.dto.CarInfoDto;
+import sirs.motorist.prototype.model.dto.ProtectedCarInfoDto;
 import sirs.motorist.prototype.model.dto.InfoGetterDto;
 import sirs.motorist.prototype.service.CarService;
 import sirs.motorist.prototype.service.UserService;
@@ -39,7 +39,7 @@ public class CarController {
         if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }
-        CarInfoDto response = carService.getCarInfo(request);
+        ProtectedCarInfoDto response = carService.getCarInfo(request);
         if (response == null) {
             logger.error("Car info for that car was not found...");
             return ResponseEntity.badRequest().body("Car info for that car was not found...");

@@ -15,5 +15,6 @@ public class WebSocketOpsConsts {
     public static final String UPDATECONFIG_OP = "updateconfig";
     public static final String DELETECONFIG_OP = "deleteconfig";
     public static final String GENERALCARINFO_OP = "generalcarinfo";
+    public static final String PROTECTEDOBJECT_FIELD = "protectedObject";
 
 }

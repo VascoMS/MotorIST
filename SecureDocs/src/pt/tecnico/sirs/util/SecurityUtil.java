@@ -85,7 +85,9 @@ public class SecurityUtil {
         mac.init(secretKeySpec);
 
         // Update the HMAC generator with the same nonce and IV as used during generation
-        mac.update(nonce);
+        if(nonce != null) {
+            mac.update(nonce);
+        }
         mac.update(iv);
 
         // Generate the HMAC for the given data
@@ -258,10 +260,11 @@ public class SecurityUtil {
         }
     }
 
-    public static <T extends Serializable> T deserializeFromByteArray(byte[] data) throws IOException, ClassNotFoundException {
+    public static <T extends Serializable> T deserializeFromByteArray(byte[] data, Class<T> clazz) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
              ObjectInputStream ois = new ObjectInputStream(bais)) {
-            return (T) ois.readObject(); // Deserialize to the original object
+            Object deserializableObj = ois.readObject(); // Deserialize to the original object
+            return clazz.cast(deserializableObj);
         }
     }
 

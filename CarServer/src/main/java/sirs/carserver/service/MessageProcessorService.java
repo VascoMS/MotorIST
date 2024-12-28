@@ -174,12 +174,13 @@ public class MessageProcessorService implements Subject {
     }
 
     private CarInfo mapToCarInfo(GeneralCarInfo generalCarInfo) {
-        CarInfo carInfo = new CarInfo();
-        carInfo.setBatteryLevel(generalCarInfo.getBatteryLevel());
-        carInfo.setFirmwareVersion(generalCarInfo.getFirmwareVersion());
-        carInfo.setLocked(generalCarInfo.isLocked());
-        carInfo.setTotalKms(generalCarInfo.getTotalKms());
-        return carInfo;
+        return new CarInfo(
+                generalCarInfo.getId(),
+                generalCarInfo.isLocked(),
+                generalCarInfo.getFirmwareVersion(),
+                generalCarInfo.getBatteryLevel(),
+                generalCarInfo.getTotalKms()
+        );
     }
 
 }

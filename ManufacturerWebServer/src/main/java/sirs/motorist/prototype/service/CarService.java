@@ -1,8 +1,8 @@
 package sirs.motorist.prototype.service;
 
-import sirs.motorist.prototype.model.dto.CarInfoDto;
+import sirs.motorist.prototype.model.dto.ProtectedCarInfoDto;
 import sirs.motorist.prototype.model.dto.InfoGetterDto;
 
 public interface CarService {
-    CarInfoDto getCarInfo(InfoGetterDto request);
+    ProtectedCarInfoDto getCarInfo(InfoGetterDto request);
 }

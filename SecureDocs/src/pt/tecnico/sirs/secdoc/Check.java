@@ -29,13 +29,23 @@ public class Check {
         String hmac = protectedObject.getHmac();
         byte[] content = Base64.getDecoder().decode(contentBase64);
 
+        byte[] nonceBytes = null;
+        if (hasNonce) {
+            try {
+                nonceBytes = SecurityUtil.serializeToByteArray(nonce);
+            } catch (Exception e) {
+                logger.error("Error serializing nonce: {}", e.getMessage());
+                return false; // Optionally handle error, return false, or throw exception
+            }
+        }
+
         boolean hmacValid;
         try {
             hmacValid = SecurityUtil.verifyHMAC(
                     content,
                     secretKey.getEncoded(),
                     hmac,
-                    SecurityUtil.serializeToByteArray(nonce),
+                    nonceBytes,
                     iv
             );
         } catch (Exception e) {
