@@ -143,29 +143,36 @@ public class UserCLI {
 
         changeCar(scanner);
 
-        if (role == 1) {
-            mechanicCLI(scanner);
-        } else {
-            userCLI(scanner);
+        String url = MANUFACTURER_URL + "/user/login";
+        HttpResponse response = prepareAndSendCredentials(url, username, password);
+
+        if(response != null && response.getStatusLine().getStatusCode() == 200) {
+            System.out.println("Logged in successfully");
+            if (role == 1) {
+                mechanicCLI(scanner);
+            } else {
+                userCLI(scanner);
+            }
+        }
+        else {
+            System.out.println("Username or password incorrect");
+            System.out.println(); // :D
         }
     }
 
-    private static void registerNewUser(Scanner scanner) throws IOException {
+    private static void registerNewUser(Scanner scanner) {
         System.out.print("Username: ");
         String name = scanner.nextLine();
         System.out.print("Password: ");
         String pass = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/newUser";
-        UserCredentialsDto dto = new UserCredentialsDto(name, pass);
-        String body = JSONUtil.parseClassToJsonString(dto);
+        HttpResponse response = prepareAndSendCredentials(url, name, pass);
 
-        HttpResponse response = httpClientManager.executeHttpRequest(url, "POST", body);
-
-        if(response != null) {
-            System.out.println(EntityUtils.toString(response.getEntity()));
+        if(response != null && response.getStatusLine().getStatusCode() == 200) {
+            System.out.println("User created successfully");
         } else {
-            System.out.println("Error registering new user");
+            System.out.println("Failed to create user");
         }
     }
 
@@ -238,29 +245,8 @@ public class UserCLI {
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
         Config config = new Config(out1,out2,pos1,pos3);
-        Protect protect = new Protect();
 
-        ProtectedObject protectedObj = protect.protect(secretKeySpec, config, true);
-
-        WriteOperationDto dto = new WriteOperationDto(
-                username,
-                carId,
-                password,
-                protectedObj.getContent(),
-                protectedObj.getIv(),
-                protectedObj.getNonce(),
-                protectedObj.getHmac()
-        );
-        String body = JSONUtil.parseClassToJsonString(dto);
-
-        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
-
-        if(response == null) {
-            System.out.println("Failed to contact server...");
-            return;
-        }
-
-        System.out.println(EntityUtils.toString(response.getEntity()));
+        protectAndSendWriteOperation(secretKeySpec, config, url);
     }
 
     private static void deleteConfig(Scanner scanner) throws Exception {
@@ -274,29 +260,7 @@ public class UserCLI {
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
-        Protect protect = new Protect();
-
-        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, confirmationPhrase, true);
-
-        WriteOperationDto dto = new WriteOperationDto(
-                username,
-                carId,
-                password,
-                protectedConfirmationPhrase.getContent(),
-                protectedConfirmationPhrase.getIv(),
-                protectedConfirmationPhrase.getNonce(),
-                protectedConfirmationPhrase.getHmac()
-        );
-        String body = JSONUtil.parseClassToJsonString(dto);
-
-        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
-
-        if(response == null) {
-            System.out.println("Failed to contact server...");
-            return;
-        }
-
-        System.out.println(EntityUtils.toString(response.getEntity()));
+        protectAndSendWriteOperation(secretKeySpec, confirmationPhrase, url);
     }
 
     private static void generalCarInfo() throws Exception {
@@ -385,6 +349,39 @@ public class UserCLI {
         } else {
             System.out.println("Error downloading firmware");
         }
+    }
+
+    private static HttpResponse prepareAndSendCredentials(String url, String name, String pass) {
+        UserCredentialsDto dto = new UserCredentialsDto(name, pass);
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        return httpClientManager.executeHttpRequest(url, "POST", body);
+    }
+
+    private static <T extends Serializable> void protectAndSendWriteOperation(SecretKeySpec secretKeySpec, T content, String url) throws Exception {
+        Protect protect = new Protect();
+
+        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, content, true);
+
+        WriteOperationDto dto = new WriteOperationDto(
+                username,
+                carId,
+                password,
+                protectedConfirmationPhrase.getContent(),
+                protectedConfirmationPhrase.getIv(),
+                protectedConfirmationPhrase.getNonce(),
+                protectedConfirmationPhrase.getHmac()
+        );
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
+
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+
+        System.out.println(EntityUtils.toString(response.getEntity()));
     }
 
     private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject, Class<T> clazz) throws IOException, ClassNotFoundException {

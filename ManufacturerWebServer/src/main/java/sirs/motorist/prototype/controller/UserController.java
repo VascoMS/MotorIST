@@ -31,4 +31,13 @@ public class UserController {
         }
         return ResponseEntity.ok("User created successfully");
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserCredentialsDto request) {
+        if (!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            logger.error("Failed to login user: {}", request.getUserId());
+            return ResponseEntity.badRequest().body("Failed to login user");
+        }
+        return ResponseEntity.ok("User logged in successfully");
+    }
 }
