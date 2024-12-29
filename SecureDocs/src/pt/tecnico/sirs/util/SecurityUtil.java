@@ -188,13 +188,12 @@ public class SecurityUtil {
 
     public static PublicKey convertPublicKeyFromString(String publicKeyString) {
         try {
-            System.out.println(publicKeyString);
             byte[] keyBytes = Base64.getDecoder().decode(publicKeyString);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePublic(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            logger.error("Error while converting the Public key: " + ex.getMessage());
+            logger.error("Error while converting the Public key: {}", ex.getMessage());
             return null;
         }
     }

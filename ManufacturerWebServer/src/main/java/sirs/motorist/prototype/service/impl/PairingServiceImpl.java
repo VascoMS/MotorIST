@@ -54,6 +54,8 @@ public class PairingServiceImpl implements PairingService {
         jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, pairSuccessful);
         jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
 
+        System.out.println("Sending message to car: " + jsonObj);
+
         carWebSocketHandler.sendMessageToCarNoResponse(request.getCarId(), jsonObj);
         if(pairSuccessful) {
             ProtectedObject protectedConfig = pairingSession.protectedConfig();
