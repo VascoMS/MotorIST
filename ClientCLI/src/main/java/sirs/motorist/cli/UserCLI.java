@@ -242,7 +242,7 @@ public class UserCLI {
 
         ProtectedObject protectedObj = protect.protect(secretKeySpec, config, true);
 
-        ConfigurationDto dto = new ConfigurationDto(
+        WriteOperationDto dto = new WriteOperationDto(
                 username,
                 carId,
                 password,
@@ -278,7 +278,7 @@ public class UserCLI {
 
         ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, confirmationPhrase, true);
 
-        DeleteConfigDto dto = new DeleteConfigDto(
+        WriteOperationDto dto = new WriteOperationDto(
                 username,
                 carId,
                 password,
@@ -307,8 +307,6 @@ public class UserCLI {
     private static <T extends Serializable> void sendRequestAndCheckResponse(String carId, String url, String contentLabel, Class<T> clazz) throws Exception {
         // Load the key store
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
-
-        System.out.println("Storing key: " + carId + "_secret");
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 

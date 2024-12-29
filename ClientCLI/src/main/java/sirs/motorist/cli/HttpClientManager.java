@@ -2,6 +2,7 @@ package sirs.motorist.cli;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -41,9 +42,15 @@ public class HttpClientManager {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(10 * 1000)
+                .setConnectionRequestTimeout(10 * 1000)
+                .build();
+
         // Create an HttpClient with the custom SSLContext
         httpClient = HttpClients.custom()
                 .setSSLContext(sslContext)
+                .setDefaultRequestConfig(requestConfig)
                 .build();
     }
 

@@ -10,6 +10,7 @@ import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.secdoc.Unprotect;
+import pt.tecnico.sirs.util.SecurityUtil;
 import sirs.carserver.model.User;
 import org.springframework.stereotype.Service;
 import sirs.carserver.repository.UserRepository;
@@ -18,6 +19,7 @@ import sirs.motorist.common.Config;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -103,6 +105,19 @@ public class UserService {
 
         //Check if object was tampered with
         if(check.check(unprotectedObject, secretKeySpec, true)){
+            byte[] confirmationBytes = Base64.getDecoder().decode(unprotectedObject.getContent());
+
+            String confirmationPhrase = null;
+            try{
+                confirmationPhrase = SecurityUtil.deserializeFromByteArray(confirmationBytes, String.class);
+            } catch (Exception e) {
+                logger.error("Unable to deserialize the confirmation phrase: {}", e.getMessage());
+            }
+
+            if(confirmationPhrase == null || !confirmationPhrase.equals("DELETE " + username)){
+                logger.error("User inputted the wrong confirmation phrase: {}", confirmationPhrase);
+                return false;
+            }
             userRepository.deleteById(username);
             try {
                 keyStoreService.deleteKey(username);

@@ -24,11 +24,10 @@ public class CarInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "CarInfo: " +
-                "carId = " + carId + "\n" +
-                "isLocked = " + isLocked + "\n" +
-                "firmwareVersion = " + firmwareVersion + "\n" +
-                "batteryLevel = " + batteryLevel + "\n" +
-                "totalKms = " + totalKms;
+        return "\n\tcarId = " + carId + "\n" +
+                "\tisLocked = " + isLocked + "\n" +
+                "\tfirmwareVersion = " + firmwareVersion + "\n" +
+                "\tbatteryLevel = " + batteryLevel + "\n" +
+                "\ttotalKms = " + totalKms;
     }
 }

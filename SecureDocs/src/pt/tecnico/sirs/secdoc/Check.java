@@ -19,7 +19,7 @@ public class Check {
 
     public Check() {}
 
-    public boolean check(ProtectedObject protectedObject, SecretKey secretKey, boolean hasNonce) {
+    public boolean check(ProtectedObject protectedObject, SecretKey secretKey, boolean verifyNonce) {
 
         // Extract the content and signature from the json object
         String contentBase64 = protectedObject.getContent();
@@ -30,7 +30,7 @@ public class Check {
         byte[] content = Base64.getDecoder().decode(contentBase64);
 
         byte[] nonceBytes = null;
-        if (hasNonce) {
+        if (nonce != null) {
             try {
                 nonceBytes = SecurityUtil.serializeToByteArray(nonce);
             } catch (Exception e) {
@@ -54,7 +54,7 @@ public class Check {
         }
 
         boolean nonceValid = true;
-        if (hasNonce) {
+        if (nonce != null && verifyNonce) {
             nonceValid = verifyNonce(nonce);
         }
         boolean isValid = hmacValid && nonceValid;

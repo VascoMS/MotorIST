@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.tecnico.sirs.secdoc.Check;
-import sirs.motorist.prototype.model.dto.ConfigurationDto;
-import sirs.motorist.prototype.model.dto.DeleteConfigDto;
+import sirs.motorist.prototype.model.dto.WriteOperationDto;
 import sirs.motorist.prototype.model.dto.InfoGetterDto;
 import sirs.motorist.prototype.model.dto.UserPairRequestDto;
 import sirs.motorist.prototype.model.entity.Configuration;
@@ -65,7 +64,7 @@ public class UserConfigController {
     }
 
     @PutMapping("/updateConfig")
-    public ResponseEntity<?> updateConfig(@RequestBody ConfigurationDto request) {
+    public ResponseEntity<?> updateConfig(@RequestBody WriteOperationDto request) {
         if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }
@@ -79,7 +78,7 @@ public class UserConfigController {
     }
 
     @PutMapping("/deleteConfig")
-    public ResponseEntity<?> deleteConfig(@RequestBody DeleteConfigDto request) {
+    public ResponseEntity<?> deleteConfig(@RequestBody WriteOperationDto request) {
         if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }

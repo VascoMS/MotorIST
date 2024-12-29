@@ -112,6 +112,8 @@ public class MessageProcessorService implements Subject {
         logger.info("Deleting user: {}", username);
         String requestId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
 
+        System.out.println("MessageJson: " + messageJson);
+
         ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);
         boolean success = userService.deleteConfig(username, protectedObject);
         return new OpResponseDto(requestId, success);

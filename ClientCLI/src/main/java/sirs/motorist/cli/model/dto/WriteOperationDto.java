@@ -6,20 +6,21 @@ import pt.tecnico.sirs.model.Nonce;
 
 @Getter
 @Setter
-public class DeleteConfigDto {
+public class WriteOperationDto {
+
     private String userId;
     private String carId;
     private String password;
-    private String confirmationPhrase;
+    private String content;
     private String iv;
     private Nonce nonce;
     private String hmac;
 
-    public DeleteConfigDto(String userId, String carId, String password, String confirmationPhrase, String iv, Nonce nonce, String hmac) {
-        this.userId = userId;
+    public WriteOperationDto(String userId, String carId, String password, String content, String iv, Nonce nonce, String hmac) {
         this.carId = carId;
+        this.userId = userId;
         this.password = password;
-        this.confirmationPhrase = confirmationPhrase;
+        this.content = content;
         this.iv = iv;
         this.nonce = nonce;
         this.hmac = hmac;

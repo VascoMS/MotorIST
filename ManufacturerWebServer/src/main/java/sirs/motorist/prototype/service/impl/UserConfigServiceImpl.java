@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.Nonce;
-import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
-import sirs.motorist.prototype.model.dto.ConfigurationDto;
-import sirs.motorist.prototype.model.dto.DeleteConfigDto;
+import sirs.motorist.prototype.model.dto.WriteOperationDto;
 import sirs.motorist.prototype.model.entity.Configuration;
 import sirs.motorist.prototype.repository.ConfigRepository;
 import sirs.motorist.prototype.service.UserConfigService;
@@ -35,13 +33,13 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public Boolean updateConfiguration(ConfigurationDto request) {
+    public Boolean updateConfiguration(WriteOperationDto request) {
         // TODO: We should consider passing the JsonObject building of the ProtectedObject into the class
         JsonObject jsonObj = new JsonObject();
         JsonElement nonce = request.getNonce().toJsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.UPDATECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
-        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfiguration());
+        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getContent());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
         jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
@@ -52,7 +50,7 @@ public class UserConfigServiceImpl implements UserConfigService {
                 Configuration config = new Configuration(
                         request.getUserId(),
                         request.getCarId(),
-                        request.getConfiguration(),
+                        request.getContent(),
                         request.getIv(),
                         request.getNonce(),
                         request.getHmac()
@@ -73,12 +71,12 @@ public class UserConfigServiceImpl implements UserConfigService {
     }
 
     @Override
-    public Boolean deleteConfiguration(DeleteConfigDto request) {
+    public Boolean deleteConfiguration(WriteOperationDto request) {
         JsonObject jsonObj = new JsonObject();
         JsonElement nonce = request.getNonce().toJsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.DELETECONFIG_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
-        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getConfirmationPhrase());
+        jsonObj.addProperty(WebSocketOpsConsts.CONTENT_FIELD, request.getContent());
         jsonObj.addProperty(WebSocketOpsConsts.IV_FIELD, request.getIv());
         jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
