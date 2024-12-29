@@ -25,16 +25,25 @@ import sirs.motorist.common.Config;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserCLI {
-    private static final String MANUFACTURER_URL = "http://localhost:8443/";
+    private static final String MANUFACTURER_URL = "https://localhost:8443/";
+    private static final String TRUSTSTORE_PATH = "keystore/truststore.p12";
+    private static final String TRUSTSTORE_PASSWORD = "motorist_tls";
     private static final int NONCE_SIZE = 8;
     private static String username;
     private static String password;
     private static String carId;
     private static String keyStorePath;
     private static final Check check = new Check();
+    private static HttpClientManager httpClientManager;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        try {
+            httpClientManager = new HttpClientManager(TRUSTSTORE_PATH, TRUSTSTORE_PASSWORD);
+        } catch (Exception e) {
+            System.out.println("Error initializing HttpClientManager: " + e.getMessage());
+            return;
+        }
 
         while (true) {
             System.out.println("Welcome to the Motorist CLI");
@@ -151,7 +160,7 @@ public class UserCLI {
         UserCredentialsDto dto = new UserCredentialsDto(name, pass);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "POST", body);
 
         if(response != null) {
             System.out.println(EntityUtils.toString(response.getEntity()));
@@ -176,7 +185,7 @@ public class UserCLI {
         UserPairRequestDto dto = new UserPairRequestDto(username, password, nonce, carId, pairCode);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "POST", body);
 
         if(response == null) {
             System.out.println("Failed to contact server...");
@@ -244,7 +253,7 @@ public class UserCLI {
         );
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
 
         if(response == null) {
             System.out.println("Failed to contact server...");
@@ -280,7 +289,7 @@ public class UserCLI {
         );
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "PUT", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
 
         if(response == null) {
             System.out.println("Failed to contact server...");
@@ -308,7 +317,7 @@ public class UserCLI {
         InfoGetterDto dto = new InfoGetterDto(username, carId, password, nonce);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "POST", body);
         if(response == null) {
             System.out.println("Failed to contact server...");
             return;
@@ -360,7 +369,7 @@ public class UserCLI {
         FirmwareRequestDto dto = new FirmwareRequestDto(username, password, signedData, nonce, carId);
         String body = JSONUtil.parseClassToJsonString(dto);
 
-        HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "POST", body);
 
         if(response != null && response.getStatusLine().getStatusCode() == 200) {
             String resBody = EntityUtils.toString(response.getEntity());

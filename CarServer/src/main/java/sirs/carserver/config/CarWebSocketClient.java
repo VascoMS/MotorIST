@@ -11,6 +11,7 @@ import sirs.carserver.exception.InvalidOperationException;
 import sirs.carserver.model.dto.OpResponseDto;
 import sirs.carserver.service.MessageProcessorService;
 
+import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,9 +27,10 @@ public class CarWebSocketClient extends WebSocketClient {
     private Timer reconnectTimer;
     private final MessageProcessorService messageProcessorService;
 
-    public CarWebSocketClient(URI serverUri, MessageProcessorService messageProcessorService) {
+    public CarWebSocketClient(URI serverUri, MessageProcessorService messageProcessorService, SSLContext sslContext) {
         super(serverUri);
         this.messageProcessorService = messageProcessorService;
+        this.setSocketFactory(sslContext.getSocketFactory());
     }
 
     @Override
@@ -58,6 +60,7 @@ public class CarWebSocketClient extends WebSocketClient {
     @Override
     public void onError(Exception ex) {
         logger.error("Error whilst connection was open: {}", ex.getMessage());
+        System.out.println("Error when connecting to server, trying again..." );
         attemptReconnect();
     }
 
@@ -94,7 +97,8 @@ public class CarWebSocketClient extends WebSocketClient {
                 }
             }, reconnectDelay);
         } else {
-            logger.error("Max reconnect attempts reached. Giving up.");
+            logger.error("Max reconnect attempts reached. Giving up and shutting down...");
+            System.exit(1);
         }
     }
 

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import pt.tecnico.sirs.secdoc.Check;
 
 @Configuration
-public class NonceCheckerConfig {
+public class CheckerConfig {
     @Bean
     public Check check() {
         return new Check();
