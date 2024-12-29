@@ -345,7 +345,7 @@ public class UserCLI {
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         // Get the private key
-        PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(username, password, keyStore);
+        PrivateKey privateKey = SecurityUtil.loadPrivateKeyFromKeyStore(password, keyStore);
 
         // Generate a nonce
         Nonce nonce = SecurityUtil.generateNonce(NONCE_SIZE);
@@ -357,17 +357,20 @@ public class UserCLI {
         String signedData = SecurityUtil.signData(carId.getBytes(), privateKey, nonceBytes, null);
 
         // Create the request DTO
-        FirmwareRequestDto dto = new FirmwareRequestDto(username, signedData, nonce, carId);
+        FirmwareRequestDto dto = new FirmwareRequestDto(username, password, signedData, nonce, carId);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         HttpResponse response = HttpClientManager.executeHttpRequest(url, "POST", body);
 
         if(response != null && response.getStatusLine().getStatusCode() == 200) {
-            System.out.println(EntityUtils.toString(response.getEntity()));
+            String resBody = EntityUtils.toString(response.getEntity());
+            SignedFirmwareDto firmware = JSONUtil.parseJsonToClass(resBody, SignedFirmwareDto.class);
+
+            System.out.println(resBody);
 
             try (FileWriter writer = new FileWriter("files/firmware.json")) {
                 // Serialize the object to JSON and write it to a file
-                JSONUtil.serializeAndWriteToFile(response, writer); //TODO: check if the response is a SignedFirmwareDto
+                JSONUtil.serializeAndWriteToFile(firmware, writer);
                 System.out.println("JSON written to file.");
             } catch (IOException e) {
                 System.out.println("Error writing to file: " + e.getMessage());

@@ -13,24 +13,29 @@ import pt.tecnico.sirs.secdoc.Check;
 import sirs.motorist.prototype.model.dto.FirmwareRequestDto;
 import sirs.motorist.prototype.model.dto.SignedFirmwareDto;
 import sirs.motorist.prototype.service.FirmwareService;
+import sirs.motorist.prototype.service.UserService;
 
 @RestController
 @RequestMapping("/firmware")
 public class FirmwareController {
 
     private static final Logger logger = LoggerFactory.getLogger(FirmwareController.class);
-
+    UserService userService;
     FirmwareService firmwareService;
     Check check;
 
     @Autowired
-    public FirmwareController(FirmwareService firmwareService, Check check) {
+    public FirmwareController(FirmwareService firmwareService, UserService userService, Check check) {
         this.firmwareService = firmwareService;
+        this.userService = userService;
         this.check = check;
     }
 
     @PostMapping("/download")
     public ResponseEntity<?> downloadFirmware(@RequestBody FirmwareRequestDto request) {
+        if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
         if(!check.verifyNonce(request.getNonce())) {
             return ResponseEntity.badRequest().body("Nonce verification failed");
         }

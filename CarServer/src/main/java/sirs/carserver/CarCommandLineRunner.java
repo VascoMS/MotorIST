@@ -1,6 +1,8 @@
 package sirs.carserver;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -84,8 +86,9 @@ class CarCommandLineRunner implements CommandLineRunner, Observer {
         System.out.println("Enter the path to the firmware file: ");
         String firmwarePath = scanner.nextLine();
 
-        try (FileReader reader = new FileReader(firmwarePath)) {
-            JsonObject jsonObject = JSONUtil.parseFileReaderToJson(reader);
+        try (JsonReader reader = new JsonReader(new FileReader(firmwarePath))) {
+            // Parse the JSON from the reader into a JsonObject
+            JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
             SignedFirmwareDto firmware = JSONUtil.parseJsonToClass(jsonObject, SignedFirmwareDto.class);
 
             carInfoService.updateFirmware(firmware);

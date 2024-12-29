@@ -147,8 +147,8 @@ public class SecurityUtil {
         return new SecretKeySpec(secretKey.getEncoded(), "AES");
     }
 
-    public static PrivateKey loadPrivateKeyFromKeyStore(String username, String password, KeyStore keyStore) throws Exception {
-        return (PrivateKey) keyStore.getKey(username + "_priv", password.toCharArray());
+    public static PrivateKey loadPrivateKeyFromKeyStore(String password, KeyStore keyStore) throws Exception {
+        return (PrivateKey) keyStore.getKey("keypair", password.toCharArray());
     }
 
     public static void saveSecretKeyInKeyStore(KeyStore keyStore, byte[] inputtedSecretKey, String keyPrefix, String password, String keyStorePath) throws Exception {
@@ -188,12 +188,13 @@ public class SecurityUtil {
 
     public static PublicKey convertPublicKeyFromString(String publicKeyString) {
         try {
+            System.out.println(publicKeyString);
             byte[] keyBytes = Base64.getDecoder().decode(publicKeyString);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePublic(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            logger.error("Error while converting the Public key");
+            logger.error("Error while converting the Public key: " + ex.getMessage());
             return null;
         }
     }

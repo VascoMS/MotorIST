@@ -9,6 +9,7 @@ import pt.tecnico.sirs.util.SecurityUtil;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.FileOutputStream;
 import java.security.*;
+import java.security.cert.Certificate;
 
 @Service
 public class KeyStoreService {
@@ -35,7 +36,16 @@ public class KeyStoreService {
 
     public PublicKey getPublicKey(String alias) throws Exception {
         logger.info("Getting public key from keystore...");
-        return (PublicKey) keyStore.getKey(alias, keystorePassword.toCharArray());
+
+        // Retrieve the certificate associated with the alias
+        Certificate cert = keyStore.getCertificate(alias);
+
+        if (cert == null) {
+            throw new Exception("Certificate not found for alias: " + alias);
+        }
+
+        // Get the public key from the certificate
+        return cert.getPublicKey();
     }
 
     public SecretKeySpec getSecretKeySpec(String alias){
