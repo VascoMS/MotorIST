@@ -65,6 +65,30 @@ public class UserServiceImpl implements UserService {
         return inputHashedPassword.equals(storedUser.getPassword());
     }
 
+
+    @Override
+    public boolean checkCredentialsAndRole(String userId, String password, boolean isMechanic) {
+        User storedUser = userRepository.findByUserId(userId);
+        if(storedUser == null) {
+            logger.error("User {} not found", userId);
+            return false;
+        }
+
+        if(isMechanic != storedUser.isMechanic()) {
+            logger.error("You selected the wrong role user claim: {}, real: {}", isMechanic, storedUser.isMechanic());
+            return false;
+        }
+
+        String inputHashedPassword;
+        try {
+            inputHashedPassword = hashPassword(password, storedUser.getSalt());
+        } catch (NoSuchAlgorithmException e) {
+            logger.error("Password hashing failed while checking credentials: {}", e.getMessage());
+            return false;
+        }
+        return inputHashedPassword.equals(storedUser.getPassword());
+    }
+
     private byte[] generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16]; // 16-byte salt

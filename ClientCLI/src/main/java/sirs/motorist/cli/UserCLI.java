@@ -126,13 +126,13 @@ public class UserCLI {
         }
     }
 
-    private static void insertCredentials(Scanner scanner) {
+    private static void insertCredentials(Scanner scanner) throws IOException {
         System.out.println("Select a role: ");
         System.out.println("1. Mechanic");
         System.out.println("2. User");
 
-        int role = scanner.nextInt();
-        scanner.nextLine();
+        String role = scanner.nextLine();
+        boolean isMechanic = role.equals("1");
 
         System.out.print("Enter username: ");
         username = scanner.nextLine();
@@ -144,15 +144,16 @@ public class UserCLI {
         changeCar(scanner);
 
         String url = MANUFACTURER_URL + "/user/login";
-        HttpResponse response = prepareAndSendCredentials(url, username, password);
+        HttpResponse response = prepareAndSendCredentials(url, username, password, isMechanic);
 
         if(response != null && response.getStatusLine().getStatusCode() == 200) {
             System.out.println("Logged in successfully");
-            if (role == 1) {
+            if (isMechanic) {
                 mechanicCLI(scanner);
             } else {
                 userCLI(scanner);
             }
+            EntityUtils.consume(response.getEntity());
         }
         else {
             System.out.println("Username or password incorrect");
@@ -160,17 +161,18 @@ public class UserCLI {
         }
     }
 
-    private static void registerNewUser(Scanner scanner) {
+    private static void registerNewUser(Scanner scanner) throws IOException {
         System.out.print("Username: ");
         String name = scanner.nextLine();
         System.out.print("Password: ");
         String pass = scanner.nextLine();
 
         String url = MANUFACTURER_URL + "/user/newUser";
-        HttpResponse response = prepareAndSendCredentials(url, name, pass);
+        HttpResponse response = prepareAndSendCredentials(url, name, pass, false);
 
         if(response != null && response.getStatusLine().getStatusCode() == 200) {
             System.out.println("User created successfully");
+            EntityUtils.consume(response.getEntity());
         } else {
             System.out.println("Failed to create user");
         }
@@ -214,6 +216,7 @@ public class UserCLI {
         } else {
             System.out.println("Pairing failed: " + EntityUtils.toString(response.getEntity()));
         }
+        EntityUtils.consume(response.getEntity());
     }
 
     private static void getConfig() throws Exception {
@@ -307,6 +310,7 @@ public class UserCLI {
         else {
             System.out.println("The integrity of the " + contentLabel + " was compromised");
         }
+        EntityUtils.consume(response.getEntity());
     }
 
     private static void downloadFirmware() throws Exception {
@@ -346,13 +350,14 @@ public class UserCLI {
             } catch (IOException e) {
                 System.out.println("Error writing to file: " + e.getMessage());
             }
+            EntityUtils.consume(response.getEntity());
         } else {
             System.out.println("Error downloading firmware");
         }
     }
 
-    private static HttpResponse prepareAndSendCredentials(String url, String name, String pass) {
-        UserCredentialsDto dto = new UserCredentialsDto(name, pass);
+    private static HttpResponse prepareAndSendCredentials(String url, String name, String pass, boolean isMechanic) {
+        UserCredentialsDto dto = new UserCredentialsDto(name, pass, isMechanic);
         String body = JSONUtil.parseClassToJsonString(dto);
 
         return httpClientManager.executeHttpRequest(url, "POST", body);
@@ -382,6 +387,7 @@ public class UserCLI {
         }
 
         System.out.println(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
     }
 
     private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject, Class<T> clazz) throws IOException, ClassNotFoundException {

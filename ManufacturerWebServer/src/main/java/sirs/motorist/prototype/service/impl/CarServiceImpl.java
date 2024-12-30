@@ -1,5 +1,6 @@
 package sirs.motorist.prototype.service.impl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +36,14 @@ public class CarServiceImpl implements CarService {
             return null;
         }
         JsonObject jsonObj = new JsonObject();
-        String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
+        JsonElement nonce = request.getNonce().toJsonObject();
         jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.GENERALCARINFO_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
-        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
+        jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         try {
+
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(carId, jsonObj).get();
+            logger.info("Received response from car {}...", carId);
             return JSONUtil.parseJsonToClass(response, ProtectedCarInfoDto.class);
         } catch (Exception e) {
             logger.error("Failed to get car info: {}", e.getMessage());

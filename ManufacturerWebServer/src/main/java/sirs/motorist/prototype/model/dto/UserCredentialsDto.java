@@ -9,9 +9,11 @@ public class UserCredentialsDto {
 
     private String userId;
     private String password;
+    private boolean isMechanic;
 
-    public UserCredentialsDto(String userId, String password) {
+    public UserCredentialsDto(String userId, String password, boolean isMechanic) {
         this.userId = userId;
         this.password = password;
+        this.isMechanic = isMechanic;
     }
 }

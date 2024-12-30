@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserCredentialsDto request) {
-        if (!userService.checkCredentials(request.getUserId(), request.getPassword())) {
+        if (!userService.checkCredentialsAndRole(request.getUserId(), request.getPassword(), request.isMechanic())) {
             logger.error("Failed to login user: {}", request.getUserId());
             return ResponseEntity.badRequest().body("Failed to login user");
         }

@@ -44,10 +44,17 @@ public class UserConfigServiceImpl implements UserConfigService {
         jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
+            Configuration currentConfig = configRepository.findByUserIdAndCarId(request.getUserId(), request.getCarId());
+            if (currentConfig == null) {
+                logger.error("User {} isn't registered with car {}...", request.getUserId(), request.getCarId());
+                return false;
+            }
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            logger.info("Received response from car {}...", request.getCarId());
             boolean success = carWebSocketHandler.checkSuccess(response);
             if(success) {
                 Configuration config = new Configuration(
+                        currentConfig.getId(),
                         request.getUserId(),
                         request.getCarId(),
                         request.getContent(),
@@ -82,6 +89,7 @@ public class UserConfigServiceImpl implements UserConfigService {
         jsonObj.addProperty(WebSocketOpsConsts.HMAC_FIELD, request.getHmac());
         try {
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(request.getCarId(), jsonObj).get();
+            logger.info("Received response from car {}...", request.getCarId());
             boolean success = carWebSocketHandler.checkSuccess(response);
 
             if(success) {

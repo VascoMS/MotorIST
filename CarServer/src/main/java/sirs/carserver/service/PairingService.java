@@ -64,7 +64,6 @@ public class PairingService {
     }
 
     private JsonObject buildJsonPayload(PairingSession pairingSession) {
-        // TODO: Add nonce to payload.
         try {
             Protect protector = new Protect();
             // Additional fields to be included in the protected object

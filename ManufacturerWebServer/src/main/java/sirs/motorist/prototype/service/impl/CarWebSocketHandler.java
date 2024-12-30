@@ -11,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.motorist.prototype.consts.WebSocketOpsConsts;
 import sirs.motorist.prototype.service.PairingService;
@@ -22,8 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class CarWebSocketHandler extends TextWebSocketHandler {
-    // TODO: Maybe the query param in the uri doesn't work
-    // TODO: Add nonces to requests which still don't have them
     private static final Logger logger = LoggerFactory.getLogger(CarWebSocketHandler.class);
 
     private final ConcurrentHashMap<String, WebSocketSession> wsSessions = new ConcurrentHashMap<>();
@@ -31,9 +30,11 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
 
     private static final ConcurrentHashMap<String, CompletableFuture<JsonObject>> pendingRequests = new ConcurrentHashMap<>();
     private final PairingService pairingService;
+    private final Check check;
 
-    public CarWebSocketHandler(@Lazy PairingService pairingService){
+    public CarWebSocketHandler(@Lazy PairingService pairingService, Check check){
         this.pairingService = pairingService;
+        this.check = check;
     }
 
     @Override
@@ -75,11 +76,16 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
         String code = messageJson.get(WebSocketOpsConsts.CODE_FIELD).getAsString();
         // Ignores previous fields which aren't part of the ProtectedObject
         ProtectedObject protectedObject = JSONUtil.parseJsonToClass(messageJson, ProtectedObject.class);
-        pairingService.initPairingSession(carId, code, protectedObject);
+        boolean nonceCheck = check.verifyNonce(protectedObject.getNonce());
+        if(nonceCheck){
+            pairingService.initPairingSession(carId, code, protectedObject);
+        } else {
+            logger.error("Nonce check failed");
+        }
         JsonObject response = new JsonObject();
         response.addProperty(WebSocketOpsConsts.REQ_ID, reqId);
         response.addProperty(WebSocketOpsConsts.OPERATION_FIELD, "initpair-response");
-        response.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, true);
+        response.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, nonceCheck);
         // Send response to car
         sendMessageToCarNoResponse(carId, response);
     }
@@ -118,6 +124,7 @@ public class CarWebSocketHandler extends TextWebSocketHandler {
             jsonObj.addProperty(WebSocketOpsConsts.REQ_ID, requestId);
             String command = JSONUtil.parseClassToJsonString(jsonObj);
             try {
+                logger.info("Sending message to car {}...", carId);
                 session.sendMessage(new TextMessage(command));
                 return future;
             } catch (IOException e) {

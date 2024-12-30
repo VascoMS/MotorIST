@@ -1,6 +1,9 @@
 package sirs.motorist.prototype.service.impl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pt.tecnico.sirs.model.ProtectedObject;
 import pt.tecnico.sirs.util.JSONUtil;
@@ -19,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PairingServiceImpl implements PairingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PairingServiceImpl.class);
 
     private final Map<String, PairingSessionRecord> pairingSessions;
     private final CarWebSocketHandler carWebSocketHandler;
@@ -41,18 +46,20 @@ public class PairingServiceImpl implements PairingService {
         byte[] userCodeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
         PairingSessionRecord pairingSession = pairingSessions.get(request.getCarId());
         byte[] hashedCode = pairingSession.hashedCode();
-        boolean userExists = configRepository.existsById(request.getUserId());
+        boolean userExists = configRepository.existsByUserIdAndCarId(request.getUserId(), request.getCarId());
+        logger.info("User {} exists: {}", request.getUserId(), userExists);
         boolean verifyCodes = Arrays.equals(userCodeHash, hashedCode);
         boolean pairSuccessful = !userExists && verifyCodes;
+        logger.info("User code matches: {}", verifyCodes);
 
         String base64hashedCode = Base64.getEncoder().encodeToString(hashedCode);
         JsonObject jsonObj = new JsonObject();
-        String nonce = JSONUtil.parseClassToJsonString(request.getNonce());
-        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_FIELD);
+        JsonElement nonce = request.getNonce().toJsonObject();
+        jsonObj.addProperty(WebSocketOpsConsts.OPERATION_FIELD, WebSocketOpsConsts.PAIR_OP);
         jsonObj.addProperty(WebSocketOpsConsts.USERID_FIELD, request.getUserId());
         jsonObj.addProperty(WebSocketOpsConsts.CODE_FIELD, base64hashedCode);
         jsonObj.addProperty(WebSocketOpsConsts.SUCCESS_FIELD, pairSuccessful);
-        jsonObj.addProperty(WebSocketOpsConsts.NONCE_FIELD, nonce);
+        jsonObj.add(WebSocketOpsConsts.NONCE_FIELD, nonce);
 
         carWebSocketHandler.sendMessageToCarNoResponse(request.getCarId(), jsonObj);
         if(pairSuccessful) {

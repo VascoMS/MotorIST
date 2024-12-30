@@ -60,3 +60,10 @@ UserId: DiogoOperation: deleteConfig
 UserId: DiogoOperation: createUser
 UserId: DiogoOperation: deleteConfig
 UserId: DiogoOperation: createUser
+UserId: vascs | Operation: createUser
+UserId: vascs | Operation: createUser
+UserId: vascs | Operation: updateConfig
+UserId: Jazz | Operation: createUser
+UserId: Jazz | Operation: updateConfig
+UserId: test | Operation: createUser
+UserId: test | Operation: updateConfig

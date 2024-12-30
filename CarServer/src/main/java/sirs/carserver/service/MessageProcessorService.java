@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import pt.tecnico.sirs.model.Nonce;
 import pt.tecnico.sirs.model.ProtectedObject;
+import pt.tecnico.sirs.secdoc.Check;
 import pt.tecnico.sirs.secdoc.Protect;
 import pt.tecnico.sirs.util.JSONUtil;
 import sirs.carserver.consts.WebSocketOpsConsts;
@@ -36,13 +38,15 @@ public class MessageProcessorService implements Subject {
     private final CarInfoService carInfoService;
     private final KeyStoreService keyStoreService;
     private final List<Observer> pairingResultObservers = new ArrayList<>();
+    private final Check check;
     private static final ConcurrentHashMap<String, CompletableFuture<Boolean>> pendingRequests = new ConcurrentHashMap<>();
 
-    public MessageProcessorService(@Lazy PairingService pairingService, UserService userService, CarInfoService carInfoService, KeyStoreService keyStoreService) {
+    public MessageProcessorService(@Lazy PairingService pairingService, UserService userService, CarInfoService carInfoService, KeyStoreService keyStoreService, Check check) {
         this.pairingService = pairingService;
         this.userService = userService;
         this.carInfoService = carInfoService;
         this.keyStoreService = keyStoreService;
+        this.check = check;
     }
 
     public OpResponseDto processMessage(String message) throws InvalidOperationException {
@@ -73,7 +77,10 @@ public class MessageProcessorService implements Subject {
         String code = messageJson.get(WebSocketOpsConsts.CODE_FIELD).getAsString();
         boolean success = Boolean.parseBoolean(messageJson.get(WebSocketOpsConsts.SUCCESS_FIELD).getAsString());
         boolean codeMatches = pairingService.checkPairingSession(code);
-        boolean pairResult = success && codeMatches;
+        JsonObject nonceJson = messageJson.get(WebSocketOpsConsts.NONCE_FIELD).getAsJsonObject();
+        Nonce nonce = JSONUtil.parseJsonToClass(nonceJson, Nonce.class); //TODO: FIXME
+        boolean nonceValid = check.verifyNonce(nonce);
+        boolean pairResult = success && codeMatches && nonceValid;
         if(pairResult){
             logger.info("Pairing code: {}", code);
             String userId = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
@@ -89,7 +96,7 @@ public class MessageProcessorService implements Subject {
             }
         } else {
             // Code sent by server doesn't match current pairing session code or user input was incorrect
-            logger.info("Pair failed: Server code matches: {} | User input matches: {}", codeMatches, success);
+            logger.info("Pair failed: Server code matches: {} | User input matches: {} | Nonce valid: {}", codeMatches, success, nonceValid);
         }
         notifyObservers(pairResult);
         pairingService.endPairSession();
@@ -122,6 +129,12 @@ public class MessageProcessorService implements Subject {
     public OpResponseDto carInfoOperation(JsonObject messageJson){
         String userId = messageJson.get(WebSocketOpsConsts.USERID_FIELD).getAsString();
         String reqId = messageJson.get(WebSocketOpsConsts.REQ_ID).getAsString();
+        JsonObject nonceJson = messageJson.get(WebSocketOpsConsts.NONCE_FIELD).getAsJsonObject();
+        Nonce nonce = JSONUtil.parseJsonToClass(nonceJson, Nonce.class);
+        if(!check.verifyNonce(nonce)){
+            logger.error("Invalid nonce: {}", nonce);
+            return new OpResponseDto(reqId, false);
+        }
         SecretKeySpec secretKey = keyStoreService.getSecretKeySpec(userId);
         if(secretKey == null){
             logger.error("No secret key found for user: {}", userId);
@@ -149,7 +162,6 @@ public class MessageProcessorService implements Subject {
             logger.error("No pending request matches response for reqId: {}", reqId);
         }
     }
-
 
     @Override
     public void addObserver(Observer observer) {

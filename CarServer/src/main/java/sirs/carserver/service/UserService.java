@@ -138,7 +138,7 @@ public class UserService {
     private void appendFileAudit(String userId, String operation){
         logger.info("Adding auditMessage onto log file");
         try (FileWriter writer = new FileWriter(filepath, true)) { // Open in append mode
-            writer.write("UserId: " + userId + "Operation: " + operation+"\n");
+            writer.write("UserId: " + userId + " | Operation: " + operation+"\n");
         } catch (IOException e) {
             logger.error("Appending onto the audit file failed with the error: {}",e.getMessage());
         }
