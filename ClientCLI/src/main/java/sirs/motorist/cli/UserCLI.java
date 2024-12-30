@@ -248,8 +248,29 @@ public class UserCLI {
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
 
         Config config = new Config(out1,out2,pos1,pos3);
+        Protect protect = new Protect();
 
-        protectAndSendWriteOperation(secretKeySpec, config, url);
+        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, config, true);
+
+        WriteOperationDto dto = new WriteOperationDto(
+                username,
+                carId,
+                password,
+                protectedConfirmationPhrase.getContent(),
+                protectedConfirmationPhrase.getIv(),
+                protectedConfirmationPhrase.getNonce(),
+                protectedConfirmationPhrase.getHmac()
+        );
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
+
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+
+        System.out.println(EntityUtils.toString(response.getEntity()));
     }
 
     private static void deleteConfig(Scanner scanner) throws Exception {
@@ -262,8 +283,29 @@ public class UserCLI {
         KeyStore keyStore = SecurityUtil.loadKeyStore(password, keyStorePath);
 
         SecretKeySpec secretKeySpec = SecurityUtil.loadSecretKeyFromKeyStore(carId, password, keyStore);
+        Protect protect = new Protect();
 
-        protectAndSendWriteOperation(secretKeySpec, confirmationPhrase, url);
+        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, confirmationPhrase, true);
+
+        WriteOperationDto dto = new WriteOperationDto(
+                username,
+                carId,
+                password,
+                protectedConfirmationPhrase.getContent(),
+                protectedConfirmationPhrase.getIv(),
+                protectedConfirmationPhrase.getNonce(),
+                protectedConfirmationPhrase.getHmac()
+        );
+        String body = JSONUtil.parseClassToJsonString(dto);
+
+        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
+
+        if(response == null) {
+            System.out.println("Failed to contact server...");
+            return;
+        }
+
+        System.out.println(EntityUtils.toString(response.getEntity()));
     }
 
     private static void generalCarInfo() throws Exception {
@@ -341,8 +383,6 @@ public class UserCLI {
             String resBody = EntityUtils.toString(response.getEntity());
             SignedFirmwareDto firmware = JSONUtil.parseJsonToClass(resBody, SignedFirmwareDto.class);
 
-            System.out.println(resBody);
-
             try (FileWriter writer = new FileWriter("files/firmware.json")) {
                 // Serialize the object to JSON and write it to a file
                 JSONUtil.serializeAndWriteToFile(firmware, writer);
@@ -361,33 +401,6 @@ public class UserCLI {
         String body = JSONUtil.parseClassToJsonString(dto);
 
         return httpClientManager.executeHttpRequest(url, "POST", body);
-    }
-
-    private static <T extends Serializable> void protectAndSendWriteOperation(SecretKeySpec secretKeySpec, T content, String url) throws Exception {
-        Protect protect = new Protect();
-
-        ProtectedObject protectedConfirmationPhrase = protect.protect(secretKeySpec, content, true);
-
-        WriteOperationDto dto = new WriteOperationDto(
-                username,
-                carId,
-                password,
-                protectedConfirmationPhrase.getContent(),
-                protectedConfirmationPhrase.getIv(),
-                protectedConfirmationPhrase.getNonce(),
-                protectedConfirmationPhrase.getHmac()
-        );
-        String body = JSONUtil.parseClassToJsonString(dto);
-
-        HttpResponse response = httpClientManager.executeHttpRequest(url, "PUT", body);
-
-        if(response == null) {
-            System.out.println("Failed to contact server...");
-            return;
-        }
-
-        System.out.println(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
     }
 
     private static <T extends Serializable> T deserializeIntoObject(ProtectedObject protectedObject, Class<T> clazz) throws IOException, ClassNotFoundException {
