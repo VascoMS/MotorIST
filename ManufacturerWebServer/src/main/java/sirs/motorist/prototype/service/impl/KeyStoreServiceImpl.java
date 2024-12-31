@@ -20,7 +20,7 @@ public class KeyStoreServiceImpl implements KeyStoreService {
 
     private final String keystorePassword;
 
-    public KeyStoreServiceImpl(@Value("classpath:keystore.jks") Resource keystoreResource,
+    public KeyStoreServiceImpl(@Value("classpath:TLSTestCerts/keystore.jks") Resource keystoreResource,
                                @Value("${keystore.password}") String keystorePassword) throws Exception {
         // Load the keystore securely
         this.keystorePassword = keystorePassword;

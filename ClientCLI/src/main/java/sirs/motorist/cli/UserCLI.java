@@ -25,7 +25,7 @@ import sirs.motorist.common.Config;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UserCLI {
-    private static final String MANUFACTURER_URL = "https://localhost:8443/";
+    private static final String MANUFACTURER_URL = "https://localhost:443/";
     private static final String TRUSTSTORE_PATH = "keystore/truststore.p12";
     private static final String TRUSTSTORE_PASSWORD = "motorist_tls";
     private static final int NONCE_SIZE = 8;

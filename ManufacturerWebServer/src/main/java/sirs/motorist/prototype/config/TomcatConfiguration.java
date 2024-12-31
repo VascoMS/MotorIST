@@ -34,7 +34,7 @@ public class TomcatConfiguration {
     private Connector createWebSocketConnector() {
         Connector connector = new Connector(Http11NioProtocol.class.getName());
         connector.setScheme("https");
-        connector.setPort(8444);
+        connector.setPort(444);
         connector.setSecure(true);
 
         Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
@@ -48,6 +48,7 @@ public class TomcatConfiguration {
         cert.setCertificateKeystoreFile(keyStorePath);
         cert.setCertificateKeystorePassword(keyStorePassword);
         cert.setCertificateKeystoreType(keyStoreType);
+
 
         // Configure trust store
         sslHostConfig.setTruststoreFile(trustStorePath);
