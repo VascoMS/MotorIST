@@ -9,34 +9,33 @@ Operations server -> car:
     operation: "pair",
     userId: "a23vcs2245",
     success: true/false
+    code(hashed): "AD325o203=="
     nonce: {
         base64: "adadsa"
         timestamp: 131231321
     }
 }
 
-{   IDEAL MESSAGE FORMAT
+{
     reqid: "1",
     operation: "updateconfig",
     userId: "a23vcs2245",
-    protected: {
-     configuration(ciphered): {
-         	"ac": [
-            	    { "out1": "789"},
-            	    { "out2": "1011"}
-         	],
-         	"seat": [
-            	    { "pos1": "0"},
-            	    { "pos3": "6"}
-         	]
+    content(ciphered): {
+        "ac": [
+                { "out1": "789"},
+                { "out2": "1011"}
+        ],
+        "seat": [
+                { "pos1": "0"},
+                { "pos3": "6"}
+        ]
      }
-     iv: "adasdasda"
+    iv: "adasdasda"
     nonce: {
              base64: "adadsa"
              timestamp: 131231321
-          }
-     hmac: "ydqwgyddhqsd"
     }
+    hmac: "ydqwgyddhqsd"
 }
 
 {
@@ -50,19 +49,17 @@ Operations server -> car:
 }
 
 {
-    IDEAL FORMAT
     reqid: "2",
     operation: "deleteconfig",
     userId: "a23vcs2245"
-    protected: {
-        content(ciphered confirmation phrase): "asdasdasdadasds"
-        iv: "randomiv"
-        nonce: {
-            base64: "adadsa="
-            timestamp: 131231321
-        }
-        hmac: "sadbaudqw="
-    }
+    content(ciphered confirmation phrase): "asdasdasdadasds"
+    iv: "randomiv"
+    nonce: {
+        base64: "adadsa="
+        timestamp: 131231321
+
+    hmac: "sadbaudqw="
+
 }
 
 {
@@ -86,16 +83,26 @@ Operations car -> server:
     }
 }
 
+Update/Delete Response
 {
     reqId: 2
     operation: "response"
     success: true/false
 }
 
-Response messages:
 
+Get Car Info Response
 {
+    reqId: 2
     operation: "response"
-    reqId: "1"
-    success: true
+    success: true/false
+    content(ciphered): {
+        "battery": "80%",
+        "km": "100"
+    }
+    iv: "adasdasda"
+    nonce: {
+        base64: "adadsa"
+        timestamp: 131231321
+    }
 }
