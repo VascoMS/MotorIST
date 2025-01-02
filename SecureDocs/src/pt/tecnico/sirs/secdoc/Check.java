@@ -13,7 +13,7 @@ public class Check {
 
     private static final Logger logger = LoggerFactory.getLogger(Check.class);
 
-    private static final long MAX_TIMEDELTA = 200 * 1000; // 30s
+    private static final long MAX_TIMEDELTA = 30 * 1000; // 30s
 
     Map<String, Long> nonces = new HashMap<>();
 
