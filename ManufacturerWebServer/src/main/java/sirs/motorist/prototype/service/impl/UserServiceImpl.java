@@ -28,10 +28,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean newUser(UserCredentialsDto request) {
-        if (userRepository.findByUserId(request.getUserId()) != null) {
+        return createUser(request, null);
+    }
+
+    @Override
+    public boolean newMechanic(UserCredentialsDto request, String publicKey) {
+        return createUser(request, publicKey);
+    }
+
+    private boolean createUser(UserCredentialsDto request, String publicKey) {
+        if (checkUserExists(request.getUserId())) {
             logger.error("User {} already exists", request.getUserId());
             return false;
         }
+
         byte[] salt = generateSalt();
 
         String hashedPassword;
@@ -42,10 +52,16 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        User newUser = new User(request.getUserId(),  hashedPassword, salt, null);
+        // Create new user with or without public key
+        User newUser = new User(request.getUserId(), hashedPassword, salt, publicKey);
         userRepository.save(newUser);
         return true;
     }
+
+    private boolean checkUserExists(String userId) {
+        return userRepository.findByUserId(userId) != null;
+    }
+
 
     @Override
     public boolean checkCredentials(String userId, String password) {

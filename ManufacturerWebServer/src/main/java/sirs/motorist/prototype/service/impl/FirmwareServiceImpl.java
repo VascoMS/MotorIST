@@ -72,4 +72,12 @@ public class FirmwareServiceImpl implements FirmwareService {
             return null;
         }
     }
+
+    @Override
+    public boolean addFirmware(int version, String description) {
+        logger.info("Adding firmware...");
+        Firmware firmware = new Firmware(version, description);
+        firmwareRepository.save(firmware);
+        return true;
+    }
 }
