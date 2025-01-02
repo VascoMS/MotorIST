@@ -56,11 +56,11 @@ public class MongoConfig {
         trustManagerFactory.init(trustStore);
 
         // Initialize SSL context with your keystore and truststore
-        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new java.security.SecureRandom());
+        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
 
         // MongoDB connection settings
         MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString("mongodb://192.168.2.1:27017/motorist_db?ssl=true"))
+                .applyConnectionString(new ConnectionString("mongodb://192.168.2.1:27017/motorist_db?tls=true"))
                 .applyToSslSettings(builder -> builder.enabled(true).context(sslContext))
                 .build();
 
