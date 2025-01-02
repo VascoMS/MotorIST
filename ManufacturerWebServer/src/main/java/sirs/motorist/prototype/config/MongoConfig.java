@@ -47,7 +47,7 @@ public class MongoConfig {
         keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
 
         // Load your truststore for the MongoDB server certificate
-        KeyStore trustStore = KeyStore.getInstance("JKS");
+        KeyStore trustStore = KeyStore.getInstance("PKCS12");
         try (InputStream trustStoreStream = getClass().getResourceAsStream(trustStorePath)) {
             trustStore.load(trustStoreStream, keyStorePassword.toCharArray());
         }
