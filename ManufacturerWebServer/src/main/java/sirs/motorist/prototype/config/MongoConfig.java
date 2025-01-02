@@ -46,17 +46,27 @@ public class MongoConfig {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
 
-        // Load your truststore for the MongoDB server certificate
+        // Ensure truststore is loaded correctly
         KeyStore trustStore = KeyStore.getInstance("PKCS12");
         try (InputStream trustStoreStream = getClass().getResourceAsStream(trustStorePath)) {
+            if (trustStoreStream == null) {
+                throw new IllegalArgumentException("Truststore file not found at " + trustStorePath);
+            }
             trustStore.load(trustStoreStream, keyStorePassword.toCharArray());
+            System.out.println("Truststore contains: " + trustStore.size() + " entries");
+        } catch (Exception e) {
+            System.err.println("Failed to load truststore: " + e.getMessage());
+            throw e;
         }
 
+        // Initialize the trust manager with the loaded truststore
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(trustStore);
+        TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+        System.out.println("Number of trust managers: " + trustManagers.length);
 
-        // Initialize SSL context with your keystore and truststore
-        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+        // Initialize the SSLContext
+        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagers, null);
 
         // MongoDB connection settings
         MongoClientSettings settings = MongoClientSettings.builder()
