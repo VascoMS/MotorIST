@@ -10,32 +10,32 @@ import java.io.Serializable;
 public class Config implements Serializable {
 
     //ac
-    private int out1;
-    private int out2;
+    private int acOut1;
+    private int acOut2;
 
     //seat
-    private int pos1;
-    private int pos3;
+    private int acPos1;
+    private int acPos3;
 
     public Config(int out1, int out2, int pos1, int pos3) {
-        this.out1 = out1;
-        this.out2 = out2;
-        this.pos1 = pos1;
-        this.pos3 = pos3;
+        this.acOut1 = out1;
+        this.acOut2 = out2;
+        this.acPos1 = pos1;
+        this.acPos3 = pos3;
     }
 
     public Config() {
-        this.out1 = 0;
-        this.out2 = 0;
-        this.pos1 = 0;
-        this.pos3 = 0;
+        this.acOut1 = 0;
+        this.acOut2 = 0;
+        this.acPos1 = 0;
+        this.acPos3 = 0;
     }
 
     @Override
     public String toString() {
-        return "\n\tout1 = " + out1 + "\n" +
-                "\tout2 = " + out2 + "\n" +
-                "\tpos1 = " + pos1 + "\n" +
-                "\tpos3 = " + pos3 + "\n";
+        return "\n\tout1 = " + acOut1 + "\n" +
+                "\tout2 = " + acOut2 + "\n" +
+                "\tpos1 = " + acPos1 + "\n" +
+                "\tpos3 = " + acPos3 + "\n";
     }
 }

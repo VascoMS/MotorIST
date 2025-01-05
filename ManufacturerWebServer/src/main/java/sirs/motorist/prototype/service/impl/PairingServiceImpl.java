@@ -45,6 +45,10 @@ public class PairingServiceImpl implements PairingService {
     public boolean validatePairingSession(UserPairRequestDto request) {
         byte[] userCodeHash = SecurityUtil.hashData(request.getPairCode().getBytes());
         PairingSessionRecord pairingSession = pairingSessions.get(request.getCarId());
+        if(pairingSession == null) {
+            logger.error("No pairing session found for car {}", request.getCarId());
+            return false;
+        }
         byte[] hashedCode = pairingSession.hashedCode();
         boolean userExists = configRepository.existsByUserIdAndCarId(request.getUserId(), request.getCarId());
         logger.info("User {} exists: {}", request.getUserId(), userExists);
