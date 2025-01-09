@@ -79,9 +79,8 @@ public class PairingServiceImpl implements PairingService {
                     protectedConfig.getHmac()
             );
             configRepository.save(configuration);
-
-            pairingSessions.remove(request.getCarId());
         }
+        pairingSessions.remove(request.getCarId());
 
         return pairSuccessful;
     }

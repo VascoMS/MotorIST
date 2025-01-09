@@ -25,4 +25,17 @@ public class WriteOperationDto {
         this.nonce = nonce;
         this.hmac = hmac;
     }
+
+    @Override
+    public String toString() {
+        return "WriteOperationDto{" +
+                "userId='" + userId + '\'' +
+                ", carId='" + carId + '\'' +
+                ", password='" + password + '\'' +
+                ", content='" + content + '\'' +
+                ", iv='" + iv + '\'' +
+                ", nonce=" + nonce +
+                ", hmac='" + hmac + '\'' +
+                '}';
+    }
 }

@@ -60,11 +60,13 @@ public class UserConfigController {
             logger.error("Configuration for that user and car was not found...");
             return ResponseEntity.badRequest().body("Configuration for that user and car was not found...");
         }
+        logger.info("Configuration: " + response);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/updateConfig")
     public ResponseEntity<?> updateConfig(@RequestBody WriteOperationDto request) {
+        logger.info("Update configuration: " + request);
         if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }
@@ -79,6 +81,7 @@ public class UserConfigController {
 
     @PutMapping("/deleteConfig")
     public ResponseEntity<?> deleteConfig(@RequestBody WriteOperationDto request) {
+        logger.info("Delete configuration: " + request);
         if(!userService.checkCredentials(request.getUserId(), request.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }

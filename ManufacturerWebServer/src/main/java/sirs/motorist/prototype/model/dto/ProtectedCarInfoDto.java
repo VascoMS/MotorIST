@@ -15,4 +15,13 @@ public class ProtectedCarInfoDto {
         this.iv = iv;
         this.hmac = hmac;
     }
+
+    @Override
+    public String toString() {
+        return "ProtectedCarInfoDto{" +
+                "content='" + content + '\'' +
+                ", iv='" + iv + '\'' +
+                ", hmac='" + hmac + '\'' +
+                '}';
+    }
 }

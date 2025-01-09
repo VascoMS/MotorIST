@@ -44,6 +44,7 @@ public class CarController {
             logger.error("Car info for that car was not found...");
             return ResponseEntity.badRequest().body("Car info for that car was not found...");
         }
+        logger.info("Car info: " + response);
         return ResponseEntity.ok(response);
     }
 }

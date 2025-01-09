@@ -43,7 +43,7 @@ public class CarServiceImpl implements CarService {
         try {
 
             JsonObject response = carWebSocketHandler.sendMessageToCarWithResponse(carId, jsonObj).get();
-            logger.info("Received response from car {}...", carId);
+            logger.info("Received response from car {} Response: {}...", carId, response.toString());
             return JSONUtil.parseJsonToClass(response, ProtectedCarInfoDto.class);
         } catch (Exception e) {
             logger.error("Failed to get car info: {}", e.getMessage());

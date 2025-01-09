@@ -35,7 +35,6 @@ public class WebSocketClientConfig {
     private String truststorePassword;
 
 
-
     private final MessageProcessorService messageProcessorService;
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketClientConfig.class);
