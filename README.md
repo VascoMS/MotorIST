@@ -9,7 +9,7 @@
 | 112192  | Diogo Rodrigues  | <https://github.com/DiogoAMRodrigues>  | <diogo.m.rodrigues@tecnico.ulisboa.pt>     |
 
 
-![Miguel](img/Miguel.jpg) ![Vasco](img/Vasco.jpg) ![Diogo](img/Diogo.jpg)
+![Miguel](img/Miguel.jpeg) ![Vasco](img/Vasco.jpg) ![Diogo](img/Diogo.jpg)
 
 ## Contents
 
